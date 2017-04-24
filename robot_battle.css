@@ -1,0 +1,121 @@
+h1, h3 {
+	font-family: 'Orbitron', sans-serif;
+	text-align: center;
+}
+
+h1 {
+	font-size: 3em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font: verdana ,arial, helvetica, sans-serif;
+	background-color: lightblue;
+	color: black;
+}
+
+
+p {
+	font-family: 'Open Sans', verdana, arial, helvetica, sans-serif;
+	color: black;
+	font-size: large;
+}
+
+.introText {
+	margin: 0 auto;
+	background-color: lightgoldenrodyellow;
+	width:75%;
+	padding: 2%;
+	margin-bottom: 2%;
+}
+
+.centerStuff {
+   text-align: center;
+}
+
+button {
+	font-family: 'Orbitron', sans-serif;
+	background-color: green;
+   border: none;
+   color: white;
+   padding: 2em;
+   font-size: 120%;
+   font-weight: bold;
+   border-radius: 4%;
+
+   cursor: pointer;
+}
+
+button:hover {
+    background-color: white;
+    color: green;
+}
+
+.timerDiv {
+	text-align: center;
+	background-color: lightyellow;
+	width:calc(82% - 560px);
+	margin: 0 auto;
+	padding-left: 2%;
+	padding-right: 2%;
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+.answerDiv {
+	margin: 0 auto;
+	background-color: lightgreen;
+	width:calc(82% - 560px);
+	margin-top: 2%;
+	height: 15%;
+	padding: 2%;
+}
+
+.numeralsDiv {
+	margin: 0 auto;
+   /*background-color: lightgoldenrodyellow;*/
+	width:45%;
+	margin-top: 2%;
+	height: 10%;
+	padding: 2%;
+}
+
+.numeralsDiv p {
+	text-align: center;
+}
+
+.numeralsDiv button {
+	text-align: center;
+	padding: 2%;
+	margin-left:2%;
+	margin-right:2%;
+	width:15%;
+	font-size: 180%;
+}
+
+.goodRobot {
+	float:left;
+	margin-left: 1%;
+}
+
+.badRobot {
+	float:right;
+	margin-right: 1%;
+}
+
+.energyBarGood, .energyBarBad {
+	background-color: lightseagreen;
+}
+
+.energyBarGood {
+	float:left;
+}
+
+.energyBarBad {
+	float:right;
+}
