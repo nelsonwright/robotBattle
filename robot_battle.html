@@ -1,32 +1,80 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang='en'>
 <head>
 	<meta charset="UTF-8">
 	<title>Robot Battle</title>
 	<link rel="stylesheet" type="text/css" href="robot_battle.css">
-	<script src="./robo.js"></script> 
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet"> 
+	<script src="./robo.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
 </head>
 
-<body>
-	<h1>Robot Battle</h1>
-	<div class="introText">
-		<p>
-			By the year 2052, robots were everywhere.  They did the jobs that humans did not want to do.  They became the friends of humans. 
-		</p>
-		<p>
-			Then, one day, it all changed.  A bad robot found that it could fry the circuits of the good robots by asking them questions!
-			More robots like this appeared.
-		</p>
-		<p>
-			There was only one thing to do.  The humans built a robot that could answer the questions!  
-			If it answered enough questions correctly, the bad robots would get so angry they would explode!
-		</p>
-	</div>
+<body class="playGame()">
+   <div id="introDiv">
+   	<h1>Robot Battle</h1>
+   	<div class="introText">
+   		<p>
+   			By the year 2052, robots were everywhere.  They did the jobs that humans did not want to do.  They became the friends of humans.
+   		</p>
+   		<p>
+   			Then, one day, it all changed.  A bad robot found that it could fry the circuits of the good robots by asking them questions!
+   			More robots like this appeared.
+   		</p>
+   		<p>
+   			There was only one thing to do.  The humans built a robot that could answer the questions!
+   			If it answered enough questions correctly, the bad robots would get so angry they would explode!
+   		</p>
+   	</div>
 
-	<div class="centerStuff">
-		<button onclick="playGame()">Play the game</button>
-	</div>
+   	<div class="centerStuff">
+   		<button onclick="playGame()">Play the game</button>
+   	</div>
+   </div> <!-- end of introState -->
+
+
+   <div id ="gameDiv" class="hidden">
+      <div class="timerDiv">
+   		timer here
+   	</div>
+
+   	<canvas id="goodRobot" class="goodRobot" width="280" height="500">
+   		The Good Robot
+   	</canvas>
+
+   	<canvas class="energyBarGood" width="60" height="500">
+   		The Good Energy
+   	</canvas>
+
+   	<canvas id="badRobot" class="badRobot" width="280" height="500">
+   		The Bad Robot
+   	</canvas>
+
+   	<canvas class="energyBarBad" width="60" height="500"	>
+   		The Bad Energy
+   	</canvas>
+
+   	<div class="answerDiv">
+   		<p>
+   			answers here
+   		</p>
+   	</div>
+
+   	<div class="numeralsDiv">
+   		<p>
+   			<button>1</button>
+   			<button>2</button>
+   			<button>3</button>
+   			<button>4</button>
+   			<button>5</button>
+   		</p>
+   		<p>
+   			<button>6</button>
+   			<button>7</button>
+   			<button>8</button>
+   			<button>9</button>
+   			<button>0</button>
+   		</p>
+   	</div>
+
+   </div> <!-- end of introState -->
 </body>
-
 </html>

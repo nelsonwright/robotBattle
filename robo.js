@@ -18,7 +18,7 @@ function drawStrokedRect(ctx, x, y, width, height) {
 function drawChestDecoration(ctx) {
    ctx.strokeStyle = "black";
    ctx.lineWidth = 2;
-   ctx.strokeRect(100, 258, 96, 60);
+   ctx.strokeRect(71 + xOffset, 258, 96, 60);
 
    // ctx.beginPath();
    // ctx.moveTo(120 , 330);
@@ -93,4 +93,10 @@ function drawRobots() {
    if (badRobotCanvas.getContext) {
       drawRobot(badRobotContext, "limegreen");
    }
+}
+
+function playGame() {
+   document.getElementById("introDiv").style.display = 'none';
+   document.getElementById("gameDiv").style.display = 'block';
+   drawRobots();
 }

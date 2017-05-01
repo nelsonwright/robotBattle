@@ -59,12 +59,14 @@ button:hover {
 .timerDiv {
 	text-align: center;
 	background-color: lightyellow;
-	width:calc(82% - 560px);
+	width:calc(82% - 60px);
 	margin: 0 auto;
 	padding-left: 2%;
 	padding-right: 2%;
 	padding-top: 1%;
 	padding-bottom: 1%;
+   margin-bottom: 2%;
+   margin-top:2%;
 }
 
 .answerDiv {
@@ -101,11 +103,13 @@ button:hover {
 .goodRobot {
 	float:left;
 	margin-left: 1%;
+   width:calc(22%);
 }
 
 .badRobot {
 	float:right;
 	margin-right: 1%;
+   width:calc(22%);
 }
 
 .energyBarGood, .energyBarBad {
@@ -114,8 +118,14 @@ button:hover {
 
 .energyBarGood {
 	float:left;
+   width:calc(4.5%);
 }
 
 .energyBarBad {
 	float:right;
+   width:calc(4.5%);
+}
+
+.hidden {
+   display: none;
 }
