@@ -15,29 +15,74 @@ function drawStrokedRect(ctx, x, y, width, height) {
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
 }
 
+function drawChestLights(ctx) {
+   var y = yOffset - 157;
+   var x = 87;
+   var areaWidth = 100;
+   var circleRadius = 5;
+
+
+   ctx.lineWidth=3;
+
+   for (var i=0; i<3; i++) {
+      switch(i) {
+         case 0:
+            ctx.fillStyle = "gold";
+            break;
+         case 1:
+            ctx.fillStyle = "mediumpurple";
+            break;
+         case 2:
+            ctx.fillStyle = "deepskyblue";
+            break;
+      }
+      ctx.beginPath();
+      ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
+      ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
+
+      ctx.stroke();
+      ctx.fill();
+   }
+}
+
 function drawChestDecoration(ctx) {
    var y = yOffset - 245;
+   var x = 71;
+   var width =  96;
+   var height = 60;
    ctx.strokeStyle = "black";
    ctx.lineWidth = 2;
 
-   ctx.strokeRect(71 + xOffset, y, 96, 60);
+   ctx.strokeRect(x + xOffset, y, width, height);
 
-   // ctx.beginPath();
-   // ctx.moveTo(120 , 330);
-   // ctx.lineTo(138, 330);
-   // ctx.stroke();
+   // draw the grille on the chest
+   for (var i=0; i<3; i++) {
+         // horizontal lines
+         ctx.beginPath();
+         ctx.moveTo(x + xOffset, y + i*(height/3));
+         ctx.lineTo(x + xOffset + width, y + i*(height/3));
+         ctx.stroke();
+   }
+
+   for (var i=0; i<4; i++) {
+      //vertical lines
+      ctx.beginPath();
+      ctx.moveTo(x + xOffset + i*(width/4), y);
+      ctx.lineTo(x + xOffset + i*(width/4), y + height);
+      ctx.stroke();
+   }
+
+   drawChestLights(ctx);
 }
 
 function drawEyes(ctx) {
-   // eyes
-   ctx.fillStyle = "#ffffff"; // white
-   ctx.lineWidth=5;
-   ctx.beginPath();
-
    var y = yOffset - 337;
+   ctx.fillStyle = "white";
+   ctx.lineWidth=5;
 
-   ctx.stroke();
+   ctx.beginPath();
    ctx.arc(100 + xOffset, y, 7, 0, 2*Math.PI);
+   ctx.stroke();
    ctx.fill();
 
    ctx.moveTo(138 + xOffset, y);
