@@ -5,7 +5,7 @@ function playGame() {
 }
 
 // needed due to Inkscape calculating y values from bottom to top, rather than top to bottom
-var yOffset = 500;
+var yOffset = 450;
 
 // just to put the robot in a better place on the canvas
 var xOffset = 20;
@@ -16,9 +16,11 @@ function drawStrokedRect(ctx, x, y, width, height) {
 }
 
 function drawChestDecoration(ctx) {
+   var y = yOffset - 245;
    ctx.strokeStyle = "black";
    ctx.lineWidth = 2;
-   ctx.strokeRect(71 + xOffset, 258, 96, 60);
+
+   ctx.strokeRect(71 + xOffset, y, 96, 60);
 
    // ctx.beginPath();
    // ctx.moveTo(120 , 330);
@@ -32,7 +34,7 @@ function drawEyes(ctx) {
    ctx.lineWidth=5;
    ctx.beginPath();
 
-   var y = 164;
+   var y = yOffset - 337;
 
    ctx.stroke();
    ctx.arc(100 + xOffset, y, 7, 0, 2*Math.PI);

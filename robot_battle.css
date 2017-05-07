@@ -72,16 +72,20 @@ button:hover {
 .answerDiv {
 	margin: 0 auto;
 	background-color: lightgreen;
-	width:calc(82% - 560px);
+	width:calc(40%);
 	margin-top: 2%;
 	height: 15%;
-	padding: 2%;
+	padding: 1%;
+}
+
+.answerDiv p {
+   font-size: 2vw;
 }
 
 .numeralsDiv {
 	margin: 0 auto;
    /*background-color: lightgoldenrodyellow;*/
-	width:45%;
+	width:44%;
 	margin-top: 2%;
 	height: 10%;
 	padding: 2%;
@@ -97,7 +101,7 @@ button:hover {
 	margin-left:2%;
 	margin-right:2%;
 	width:15%;
-	font-size: 180%;
+	font-size: 3vw;
 }
 
 .goodRobot {
