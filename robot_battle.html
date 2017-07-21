@@ -8,7 +8,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
 </head>
 
-<body onload="playGame()">
+<body onload="playGame()" onkeyup="pressedAKey(event)">
    <div id="introDiv">
    	<h1>Robot Battle</h1>
    	<div class="introText">
@@ -28,7 +28,7 @@
    	<div class="centerStuff">
    		<button onclick="playGame()">Play the game</button>
    	</div>
-   </div> <!-- end of introState -->
+   </div> <!-- end of introDiv -->
 
 
    <div id ="gameDiv" class="hidden">
@@ -53,8 +53,7 @@
    	</canvas>
 
    	<div class="answerDiv">
-   		<p>
-   			questions/answers here
+   		<p id="questionAndAnswersPara">
    		</p>
          <p>
             feedback here

@@ -43,11 +43,10 @@ button {
 	background-color: green;
    border: none;
    color: white;
-   padding: 2em;
+   padding: 2%;
    font-size: 120%;
    font-weight: bold;
    border-radius: 4%;
-
    cursor: pointer;
 }
 

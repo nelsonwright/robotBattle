@@ -1,14 +1,115 @@
-
-
-function playGame() {
-	window.location.href = "./robot_battle_game.html";
-}
-
 // needed due to Inkscape calculating y values from bottom to top, rather than top to bottom
 var yOffset = 450;
 
 // just to put the robot in a better place on the canvas
 var xOffset = 20;
+
+// these are the unicode values for the keyboard keys when pressed
+var key = Object.freeze({
+	isTopRowDigit: function(actionCode) {
+		return actionCode >= 48 && actionCode <= 57;
+	},
+	isKeypadDigit: function(actionCode) {
+		return actionCode >= 96 && actionCode <= 105;
+	},
+	isDigit: function(actionCode) {
+		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
+	},
+	enter: 13	// the enter or return key
+});
+
+var calculation = {
+   firstFactor: null,
+   secondFactor: null,
+   digitToGuess: null,
+   timeAllowed: 7, // how many seconds you're allowed to answer
+   answerIndex: null,
+   timeToAnswerText: null,
+   text: null,
+   answerText: "",
+   resultText: null,
+   create: function() {
+      this.firstFactor = Math.floor(Math.random() * 10 + 2);
+      this.secondFactor = Math.floor(Math.random() * 10 + 2);
+      this.answerIndex = 0;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   product: function() {
+      return this.firstFactor * this.secondFactor;
+   },
+   createQuestionText: function () {
+      this.create();
+      return this.firstFactor + ' X ' + this.secondFactor + ' = ';
+   },
+   correctDigitGuessed: function(digitGuessed) {
+      return digitGuessed === this.digitToGuess;
+   },
+   calcDigitToGuess: function () {
+      return parseInt(this.product().toString()[this.answerIndex]);
+   },
+   updateDigitToGuess: function() {
+      this.answerIndex++;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   gotItAllCorrect: function() {
+      return this.answerIndex >= parseInt(this.product().toString().length);
+   },
+   wipeText: function() {
+      this.timeToAnswerText = "";
+      this.text = "";
+      this.resultText = " ";
+      this.answerText = "";
+   }
+};
+
+function setUpQuestion() {
+   var answersPara = document.getElementById('questionAndAnswersPara');
+   answersPara.innerHTML = calculation.createQuestionText();
+}
+
+function pressedAKey(e) {
+	var unicode = e.keyCode? e.keyCode : e.charCode;
+
+	if (key.isDigit(unicode)) {
+		processAttemptedSumAnswer(unicode);
+	}
+}
+
+function processAttemptedSumAnswer(numberCode) {
+	// the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
+	// the numeric keypad digits are unicode values 96 - 105
+	var digitPressed;
+
+
+	if (key.isTopRowDigit(numberCode)) {
+		digitPressed = numberCode - 48;
+	} else {
+		digitPressed = numberCode - 96;
+	}
+
+   console.log("The digit is " + digitPressed);
+
+	// if (sleep.calculation.correctDigitGuessed(digitPressed)) {
+	// 	sleep.calculation.answerText = sleep.calculation.answerText === '?' ? digitPressed : sleep.calculation.answerText + digitPressed.toString();
+	// 	sleep.calculation.updateDigitToGuess();
+   //    renderSleepingState();
+   //
+	// 	if (sleep.calculation.gotItAllCorrect()) {
+	// 		clearInterval(gameState.sumsIntervalId);
+	// 		sleep.calculation.resultText = "Got it right!";
+	// 		sleep.correctAnswers++;
+   //       renderSleepingState();
+   //       waitABitThenKeepSleeping();
+	// 	}
+	// } else {
+	// 	sleep.calculation.answerText = sleep.calculation.answerText === '?' ? digitPressed : sleep.calculation.answerText + digitPressed.toString();
+	// 	//oh dear, got it wrong . . .
+	// 	clearInterval(gameState.sumsIntervalId);
+	// 	sleep.calculation.resultText = "Wrong! Ha ha!";
+   //    renderSleepingState();
+   //    waitABitThenKeepSleeping();
+	// }
+}
 
 function drawStrokedRect(ctx, x, y, width, height) {
 	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
@@ -146,4 +247,5 @@ function playGame() {
    document.getElementById("introDiv").style.display = 'none';
    document.getElementById("gameDiv").style.display = 'block';
    drawRobots();
+   setUpQuestion();
 }
