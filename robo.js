@@ -29,35 +29,35 @@ var calculation = {
    questionText: "",
    answerText: "",
    resultText: null,
-   create: function() {
+   create() {
       this.firstFactor = Math.floor(Math.random() * 10 + 2);
       this.secondFactor = Math.floor(Math.random() * 10 + 2);
       this.answerIndex = 0;
       this.digitToGuess = this.calcDigitToGuess();
    },
-   product: function() {
+   product() {
       return this.firstFactor * this.secondFactor;
    },
-   createQuestionText: function () {
+   createQuestionText() {
       this.create();
       this.answerText = "?";
-      this.questionText = this.firstFactor + ' X ' + this.secondFactor + ' = ';
-      return this.questionText + ' ' + this.answerText;
+      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
+      return this.questionText + " " + this.answerText;
    },
-   correctDigitGuessed: function(digitGuessed) {
+   correctDigitGuessed(digitGuessed) {
       return digitGuessed === this.digitToGuess;
    },
-   calcDigitToGuess: function () {
+   calcDigitToGuess () {
       return parseInt(this.product().toString()[this.answerIndex]);
    },
-   updateDigitToGuess: function() {
+   updateDigitToGuess() {
       this.answerIndex++;
       this.digitToGuess = this.calcDigitToGuess();
    },
-   gotItAllCorrect: function() {
+   gotItAllCorrect() {
       return this.answerIndex >= parseInt(this.product().toString().length);
    },
-   wipeText: function() {
+   wipeText() {
       this.timeToAnswerText = "";
       this.text = "";
       this.resultText = " ";
@@ -66,21 +66,8 @@ var calculation = {
 };
 
 function setUpQuestion() {
-   var answersPara = document.getElementById('questionAndAnswersPara');
+   var answersPara = document.getElementById("questionAndAnswersPara");
    answersPara.innerHTML = calculation.createQuestionText();
-}
-
-function clickedANumber(numberButton) {
-   console.log("Number " + numberButton.innerHTML + " clicked");
-   processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
-}
-
-function pressedAKey(e) {
-	var unicode = e.keyCode? e.keyCode : e.charCode;
-
-	if (key.isDigit(unicode)) {
-		processAttemptedSumAnswer(unicodeToNumeral(unicode));
-	}
 }
 
 function unicodeToNumeral(numberCode) {
@@ -100,33 +87,39 @@ function unicodeToNumeral(numberCode) {
 
 function processAttemptedSumAnswer(digitPressed) {
 
-   console.log("The digit is " + digitPressed);
-
 	if (calculation.correctDigitGuessed(digitPressed)) {
-		calculation.answerText = calculation.answerText === '?' ? digitPressed : calculation.answerText + digitPressed.toString();
+		calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
 		calculation.updateDigitToGuess();
 
-      console.log(calculation.answerText);
-
-      document.getElementById('questionAndAnswersPara').innerHTML = calculation.questionText + calculation.answerText;
+      document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
 
 		if (calculation.gotItAllCorrect()) {
 			// clearInterval(gameState.sumsIntervalId);
 			calculation.resultText = "Got it right!";
 			// sleep.correctAnswers++;
 
-         console.log(calculation.resultText);
-         document.getElementById('resultPara').innerHTML = calculation.resultText;
+         document.getElementById("resultPara").innerHTML = calculation.resultText;
 		}
 	} else {
       //oh dear, got it wrong . . .
-		calculation.answerText = calculation.answerText === '?' ? digitPressed : calculation.answerText + digitPressed.toString();
-      document.getElementById('questionAndAnswersPara').innerHTML = calculation.questionText + calculation.answerText;
+		calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
+      document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
 
 		// clearInterval(gameState.sumsIntervalId);
 		calculation.resultText = "Wrong! Ha ha!";
-      console.log(calculation.resultText);
-      document.getElementById('resultPara').innerHTML = calculation.resultText;
+      document.getElementById("resultPara").innerHTML = calculation.resultText;
+	}
+}
+
+function clickedANumber(numberButton) {
+   processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
+}
+
+function pressedAKey(e) {
+	var unicode = e.keyCode? e.keyCode : e.charCode;
+
+	if (key.isDigit(unicode)) {
+		processAttemptedSumAnswer(unicodeToNumeral(unicode));
 	}
 }
 
@@ -140,11 +133,11 @@ function drawChestLights(ctx) {
    var x = 87;
    var areaWidth = 100;
    var circleRadius = 5;
-
+   var i;  //loop counter
 
    ctx.lineWidth=3;
 
-   for (var i=0; i<3; i++) {
+   for (i=0; i<3; i++) {
       switch(i) {
          case 0:
             ctx.fillStyle = "gold";
@@ -170,13 +163,15 @@ function drawChestDecoration(ctx) {
    var x = 71;
    var width =  96;
    var height = 60;
+   var i; // loop counter
+
    ctx.strokeStyle = "black";
    ctx.lineWidth = 2;
 
    ctx.strokeRect(x + xOffset, y, width, height);
 
    // draw the grille on the chest
-   for (var i=0; i<3; i++) {
+   for (i=0; i<3; i++) {
          // horizontal lines
          ctx.beginPath();
          ctx.moveTo(x + xOffset, y + i*(height/3));
@@ -184,7 +179,7 @@ function drawChestDecoration(ctx) {
          ctx.stroke();
    }
 
-   for (var i=0; i<4; i++) {
+   for (i=0; i<4; i++) {
       //vertical lines
       ctx.beginPath();
       ctx.moveTo(x + xOffset + i*(width/4), y);
@@ -248,10 +243,10 @@ function drawRobot(ctx, colour) {
 }
 
 function drawRobots() {
-   var goodRobotCanvas = document.getElementById('goodRobot');
-   var goodRobotContext = goodRobotCanvas.getContext('2d');
-   var badRobotCanvas = document.getElementById('badRobot');
-   var badRobotContext = badRobotCanvas.getContext('2d');
+   var goodRobotCanvas = document.getElementById("goodRobot");
+   var goodRobotContext = goodRobotCanvas.getContext("2d");
+   var badRobotCanvas = document.getElementById("badRobot");
+   var badRobotContext = badRobotCanvas.getContext("2d");
 
    if (goodRobotCanvas.getContext) {
       drawRobot(goodRobotContext, "firebrick");
@@ -263,8 +258,8 @@ function drawRobots() {
 }
 
 function playGame() {
-   document.getElementById("introDiv").style.display = 'none';
-   document.getElementById("gameDiv").style.display = 'block';
+   document.getElementById("introDiv").style.display = "none";
+   document.getElementById("gameDiv").style.display = "block";
    drawRobots();
    setUpQuestion();
 }
