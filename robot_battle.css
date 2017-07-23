@@ -71,14 +71,19 @@ button:hover {
 .answerDiv {
 	margin: 0 auto;
 	background-color: lightgreen;
-	width:calc(40%);
+   width:40vw;
 	margin-top: 2%;
-	height: 15%;
 	padding: 1%;
 }
 
 .answerDiv p {
-   font-size: 2vw;
+   margin: 2%;
+   font-size: 4vw;
+   font-weight: bold;
+}
+
+.questionAndAnswersPara {
+   text-align: center;
 }
 
 .numeralsDiv {
@@ -106,13 +111,13 @@ button:hover {
 .goodRobot {
 	float:left;
 	margin-left: 1%;
-   width:calc(22%);
+   width:22vw;
 }
 
 .badRobot {
 	float:right;
 	margin-right: 1%;
-   width:calc(22%);
+   width:22vw;
 }
 
 .energyBarGood, .energyBarBad {
@@ -121,12 +126,12 @@ button:hover {
 
 .energyBarGood {
 	float:left;
-   width:calc(4.5%);
+   width:4.5vw;
 }
 
 .energyBarBad {
 	float:right;
-   width:calc(4.5%);
+   width:4.5vw;
 }
 
 .hidden {

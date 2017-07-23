@@ -26,6 +26,7 @@ var calculation = {
    answerIndex: null,
    timeToAnswerText: null,
    text: null,
+   questionText: "",
    answerText: "",
    resultText: null,
    create: function() {
@@ -39,7 +40,9 @@ var calculation = {
    },
    createQuestionText: function () {
       this.create();
-      return this.firstFactor + ' X ' + this.secondFactor + ' = ';
+      this.answerText = "?";
+      this.questionText = this.firstFactor + ' X ' + this.secondFactor + ' = ';
+      return this.questionText + ' ' + this.answerText;
    },
    correctDigitGuessed: function(digitGuessed) {
       return digitGuessed === this.digitToGuess;
@@ -67,48 +70,64 @@ function setUpQuestion() {
    answersPara.innerHTML = calculation.createQuestionText();
 }
 
+function clickedANumber(numberButton) {
+   console.log("Number " + numberButton.innerHTML + " clicked");
+   processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
+}
+
 function pressedAKey(e) {
 	var unicode = e.keyCode? e.keyCode : e.charCode;
 
 	if (key.isDigit(unicode)) {
-		processAttemptedSumAnswer(unicode);
+		processAttemptedSumAnswer(unicodeToNumeral(unicode));
 	}
 }
 
-function processAttemptedSumAnswer(numberCode) {
-	// the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
-	// the numeric keypad digits are unicode values 96 - 105
-	var digitPressed;
+function unicodeToNumeral(numberCode) {
+   // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
+   // the numeric keypad digits are unicode values 96 - 105
 
+   var digitPressed;
 
-	if (key.isTopRowDigit(numberCode)) {
-		digitPressed = numberCode - 48;
-	} else {
-		digitPressed = numberCode - 96;
-	}
+   if (key.isTopRowDigit(numberCode)) {
+      digitPressed = numberCode - 48;
+   } else {
+      digitPressed = numberCode - 96;
+   }
+
+   return digitPressed;
+}
+
+function processAttemptedSumAnswer(digitPressed) {
 
    console.log("The digit is " + digitPressed);
 
-	// if (sleep.calculation.correctDigitGuessed(digitPressed)) {
-	// 	sleep.calculation.answerText = sleep.calculation.answerText === '?' ? digitPressed : sleep.calculation.answerText + digitPressed.toString();
-	// 	sleep.calculation.updateDigitToGuess();
-   //    renderSleepingState();
-   //
-	// 	if (sleep.calculation.gotItAllCorrect()) {
-	// 		clearInterval(gameState.sumsIntervalId);
-	// 		sleep.calculation.resultText = "Got it right!";
-	// 		sleep.correctAnswers++;
-   //       renderSleepingState();
-   //       waitABitThenKeepSleeping();
-	// 	}
-	// } else {
-	// 	sleep.calculation.answerText = sleep.calculation.answerText === '?' ? digitPressed : sleep.calculation.answerText + digitPressed.toString();
-	// 	//oh dear, got it wrong . . .
-	// 	clearInterval(gameState.sumsIntervalId);
-	// 	sleep.calculation.resultText = "Wrong! Ha ha!";
-   //    renderSleepingState();
-   //    waitABitThenKeepSleeping();
-	// }
+	if (calculation.correctDigitGuessed(digitPressed)) {
+		calculation.answerText = calculation.answerText === '?' ? digitPressed : calculation.answerText + digitPressed.toString();
+		calculation.updateDigitToGuess();
+
+      console.log(calculation.answerText);
+
+      document.getElementById('questionAndAnswersPara').innerHTML = calculation.questionText + calculation.answerText;
+
+		if (calculation.gotItAllCorrect()) {
+			// clearInterval(gameState.sumsIntervalId);
+			calculation.resultText = "Got it right!";
+			// sleep.correctAnswers++;
+
+         console.log(calculation.resultText);
+         document.getElementById('resultPara').innerHTML = calculation.resultText;
+		}
+	} else {
+      //oh dear, got it wrong . . .
+		calculation.answerText = calculation.answerText === '?' ? digitPressed : calculation.answerText + digitPressed.toString();
+      document.getElementById('questionAndAnswersPara').innerHTML = calculation.questionText + calculation.answerText;
+
+		// clearInterval(gameState.sumsIntervalId);
+		calculation.resultText = "Wrong! Ha ha!";
+      console.log(calculation.resultText);
+      document.getElementById('resultPara').innerHTML = calculation.resultText;
+	}
 }
 
 function drawStrokedRect(ctx, x, y, width, height) {
