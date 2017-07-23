@@ -6,13 +6,13 @@ var xOffset = 20;
 
 // these are the unicode values for the keyboard keys when pressed
 var key = Object.freeze({
-	isTopRowDigit: function(actionCode) {
+	isTopRowDigit(actionCode) {
 		return actionCode >= 48 && actionCode <= 57;
 	},
-	isKeypadDigit: function(actionCode) {
+	isKeypadDigit(actionCode) {
 		return actionCode >= 96 && actionCode <= 105;
 	},
-	isDigit: function(actionCode) {
+	isDigit(actionCode) {
 		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
 	},
 	enter: 13	// the enter or return key
