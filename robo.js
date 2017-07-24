@@ -85,34 +85,43 @@ function unicodeToNumeral(numberCode) {
    return digitPressed;
 }
 
+function processCorrectDigit() {
+   calculation.updateDigitToGuess();
+
+   if (calculation.gotItAllCorrect()) {
+      // clearInterval(gameState.sumsIntervalId);
+      calculation.resultText = "Got it right!";
+      // sleep.correctAnswers++;
+
+      document.getElementById("resultPara").innerHTML = calculation.resultText;
+   }
+}
+
+function processIncorrectDigit() {
+   // clearInterval(gameState.sumsIntervalId);
+   calculation.resultText = "Wrong! Ha ha!";
+   document.getElementById("resultPara").innerHTML = calculation.resultText;
+}
+
 function processAttemptedSumAnswer(digitPressed) {
+   calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
+   document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
 
 	if (calculation.correctDigitGuessed(digitPressed)) {
-		calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-		calculation.updateDigitToGuess();
-
-      document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
-
-		if (calculation.gotItAllCorrect()) {
-			// clearInterval(gameState.sumsIntervalId);
-			calculation.resultText = "Got it right!";
-			// sleep.correctAnswers++;
-
-         document.getElementById("resultPara").innerHTML = calculation.resultText;
-		}
+		processCorrectDigit();
 	} else {
-      //oh dear, got it wrong . . .
-		calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-      document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
-
-		// clearInterval(gameState.sumsIntervalId);
-		calculation.resultText = "Wrong! Ha ha!";
-      document.getElementById("resultPara").innerHTML = calculation.resultText;
+      processIncorrectDigit();
 	}
 }
 
 function clickedANumber(numberButton) {
    processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
+}
+
+function humanReadyToDoSums() {
+   document.getElementById("humanReady").className="hidden";
+   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
+   document.getElementById("resultPara").className="";
 }
 
 function pressedAKey(e) {
@@ -123,6 +132,9 @@ function pressedAKey(e) {
 	}
 }
 
+/*****************************************
+*   Stuff to do with drawing the robots...
+******************************************/
 function drawStrokedRect(ctx, x, y, width, height) {
 	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
@@ -256,6 +268,9 @@ function drawRobots() {
       drawRobot(badRobotContext, "limegreen");
    }
 }
+/*****************************
+* end of robot drawing section
+*****************************/
 
 function playGame() {
    document.getElementById("introDiv").style.display = "none";
