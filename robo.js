@@ -20,8 +20,8 @@ var key = Object.freeze({
 
 var gameState = {
    waitingForTap: true,       // to indicate if the UI is waiting for a tap before starting the timer
-	sumsIntervalId: null,		// id for the timer used when doing sums
-	timeForSums: 10				// how many seconds you have to complete a sum
+   sumsIntervalId: null,		// id for the timer used when doing sums
+   timeForSums: 10				// how many seconds you have to complete a sum
 };
 
 var calculation = {
@@ -73,7 +73,7 @@ var calculation = {
 
 function setUpQuestion() {
    var answersPara = document.getElementById("questionAndAnswersPara");
-   answersPara.innerHTML = calculation.createQuestionText();
+   answersPara.textContent = calculation.createQuestionText();
 }
 
 function unicodeToNumeral(numberCode) {
@@ -97,19 +97,19 @@ function processCorrectDigit() {
    if (calculation.gotItAllCorrect()) {
       clearInterval(gameState.sumsIntervalId);
       calculation.resultText = "Got it right!";
-      document.getElementById("resultPara").innerHTML = calculation.resultText;
+      document.getElementById("resultPara").textContent = calculation.resultText;
    }
 }
 
 function processIncorrectDigit() {
    clearInterval(gameState.sumsIntervalId);
    calculation.resultText = "Wrong! Ha ha!";
-   document.getElementById("resultPara").innerHTML = calculation.resultText;
+   document.getElementById("resultPara").textContent = calculation.resultText;
 }
 
 function processAttemptedSumAnswer(digitPressed) {
    calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-   document.getElementById("questionAndAnswersPara").innerHTML = calculation.questionText + calculation.answerText;
+   document.getElementById("questionAndAnswersPara").textContent = calculation.questionText + calculation.answerText;
 
 	if (calculation.correctDigitGuessed(digitPressed)) {
 		processCorrectDigit();
@@ -119,7 +119,7 @@ function processAttemptedSumAnswer(digitPressed) {
 }
 
 function clickedANumber(numberButton) {
-   processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
+   processAttemptedSumAnswer(parseInt(numberButton.textContent));
 }
 
 function pressedAKey(e) {
@@ -135,11 +135,11 @@ function processSums() {
 
 	if (calculation.timeAllowed > 0) {
       calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
-      document.getElementById("timerDiv").innerHTML = calculation.timeToAnswerText;
+      document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
 	} else {
 		clearInterval(gameState.sumsIntervalId);
 		calculation.timeToAnswerText = "Too slow!";
-		document.getElementById("timerDiv").innerHTML = calculation.timeToAnswerText;
+		document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
 	}
    // update something here ??
 }
