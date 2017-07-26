@@ -18,11 +18,17 @@ var key = Object.freeze({
 	enter: 13	// the enter or return key
 });
 
+var gameState = {
+   waitingForTap: true,       // to indicate if the UI is waiting for a tap before starting the timer
+	sumsIntervalId: null,		// id for the timer used when doing sums
+	timeForSums: 10				// how many seconds you have to complete a sum
+};
+
 var calculation = {
    firstFactor: null,
    secondFactor: null,
    digitToGuess: null,
-   timeAllowed: 7, // how many seconds you're allowed to answer
+   timeAllowed: 10, // how many seconds you're allowed to answer this particular calculation
    answerIndex: null,
    timeToAnswerText: null,
    text: null,
@@ -89,16 +95,14 @@ function processCorrectDigit() {
    calculation.updateDigitToGuess();
 
    if (calculation.gotItAllCorrect()) {
-      // clearInterval(gameState.sumsIntervalId);
+      clearInterval(gameState.sumsIntervalId);
       calculation.resultText = "Got it right!";
-      // sleep.correctAnswers++;
-
       document.getElementById("resultPara").innerHTML = calculation.resultText;
    }
 }
 
 function processIncorrectDigit() {
-   // clearInterval(gameState.sumsIntervalId);
+   clearInterval(gameState.sumsIntervalId);
    calculation.resultText = "Wrong! Ha ha!";
    document.getElementById("resultPara").innerHTML = calculation.resultText;
 }
@@ -118,12 +122,6 @@ function clickedANumber(numberButton) {
    processAttemptedSumAnswer(parseInt(numberButton.innerHTML));
 }
 
-function humanReadyToDoSums() {
-   document.getElementById("humanReady").className="hidden";
-   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
-   document.getElementById("resultPara").className="";
-}
-
 function pressedAKey(e) {
 	var unicode = e.keyCode? e.keyCode : e.charCode;
 
@@ -132,12 +130,51 @@ function pressedAKey(e) {
 	}
 }
 
+function processSums() {
+	calculation.timeAllowed--;
+
+	if (calculation.timeAllowed > 0) {
+      calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
+      document.getElementById("timerDiv").innerHTML = calculation.timeToAnswerText;
+	} else {
+		clearInterval(gameState.sumsIntervalId);
+		calculation.timeToAnswerText = "Too slow!";
+		document.getElementById("timerDiv").innerHTML = calculation.timeToAnswerText;
+	}
+   // update something here ??
+}
+
+function humanReadyToDoSums() {
+   document.getElementById("humanReady").className="hidden";
+   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
+   document.getElementById("resultPara").className="";
+   gameState.waitingForTap = false;
+   gameState.sumsIntervalId = setInterval(processSums, 1000);
+}
+
 /*****************************************
 *   Stuff to do with drawing the robots...
 ******************************************/
 function drawStrokedRect(ctx, x, y, width, height) {
 	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
+}
+
+function choosFillStyle(position) {
+   var fillstyle = "white"; //default
+
+   switch(position) {
+      case 0:
+         fillstyle = "gold";
+         break;
+      case 1:
+         fillstyle = "mediumpurple";
+         break;
+      case 2:
+         fillstyle = "deepskyblue";
+         break;
+   }
+   return fillstyle;
 }
 
 function drawChestLights(ctx) {
@@ -150,17 +187,7 @@ function drawChestLights(ctx) {
    ctx.lineWidth=3;
 
    for (i=0; i<3; i++) {
-      switch(i) {
-         case 0:
-            ctx.fillStyle = "gold";
-            break;
-         case 1:
-            ctx.fillStyle = "mediumpurple";
-            break;
-         case 2:
-            ctx.fillStyle = "deepskyblue";
-            break;
-      }
+      ctx.fillStyle = choosFillStyle(i);
       ctx.beginPath();
       ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
       ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
