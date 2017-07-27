@@ -19,7 +19,7 @@ var key = Object.freeze({
 });
 
 var gameState = {
-   waitingForTap: true,       // to indicate if the UI is waiting for a tap before starting the timer
+   doingSums: false,          // to indicate if we're actually doing a sum
    sumsIntervalId: null,		// id for the timer used when doing sums
    timeForSums: 10				// how many seconds you have to complete a sum
 };
@@ -118,24 +118,36 @@ function processAttemptedSumAnswer(digitPressed) {
 	}
 }
 
+function interpretNumberInput(number) {
+   if (gameState.doingSums) {
+      processAttemptedSumAnswer(number);
+   } else {
+      humanReadyToDoSums();
+   }
+}
+
 function clickedANumber(numberButton) {
-   processAttemptedSumAnswer(parseInt(numberButton.textContent));
+   interpretNumberInput(parseInt(numberButton.textContent));
 }
 
 function pressedAKey(e) {
 	var unicode = e.keyCode? e.keyCode : e.charCode;
 
 	if (key.isDigit(unicode)) {
-		processAttemptedSumAnswer(unicodeToNumeral(unicode));
+      interpretNumberInput(unicodeToNumeral(unicode));
 	}
+}
+
+function displayTimerValue() {
+   calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
+   document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
 }
 
 function processSums() {
 	calculation.timeAllowed--;
 
 	if (calculation.timeAllowed > 0) {
-      calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
-      document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
+      displayTimerValue();
 	} else {
 		clearInterval(gameState.sumsIntervalId);
 		calculation.timeToAnswerText = "Too slow!";
@@ -148,7 +160,9 @@ function humanReadyToDoSums() {
    document.getElementById("humanReady").className="hidden";
    document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
    document.getElementById("resultPara").className="";
-   gameState.waitingForTap = false;
+   setUpQuestion();
+   displayTimerValue();
+   gameState.doingSums = true;
    gameState.sumsIntervalId = setInterval(processSums, 1000);
 }
 
@@ -303,5 +317,5 @@ function playGame() {
    document.getElementById("introDiv").style.display = "none";
    document.getElementById("gameDiv").style.display = "block";
    drawRobots();
-   setUpQuestion();
+
 }
