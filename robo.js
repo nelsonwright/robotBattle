@@ -19,7 +19,7 @@ var key = Object.freeze({
 });
 
 var gameState = {
-   doingSums: false,          // to indicate if we're actually doing a sum
+   battleInProgress: false,   // to indicate if we're battling a robot
    sumsIntervalId: null,		// id for the timer used when doing sums
    timeForSums: 10				// how many seconds you have to complete a sum
 };
@@ -35,6 +35,7 @@ var calculation = {
    questionText: "",
    answerText: "",
    resultText: null,
+   inProgress: false, // indicates if we're answering a question at the moment
    create() {
       this.firstFactor = Math.floor(Math.random() * 10 + 2);
       this.secondFactor = Math.floor(Math.random() * 10 + 2);
@@ -91,6 +92,39 @@ function unicodeToNumeral(numberCode) {
    return digitPressed;
 }
 
+function disableNumberButtons() {
+   var numbersDiv = document.getElementById("numeralsDiv");
+   var numberButtons = numbersDiv.getElementsByTagName("button");
+   for (i = 0; i < numberButtons.length; i++) {
+      numberButtons[i].disabled = true;
+      numberButtons[i].style.opacity = 0.5;
+   }
+}
+
+function enableNumberButtons() {
+   var numbersDiv = document.getElementById("numeralsDiv");
+   var numberButtons = numbersDiv.getElementsByTagName("button");
+   for (i = 0; i < numberButtons.length; i++) {
+      numberButtons[i].disabled = false;
+      numberButtons[i].style.opacity = 1;
+   }
+}
+
+function humanReadyToDoSums() {
+   document.getElementById("humanReady").className="hidden";
+   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
+   document.getElementById("resultPara").className="";
+   setUpQuestion();
+   displayTimerValue();
+
+   // we'll need to set these up at different points later, but for now, both here is ok . . .
+   gameState.battleInProgress = true;
+   calculation.inProgress = true;
+
+   enableNumberButtons();
+   gameState.sumsIntervalId = setInterval(processSums, 1000);
+}
+
 function processCorrectDigit() {
    calculation.updateDigitToGuess();
 
@@ -98,6 +132,8 @@ function processCorrectDigit() {
       clearInterval(gameState.sumsIntervalId);
       calculation.resultText = "Got it right!";
       document.getElementById("resultPara").textContent = calculation.resultText;
+      disableNumberButtons();
+      calculation.inProgress = false;
    }
 }
 
@@ -105,6 +141,8 @@ function processIncorrectDigit() {
    clearInterval(gameState.sumsIntervalId);
    calculation.resultText = "Wrong! Ha ha!";
    document.getElementById("resultPara").textContent = calculation.resultText;
+   disableNumberButtons();
+   calculation.inProgress = false;
 }
 
 function processAttemptedSumAnswer(digitPressed) {
@@ -119,9 +157,9 @@ function processAttemptedSumAnswer(digitPressed) {
 }
 
 function interpretNumberInput(number) {
-   if (gameState.doingSums) {
+   if (calculation.inProgress) {
       processAttemptedSumAnswer(number);
-   } else {
+   } else if (!gameState.battleInProgress) {
       humanReadyToDoSums();
    }
 }
@@ -154,16 +192,6 @@ function processSums() {
 		document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
 	}
    // update something here ??
-}
-
-function humanReadyToDoSums() {
-   document.getElementById("humanReady").className="hidden";
-   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
-   document.getElementById("resultPara").className="";
-   setUpQuestion();
-   displayTimerValue();
-   gameState.doingSums = true;
-   gameState.sumsIntervalId = setInterval(processSums, 1000);
 }
 
 /*****************************************
@@ -317,5 +345,4 @@ function playGame() {
    document.getElementById("introDiv").style.display = "none";
    document.getElementById("gameDiv").style.display = "block";
    drawRobots();
-
 }
