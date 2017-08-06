@@ -92,22 +92,41 @@ function unicodeToNumeral(numberCode) {
    return digitPressed;
 }
 
-function disableNumberButtons() {
+function setNumberButtonsDisabled(state) {
    var numbersDiv = document.getElementById("numeralsDiv");
    var numberButtons = numbersDiv.getElementsByTagName("button");
+   var i; //loop counter
+
    for (i = 0; i < numberButtons.length; i++) {
-      numberButtons[i].disabled = true;
-      numberButtons[i].style.opacity = 0.5;
+      numberButtons[i].disabled = state;
+      numberButtons[i].style.opacity = state == true ? 0.5 : 1;
    }
 }
 
+function disableNumberButtons() {
+   setNumberButtonsDisabled(true);
+}
+
 function enableNumberButtons() {
-   var numbersDiv = document.getElementById("numeralsDiv");
-   var numberButtons = numbersDiv.getElementsByTagName("button");
-   for (i = 0; i < numberButtons.length; i++) {
-      numberButtons[i].disabled = false;
-      numberButtons[i].style.opacity = 1;
-   }
+   setNumberButtonsDisabled(false);
+}
+
+function displayTimerValue() {
+   calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
+   document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
+}
+
+function processSums() {
+	calculation.timeAllowed--;
+
+	if (calculation.timeAllowed > 0) {
+      displayTimerValue();
+	} else {
+		clearInterval(gameState.sumsIntervalId);
+		calculation.timeToAnswerText = "Too slow!";
+		document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
+	}
+   // update something here ??
 }
 
 function humanReadyToDoSums() {
@@ -174,24 +193,6 @@ function pressedAKey(e) {
 	if (key.isDigit(unicode)) {
       interpretNumberInput(unicodeToNumeral(unicode));
 	}
-}
-
-function displayTimerValue() {
-   calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
-   document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
-}
-
-function processSums() {
-	calculation.timeAllowed--;
-
-	if (calculation.timeAllowed > 0) {
-      displayTimerValue();
-	} else {
-		clearInterval(gameState.sumsIntervalId);
-		calculation.timeToAnswerText = "Too slow!";
-		document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
-	}
-   // update something here ??
 }
 
 /*****************************************
