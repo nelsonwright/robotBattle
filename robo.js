@@ -4,6 +4,73 @@ var yOffset = 450;
 // just to put the robot in a better place on the canvas
 var xOffset = 20;
 
+
+// these are the unicode values for the keyboard keys when pressed
+var key = Object.freeze({
+	isTopRowDigit(actionCode) {
+		return actionCode >= 48 && actionCode <= 57;
+	},
+	isKeypadDigit(actionCode) {
+		return actionCode >= 96 && actionCode <= 105;
+	},
+	isDigit(actionCode) {
+		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
+	},
+	enter: 13	// the enter or return key
+});
+
+var gameState = {
+   battleInProgress: false,   // to indicate if we're battling a robot
+   timeForSums: 10				// how many seconds you have to complete a sum
+};
+
+var calculation = {
+   firstFactor: null,
+   secondFactor: null,
+   digitToGuess: null,
+   timeAllowed: 9, // how many seconds you're allowed to answer this particular calculation
+   answerIndex: null,
+   text: null,
+   questionText: "",
+   answerText: "",
+   resultText: null,
+   inProgress: false, // indicates if we're answering a question at the moment
+   intervalId: null,  // timer id for this question
+   create() {
+      this.firstFactor = Math.floor(Math.random() * 10 + 2);
+      this.secondFactor = Math.floor(Math.random() * 10 + 2);
+      this.answerIndex = 0;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   product() {
+      return this.firstFactor * this.secondFactor;
+   },
+   createQuestionText() {
+      this.create();
+      this.answerText = "?";
+      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
+      return this.questionText + " " + this.answerText;
+   },
+   correctDigitGuessed(digitGuessed) {
+      return digitGuessed === this.digitToGuess;
+   },
+   calcDigitToGuess () {
+      return parseInt(this.product().toString()[this.answerIndex]);
+   },
+   updateDigitToGuess() {
+      this.answerIndex++;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   gotItAllCorrect() {
+      return this.answerIndex >= parseInt(this.product().toString().length);
+   },
+   wipeText() {
+      this.text = "";
+      this.resultText = " ";
+      this.answerText = "";
+   }
+};
+
 /**************************************
 *   Stuff to do with drawing the robots
 ***************************************/
@@ -159,72 +226,6 @@ function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
 /******************************
 * end of robot drawing section
 *******************************/
-
-// these are the unicode values for the keyboard keys when pressed
-var key = Object.freeze({
-	isTopRowDigit(actionCode) {
-		return actionCode >= 48 && actionCode <= 57;
-	},
-	isKeypadDigit(actionCode) {
-		return actionCode >= 96 && actionCode <= 105;
-	},
-	isDigit(actionCode) {
-		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
-	},
-	enter: 13	// the enter or return key
-});
-
-var gameState = {
-   battleInProgress: false,   // to indicate if we're battling a robot
-   timeForSums: 10				// how many seconds you have to complete a sum
-};
-
-var calculation = {
-   firstFactor: null,
-   secondFactor: null,
-   digitToGuess: null,
-   timeAllowed: 9, // how many seconds you're allowed to answer this particular calculation
-   answerIndex: null,
-   text: null,
-   questionText: "",
-   answerText: "",
-   resultText: null,
-   inProgress: false, // indicates if we're answering a question at the moment
-   intervalId: null,  // timer id for this question
-   create() {
-      this.firstFactor = Math.floor(Math.random() * 10 + 2);
-      this.secondFactor = Math.floor(Math.random() * 10 + 2);
-      this.answerIndex = 0;
-      this.digitToGuess = this.calcDigitToGuess();
-   },
-   product() {
-      return this.firstFactor * this.secondFactor;
-   },
-   createQuestionText() {
-      this.create();
-      this.answerText = "?";
-      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
-      return this.questionText + " " + this.answerText;
-   },
-   correctDigitGuessed(digitGuessed) {
-      return digitGuessed === this.digitToGuess;
-   },
-   calcDigitToGuess () {
-      return parseInt(this.product().toString()[this.answerIndex]);
-   },
-   updateDigitToGuess() {
-      this.answerIndex++;
-      this.digitToGuess = this.calcDigitToGuess();
-   },
-   gotItAllCorrect() {
-      return this.answerIndex >= parseInt(this.product().toString().length);
-   },
-   wipeText() {
-      this.text = "";
-      this.resultText = " ";
-      this.answerText = "";
-   }
-};
 
 function setUpQuestion() {
    var answersPara = document.getElementById("questionAndAnswersPara");
