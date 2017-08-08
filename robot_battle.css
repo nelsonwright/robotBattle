@@ -56,13 +56,17 @@ button:hover {
 }
 
 .timerDiv {
-	text-align: center;
-	background-color: lightyellow;
-	width:calc(82% - 60px);
-	margin: 0 auto;
-   padding: 1% 2% 1% 2%;
-   margin-bottom: 2%;
-   margin-top:2%;
+   text-align: center;
+   background-color: lightyellow;
+   width: 82vw;
+   margin: 0 auto;
+   margin-bottom: 1%;
+   margin-top:1%;
+}
+
+.questionTimer {
+   width: 82vw;
+   height:2vw;
 }
 
 .answerDiv {

@@ -4,200 +4,9 @@ var yOffset = 450;
 // just to put the robot in a better place on the canvas
 var xOffset = 20;
 
-// these are the unicode values for the keyboard keys when pressed
-var key = Object.freeze({
-	isTopRowDigit(actionCode) {
-		return actionCode >= 48 && actionCode <= 57;
-	},
-	isKeypadDigit(actionCode) {
-		return actionCode >= 96 && actionCode <= 105;
-	},
-	isDigit(actionCode) {
-		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
-	},
-	enter: 13	// the enter or return key
-});
-
-var gameState = {
-   battleInProgress: false,   // to indicate if we're battling a robot
-   sumsIntervalId: null,		// id for the timer used when doing sums
-   timeForSums: 10				// how many seconds you have to complete a sum
-};
-
-var calculation = {
-   firstFactor: null,
-   secondFactor: null,
-   digitToGuess: null,
-   timeAllowed: 10, // how many seconds you're allowed to answer this particular calculation
-   answerIndex: null,
-   timeToAnswerText: null,
-   text: null,
-   questionText: "",
-   answerText: "",
-   resultText: null,
-   inProgress: false, // indicates if we're answering a question at the moment
-   create() {
-      this.firstFactor = Math.floor(Math.random() * 10 + 2);
-      this.secondFactor = Math.floor(Math.random() * 10 + 2);
-      this.answerIndex = 0;
-      this.digitToGuess = this.calcDigitToGuess();
-   },
-   product() {
-      return this.firstFactor * this.secondFactor;
-   },
-   createQuestionText() {
-      this.create();
-      this.answerText = "?";
-      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
-      return this.questionText + " " + this.answerText;
-   },
-   correctDigitGuessed(digitGuessed) {
-      return digitGuessed === this.digitToGuess;
-   },
-   calcDigitToGuess () {
-      return parseInt(this.product().toString()[this.answerIndex]);
-   },
-   updateDigitToGuess() {
-      this.answerIndex++;
-      this.digitToGuess = this.calcDigitToGuess();
-   },
-   gotItAllCorrect() {
-      return this.answerIndex >= parseInt(this.product().toString().length);
-   },
-   wipeText() {
-      this.timeToAnswerText = "";
-      this.text = "";
-      this.resultText = " ";
-      this.answerText = "";
-   }
-};
-
-function setUpQuestion() {
-   var answersPara = document.getElementById("questionAndAnswersPara");
-   answersPara.textContent = calculation.createQuestionText();
-}
-
-function unicodeToNumeral(numberCode) {
-   // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
-   // the numeric keypad digits are unicode values 96 - 105
-
-   var digitPressed;
-
-   if (key.isTopRowDigit(numberCode)) {
-      digitPressed = numberCode - 48;
-   } else {
-      digitPressed = numberCode - 96;
-   }
-
-   return digitPressed;
-}
-
-function setNumberButtonsDisabled(state) {
-   var numbersDiv = document.getElementById("numeralsDiv");
-   var numberButtons = numbersDiv.getElementsByTagName("button");
-   var i; //loop counter
-
-   for (i = 0; i < numberButtons.length; i++) {
-      numberButtons[i].disabled = state;
-      numberButtons[i].style.opacity = state == true ? 0.5 : 1;
-   }
-}
-
-function disableNumberButtons() {
-   setNumberButtonsDisabled(true);
-}
-
-function enableNumberButtons() {
-   setNumberButtonsDisabled(false);
-}
-
-function displayTimerValue() {
-   calculation.timeToAnswerText = "Time to answer: " + calculation.timeAllowed;
-   document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
-}
-
-function processSums() {
-	calculation.timeAllowed--;
-
-	if (calculation.timeAllowed > 0) {
-      displayTimerValue();
-	} else {
-		clearInterval(gameState.sumsIntervalId);
-		calculation.timeToAnswerText = "Too slow!";
-		document.getElementById("timerDiv").textContent = calculation.timeToAnswerText;
-	}
-   // update something here ??
-}
-
-function humanReadyToDoSums() {
-   document.getElementById("humanReady").className="hidden";
-   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
-   document.getElementById("resultPara").className="";
-   setUpQuestion();
-   displayTimerValue();
-
-   // we'll need to set these up at different points later, but for now, both here is ok . . .
-   gameState.battleInProgress = true;
-   calculation.inProgress = true;
-
-   enableNumberButtons();
-   gameState.sumsIntervalId = setInterval(processSums, 1000);
-}
-
-function processCorrectDigit() {
-   calculation.updateDigitToGuess();
-
-   if (calculation.gotItAllCorrect()) {
-      clearInterval(gameState.sumsIntervalId);
-      calculation.resultText = "Got it right!";
-      document.getElementById("resultPara").textContent = calculation.resultText;
-      disableNumberButtons();
-      calculation.inProgress = false;
-   }
-}
-
-function processIncorrectDigit() {
-   clearInterval(gameState.sumsIntervalId);
-   calculation.resultText = "Wrong! Ha ha!";
-   document.getElementById("resultPara").textContent = calculation.resultText;
-   disableNumberButtons();
-   calculation.inProgress = false;
-}
-
-function processAttemptedSumAnswer(digitPressed) {
-   calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-   document.getElementById("questionAndAnswersPara").textContent = calculation.questionText + calculation.answerText;
-
-	if (calculation.correctDigitGuessed(digitPressed)) {
-		processCorrectDigit();
-	} else {
-      processIncorrectDigit();
-	}
-}
-
-function interpretNumberInput(number) {
-   if (calculation.inProgress) {
-      processAttemptedSumAnswer(number);
-   } else if (!gameState.battleInProgress) {
-      humanReadyToDoSums();
-   }
-}
-
-function clickedANumber(numberButton) {
-   interpretNumberInput(parseInt(numberButton.textContent));
-}
-
-function pressedAKey(e) {
-	var unicode = e.keyCode? e.keyCode : e.charCode;
-
-	if (key.isDigit(unicode)) {
-      interpretNumberInput(unicodeToNumeral(unicode));
-	}
-}
-
-/*****************************************
-*   Stuff to do with drawing the robots...
-******************************************/
+/**************************************
+*   Stuff to do with drawing the robots
+***************************************/
 function drawStrokedRect(ctx, x, y, width, height) {
 	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
@@ -326,21 +135,238 @@ function drawRobot(ctx, colour) {
 
 function drawRobots() {
    var goodRobotCanvas = document.getElementById("goodRobot");
-   var goodRobotContext = goodRobotCanvas.getContext("2d");
    var badRobotCanvas = document.getElementById("badRobot");
-   var badRobotContext = badRobotCanvas.getContext("2d");
 
    if (goodRobotCanvas.getContext) {
-      drawRobot(goodRobotContext, "firebrick");
+      drawRobot(goodRobotCanvas.getContext("2d"), "firebrick");
    }
 
    if (badRobotCanvas.getContext) {
-      drawRobot(badRobotContext, "limegreen");
+      drawRobot(badRobotCanvas.getContext("2d"), "limegreen");
    }
 }
-/*****************************
+
+function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
+   var timeRemainingBoxWidth;
+
+   ctx.fillStyle = "lightyellow";
+   ctx.fillStyle = "orange";
+
+   timeRemainingBoxWidth = (calculation.timeAllowed / gameState.timeForSums) * virtualCanvasWidth;
+   ctx.fillRect(0, 0, timeRemainingBoxWidth, 60);
+}
+
+/******************************
 * end of robot drawing section
-*****************************/
+*******************************/
+
+// these are the unicode values for the keyboard keys when pressed
+var key = Object.freeze({
+	isTopRowDigit(actionCode) {
+		return actionCode >= 48 && actionCode <= 57;
+	},
+	isKeypadDigit(actionCode) {
+		return actionCode >= 96 && actionCode <= 105;
+	},
+	isDigit(actionCode) {
+		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
+	},
+	enter: 13	// the enter or return key
+});
+
+var gameState = {
+   battleInProgress: false,   // to indicate if we're battling a robot
+   timeForSums: 10				// how many seconds you have to complete a sum
+};
+
+var calculation = {
+   firstFactor: null,
+   secondFactor: null,
+   digitToGuess: null,
+   timeAllowed: 9, // how many seconds you're allowed to answer this particular calculation
+   answerIndex: null,
+   text: null,
+   questionText: "",
+   answerText: "",
+   resultText: null,
+   inProgress: false, // indicates if we're answering a question at the moment
+   intervalId: null,  // timer id for this question
+   create() {
+      this.firstFactor = Math.floor(Math.random() * 10 + 2);
+      this.secondFactor = Math.floor(Math.random() * 10 + 2);
+      this.answerIndex = 0;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   product() {
+      return this.firstFactor * this.secondFactor;
+   },
+   createQuestionText() {
+      this.create();
+      this.answerText = "?";
+      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
+      return this.questionText + " " + this.answerText;
+   },
+   correctDigitGuessed(digitGuessed) {
+      return digitGuessed === this.digitToGuess;
+   },
+   calcDigitToGuess () {
+      return parseInt(this.product().toString()[this.answerIndex]);
+   },
+   updateDigitToGuess() {
+      this.answerIndex++;
+      this.digitToGuess = this.calcDigitToGuess();
+   },
+   gotItAllCorrect() {
+      return this.answerIndex >= parseInt(this.product().toString().length);
+   },
+   wipeText() {
+      this.text = "";
+      this.resultText = " ";
+      this.answerText = "";
+   }
+};
+
+function setUpQuestion() {
+   var answersPara = document.getElementById("questionAndAnswersPara");
+   answersPara.textContent = calculation.createQuestionText();
+}
+
+function unicodeToNumeral(numberCode) {
+   // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
+   // the numeric keypad digits are unicode values 96 - 105
+
+   var digitPressed;
+
+   if (key.isTopRowDigit(numberCode)) {
+      digitPressed = numberCode - 48;
+   } else {
+      digitPressed = numberCode - 96;
+   }
+
+   return digitPressed;
+}
+
+function setNumberButtonsDisabled(state) {
+   var numbersDiv = document.getElementById("numeralsDiv");
+   var numberButtons = numbersDiv.getElementsByTagName("button");
+   var i; //loop counter
+
+   for (i = 0; i < numberButtons.length; i++) {
+      numberButtons[i].disabled = state;
+      numberButtons[i].style.opacity = state === true ? 0.5 : 1;
+   }
+}
+
+function disableNumberButtons() {
+   setNumberButtonsDisabled(true);
+}
+
+function enableNumberButtons() {
+   setNumberButtonsDisabled(false);
+}
+
+function resetCanvas() {
+   var timerCanvas = document.getElementById("questionTimer");
+   timerCanvas.width = timerCanvas.width;
+}
+
+function displayTimerValue() {
+   var timerCanvas = document.getElementById("questionTimer");
+
+   if (timerCanvas.getContext) {
+      resetCanvas();
+      drawTimer(timerCanvas.getContext("2d"), calculation.timeAllowed, timerCanvas.width);
+   }
+}
+
+function displayTimeOutMessage() {
+   document.getElementById("resultPara").textContent = calculation.resultText;
+}
+
+function handleTimerRunDown() {
+   clearInterval(calculation.intervalId);
+   calculation.resultText = "Too Slow!";
+   disableNumberButtons();
+   calculation.inProgress = false;
+   displayTimeOutMessage();
+   resetCanvas();
+}
+
+function processSums() {
+   calculation.timeAllowed--;
+
+	if (calculation.timeAllowed > 0) {
+      displayTimerValue();
+	} else {
+      handleTimerRunDown();
+	}
+}
+
+function humanReadyToDoSums() {
+   document.getElementById("humanReady").className="hidden";
+   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
+   document.getElementById("resultPara").className="";
+   setUpQuestion();
+   displayTimerValue();
+
+   // we'll need to set these up at different points later, but for now, both here is ok . . .
+   gameState.battleInProgress = true;
+   calculation.inProgress = true;
+
+   enableNumberButtons();
+   calculation.intervalId = setInterval(processSums, 1000);
+}
+
+function processCorrectDigit() {
+   calculation.updateDigitToGuess();
+
+   if (calculation.gotItAllCorrect()) {
+      clearInterval(calculation.intervalId);
+      calculation.resultText = "Got it right!";
+      document.getElementById("resultPara").textContent = calculation.resultText;
+      disableNumberButtons();
+      calculation.inProgress = false;
+   }
+}
+
+function processIncorrectDigit() {
+   clearInterval(calculation.intervalId);
+   calculation.resultText = "Wrong! Ha ha!";
+   document.getElementById("resultPara").textContent = calculation.resultText;
+   disableNumberButtons();
+   calculation.inProgress = false;
+}
+
+function processAttemptedSumAnswer(digitPressed) {
+   calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
+   document.getElementById("questionAndAnswersPara").textContent = calculation.questionText + calculation.answerText;
+
+	if (calculation.correctDigitGuessed(digitPressed)) {
+		processCorrectDigit();
+	} else {
+      processIncorrectDigit();
+	}
+}
+
+function interpretNumberInput(number) {
+   if (calculation.inProgress) {
+      processAttemptedSumAnswer(number);
+   } else if (!gameState.battleInProgress) {
+      humanReadyToDoSums();
+   }
+}
+
+function clickedANumber(numberButton) {
+   interpretNumberInput(parseInt(numberButton.textContent));
+}
+
+function pressedAKey(e) {
+	var unicode = e.keyCode? e.keyCode : e.charCode;
+
+	if (key.isDigit(unicode)) {
+      interpretNumberInput(unicodeToNumeral(unicode));
+	}
+}
 
 function playGame() {
    document.getElementById("introDiv").style.display = "none";
