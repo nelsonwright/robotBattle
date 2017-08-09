@@ -87,21 +87,23 @@ button:hover {
 	margin: 0 auto;
 	width:44%;
 	margin-top: 2%;
-	height: 10%;
+	height: 10vw;
 	padding: 2%;
 }
 
 .numeralsDiv p {
 	text-align: center;
+   margin-bottom: 2vw;
 }
 
 .numeralsDiv button {
 	text-align: center;
-	padding: 2%;
+	padding: 1vw 2vw 0.5vw 2vw;
 	margin-left:2%;
 	margin-right:2%;
 	width:15%;
 	font-size: 3vw;
+   border-radius: 0.5vw;
 }
 
 .goodRobot {
