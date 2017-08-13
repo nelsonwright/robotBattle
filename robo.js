@@ -80,6 +80,9 @@ var calculation = {
    },
    setTimeAllowed() {
       this.timeAllowed = gameState.timeForSums;
+   },
+   composeCorrectAnswerText() {
+      return "It's " + this.product();
    }
 };
 
@@ -240,8 +243,8 @@ function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
 *******************************/
 
 function setUpQuestion() {
-   var answersPara = document.getElementById("questionAndAnswersPara");
-   answersPara.textContent = calculation.createQuestionText();
+   document.getElementById("questionAndAnswersPara").textContent = calculation.createQuestionText();
+   document.getElementById("resultPara").textContent = " ";
    calculation.setTimeAllowed();
    clearInterval(calculation.intervalId);
 }
@@ -338,17 +341,27 @@ function checkEnergy() {
 
 function getNextQuestionReadyIfBothRobotsAlive() {
    if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, 2000);
+      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
    }
 }
 
-function handleTimerRunDown() {
+function stopQuestion() {
    clearInterval(calculation.intervalId);
-   calculation.resultText = "Too Slow!";
    disableNumberButtons();
+}
+
+function showFeedbackToAnswer(feedback) {
+   stopQuestion();
+   calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
+   document.getElementById("resultPara").textContent = calculation.resultText;
+}
+
+function handleTimerRunDown() {
+   showFeedbackToAnswer("Too Slow!");
    goodRobot.energy--;
    checkEnergy();
    calculation.inProgress = false;
+
    displayTimeOutMessage();
    resetCanvas();
    getNextQuestionReadyIfBothRobotsAlive();
@@ -389,30 +402,30 @@ function resetForNextQuestion() {
    calculation.intervalId = setInterval(processSums, 1000);
 }
 
+function getNextQuestionIfAlive() {
+   checkEnergy();
+   calculation.inProgress = false;
+   getNextQuestionReadyIfBothRobotsAlive();
+}
+
 function processCorrectDigit() {
    calculation.updateDigitToGuess();
 
    if (calculation.gotItAllCorrect()) {
-      clearInterval(calculation.intervalId);
+      stopQuestion();
+
       calculation.resultText = "Got it right!";
       document.getElementById("resultPara").textContent = calculation.resultText;
-      disableNumberButtons();
+
       badRobot.energy--;
-      checkEnergy();
-      calculation.inProgress = false;
-      getNextQuestionReadyIfBothRobotsAlive();
+      getNextQuestionIfAlive();
    }
 }
 
 function processIncorrectDigit() {
-   clearInterval(calculation.intervalId);
-   calculation.resultText = "Wrong! Ha ha!";
-   document.getElementById("resultPara").textContent = calculation.resultText;
-   disableNumberButtons();
+   showFeedbackToAnswer("Wrong!")
    goodRobot.energy--;
-   checkEnergy();
-   calculation.inProgress = false;
-   getNextQuestionReadyIfBothRobotsAlive();
+   getNextQuestionIfAlive();
 }
 
 function processAttemptedSumAnswer(digitPressed) {
@@ -426,10 +439,14 @@ function processAttemptedSumAnswer(digitPressed) {
 	}
 }
 
+function noBattleInProgress() {
+   return !gameState.battleInProgress;
+}
+
 function interpretNumberInput(number) {
    if (calculation.inProgress) {
       processAttemptedSumAnswer(number);
-   } else if (!gameState.battleInProgress) {
+   } else if (noBattleInProgress()) {
       humanReadyToDoSums();
    }
 }
@@ -441,9 +458,11 @@ function clickedANumber(numberButton) {
 function pressedAKey(e) {
 	var unicode = e.keyCode? e.keyCode : e.charCode;
 
-	if (key.isDigit(unicode)) {
-      interpretNumberInput(unicodeToNumeral(unicode));
-	}
+   if (noBattleInProgress()) {
+      humanReadyToDoSums();
+   } else if (key.isDigit(unicode)) {
+         interpretNumberInput(unicodeToNumeral(unicode));
+   	}
 }
 
 function playGame() {
