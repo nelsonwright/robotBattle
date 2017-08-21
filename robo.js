@@ -22,15 +22,17 @@ var key = Object.freeze({
 var gameState = {
    battleInProgress: false,   // to indicate if we're battling a robot
    timeForSums: 10,				// how many seconds you have to complete a sum
-   timerId: null              // timerId for when we want to pause for a bit
+   timerId: null,             // timerId for when we want to pause for a bit
+   goodRobotMaxEnergy: 8,
+   badRobotMaxEnergy: 8
 };
 
 var goodRobot = {
-   energy: 10
+   energy: null
 };
 
 var badRobot = {
-   energy:10
+   energy: null
 };
 
 var calculation = {
@@ -58,6 +60,7 @@ var calculation = {
       this.create();
       this.answerText = "?";
       this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
+      this.resultText = "Awaiting answer . . ."
       return this.questionText + " " + this.answerText;
    },
    correctDigitGuessed(digitGuessed) {
@@ -89,7 +92,7 @@ var calculation = {
 /**************************************
 *   Stuff to do with drawing the robots
 ***************************************/
-function drawStrokedRect(ctx, x, y, width, height) {
+function drawOffsetStrokedRect(ctx, x, y, width, height) {
 	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
 }
@@ -185,31 +188,31 @@ function drawRobot(ctx, colour) {
    ctx.lineWidth = 3;
 
    // head
-	drawStrokedRect(ctx, 90, 293, 57, 84);
-   drawStrokedRect(ctx, 64, 316, 109, 38);
+	drawOffsetStrokedRect(ctx, 90, 293, 57, 84);
+   drawOffsetStrokedRect(ctx, 64, 316, 109, 38);
 
 	// neck
-   drawStrokedRect(ctx, 106, 285, 26, 8);
+   drawOffsetStrokedRect(ctx, 106, 285, 26, 8);
 
    // body
-   drawStrokedRect(ctx, 50, 125, 136, 162);
-   drawStrokedRect(ctx, 8, 260, 220, 27);
+   drawOffsetStrokedRect(ctx, 50, 125, 136, 162);
+   drawOffsetStrokedRect(ctx, 8, 260, 220, 27);
 
    // arms
-   drawStrokedRect(ctx, 8, 170, 27, 117);
-   drawStrokedRect(ctx, 201, 166, 27, 121);
+   drawOffsetStrokedRect(ctx, 8, 170, 27, 117);
+   drawOffsetStrokedRect(ctx, 201, 166, 27, 121);
 
    // hands
-   drawStrokedRect(ctx, 0, 141, 42, 32);
-   drawStrokedRect(ctx, 194, 136, 42, 32);
+   drawOffsetStrokedRect(ctx, 0, 141, 42, 32);
+   drawOffsetStrokedRect(ctx, 194, 136, 42, 32);
 
    // legs
-   drawStrokedRect(ctx, 71, 0, 42, 125);
-   drawStrokedRect(ctx, 127, 0, 42, 125);
+   drawOffsetStrokedRect(ctx, 71, 0, 42, 125);
+   drawOffsetStrokedRect(ctx, 127, 0, 42, 125);
 
    // feet
-   drawStrokedRect(ctx, 48, 1, 65, 26);
-	drawStrokedRect(ctx, 127, 1, 68, 26);
+   drawOffsetStrokedRect(ctx, 48, 1, 65, 26);
+	drawOffsetStrokedRect(ctx, 127, 1, 68, 26);
 
    drawEyes(ctx);
    drawChestDecoration(ctx);
@@ -227,7 +230,11 @@ function drawRobots() {
       drawRobot(badRobotCanvas.getContext("2d"), "limegreen");
    }
 }
+// end of robot drawing section
 
+/***********************************************
+*   Stuff to do with drawing the countdown timer
+************************************************/
 function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
    var timeRemainingBoxWidth;
 
@@ -237,14 +244,65 @@ function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
    timeRemainingBoxWidth = (calculation.timeAllowed / gameState.timeForSums) * virtualCanvasWidth;
    ctx.fillRect(0, 0, timeRemainingBoxWidth, 60);
 }
+// end of countdown timer drawing section
 
-/******************************
-* end of robot drawing section
-*******************************/
+/********************************************
+*   Stuff to do with drawing the energy bars
+*********************************************/
+function drawStrokedRectWithGradient(ctx, position, colour, canvas) {
+   var width = canvas.width;
+   var halfWidth = width / 2;
+   var y = canvas.height - ((1 + position) * width);
+
+   // Create radial gradient, in the form (x,y,r,x1,y1,r1) . . .
+   ctx.moveTo(0, y);
+   var gradient = ctx.createRadialGradient(halfWidth, y + halfWidth, 7, 30, y + halfWidth, halfWidth);
+   gradient.addColorStop(0, "gold");
+   gradient.addColorStop(1, colour);
+   ctx.fillStyle = gradient;
+
+   ctx.fillRect(0, y, width, width);
+   ctx.strokeStyle = "black";
+   ctx.lineWidth = 2;
+   ctx.strokeRect(0, y, width, width);
+}
+
+function drawEnergyBar(energy, colour, canvas) {
+   canvas.width = canvas.width;
+   var ctx = canvas.getContext("2d");
+
+   for (var i=0; i<energy; i++) {
+      drawStrokedRectWithGradient(ctx, i, colour, canvas);
+   }
+}
+
+function drawGoodRobotEnergyBar(goodEnergyBarCanvas) {
+   drawEnergyBar(goodRobot.energy, "firebrick", goodEnergyBarCanvas);
+}
+
+function drawBadRobotEnergyBar(badEnergyBarCanvas) {
+   drawEnergyBar(badRobot.energy, "green", badEnergyBarCanvas);
+}
+
+function drawEnergyBars() {
+   var goodEnergyBarCanvas = document.getElementById("energyBarGood");
+   var badEnergyBarCanvas = document.getElementById("energyBarBad");
+
+   if (goodEnergyBarCanvas.getContext) {
+      drawGoodRobotEnergyBar(goodEnergyBarCanvas);
+   }
+
+   if (badEnergyBarCanvas.getContext) {
+      drawBadRobotEnergyBar(badEnergyBarCanvas);
+   }
+}
+
+// end of energy bar drawing section
+
 
 function setUpQuestion() {
    document.getElementById("questionAndAnswersPara").textContent = calculation.createQuestionText();
-   document.getElementById("resultPara").textContent = " ";
+   document.getElementById("resultPara").textContent = calculation.resultText;
    calculation.setTimeAllowed();
    clearInterval(calculation.intervalId);
 }
@@ -302,22 +360,7 @@ function displayTimeOutMessage() {
 }
 
 function checkEnergy() {
-   var goodEnergyBarCanvas = document.getElementById("energyBarGood");
-   var badEnergyBarCanvas = document.getElementById("energyBarBad");
-
-   if (goodEnergyBarCanvas.getContext) {
-      ctx = goodEnergyBarCanvas.getContext("2d");
-      // just temporary for now . . .
-      goodEnergyBarCanvas.width = goodEnergyBarCanvas.width;
-      ctx.fillText("Energy:" + goodRobot.energy, 0, 100);
-   }
-
-   if (badEnergyBarCanvas.getContext) {
-      ctx = badEnergyBarCanvas.getContext("2d");
-      // just temporary for now . . .
-      badEnergyBarCanvas.width = badEnergyBarCanvas.width;
-      ctx.fillText("Energy:" + badRobot.energy, 0, 100);
-   }
+   drawEnergyBars();
 
    if (goodRobot.energy < 0) {
       clearTimeout(gameState.timerId);
@@ -408,6 +451,12 @@ function getNextQuestionIfAlive() {
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
+function drawInitialEnergyBars() {
+   goodRobot.energy = gameState.goodRobotMaxEnergy;
+   badRobot.energy = gameState.badRobotMaxEnergy;
+   drawEnergyBars();
+}
+
 function processCorrectDigit() {
    calculation.updateDigitToGuess();
 
@@ -458,15 +507,14 @@ function clickedANumber(numberButton) {
 function pressedAKey(e) {
 	var unicode = e.keyCode? e.keyCode : e.charCode;
 
-   if (noBattleInProgress()) {
-      humanReadyToDoSums();
-   } else if (key.isDigit(unicode)) {
+   if (key.isDigit(unicode)) {
          interpretNumberInput(unicodeToNumeral(unicode));
-   	}
+   }
 }
 
 function playGame() {
    document.getElementById("introDiv").style.display = "none";
    document.getElementById("gameDiv").style.display = "block";
    drawRobots();
+   drawInitialEnergyBars();
 }

@@ -70,9 +70,8 @@ button:hover {
 
 .answerDiv {
 	margin: 0 auto;
-	background-color: lightgreen;
+	background-color: paleGoldenRod ;
    width:40vw;
-	margin-top: 2%;
 	padding: 1%;
 }
 
@@ -121,10 +120,6 @@ button:hover {
 	float:right;
 	margin-right: 1%;
    width:22vw;
-}
-
-.energyBarGood, .energyBarBad {
-	background-color: lightseagreen;
 }
 
 .energyBarGood {
