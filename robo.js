@@ -60,7 +60,7 @@ var calculation = {
       this.create();
       this.answerText = "?";
       this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
-      this.resultText = "Awaiting answer . . ."
+      this.resultText = "Awaiting answer . . .";
       return this.questionText + " " + this.answerText;
    },
    correctDigitGuessed(digitGuessed) {
@@ -382,6 +382,17 @@ function checkEnergy() {
    }
 }
 
+function resetForNextQuestion() {
+   calculation.wipeText();
+   setUpQuestion();
+   displayTimerValue();
+
+   calculation.inProgress = true;
+   enableNumberButtons();
+   calculation.intervalId = setInterval(processSums, 1000);
+}
+
+
 function getNextQuestionReadyIfBothRobotsAlive() {
    if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
       gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
@@ -435,16 +446,6 @@ function humanReadyToDoSums() {
    calculation.intervalId = setInterval(processSums, 1000);
 }
 
-function resetForNextQuestion() {
-   calculation.wipeText();
-   setUpQuestion();
-   displayTimerValue();
-
-   calculation.inProgress = true;
-   enableNumberButtons();
-   calculation.intervalId = setInterval(processSums, 1000);
-}
-
 function getNextQuestionIfAlive() {
    checkEnergy();
    calculation.inProgress = false;
@@ -472,7 +473,7 @@ function processCorrectDigit() {
 }
 
 function processIncorrectDigit() {
-   showFeedbackToAnswer("Wrong!")
+   showFeedbackToAnswer("Wrong!");
    goodRobot.energy--;
    getNextQuestionIfAlive();
 }
