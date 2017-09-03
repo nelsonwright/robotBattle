@@ -5,10 +5,19 @@
 	<title>Robot Battle</title>
 	<link rel="stylesheet" type="text/css" href="robot_battle.css">
 	<script src="./robo.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
+   <script>
+      $(document).ready(function() {
+         // we may need to do something here at some point...
+
+         // just for testing...
+         // playGame();
+      });
+   </script>
 </head>
 
-<body onload="playGame()" onkeyup="pressedAKey(event)">
+<body onkeyup="pressedAKey(event)">
    <div id="introDiv">
    	<h1>Robot Battle</h1>
    	<div class="introText">
@@ -80,7 +89,13 @@
    			<button onClick="clickedANumber(this)">9</button>
    			<button onClick="clickedANumber(this)">0</button>
    		</p>
-   	</div>
+      </div>
+
+      <div id="playAgain" class="playAgain hidden">
+         <p>
+            <button onClick="startAnotherGame()">Tap to play again, human!</button>
+         </p>
+      <div>
 
    </div> <!-- end of gameDiv -->
 </body>

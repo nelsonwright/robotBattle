@@ -110,6 +110,21 @@ button:hover {
    border-radius: 0.5vw;
 }
 
+.playAgain {
+   margin: 0 auto;
+	width:44%;
+   margin-top: 2%;
+   height: 10vw;
+   padding: 2%;
+}
+
+.playAgain p {
+   text-align: center;
+   font-size: 3vw;
+   font-weight: bold;
+   margin: 2%;
+}
+
 .goodRobot {
 	float:left;
 	margin-left: 1%;

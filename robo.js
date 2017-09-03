@@ -238,7 +238,6 @@ function drawRobots() {
 function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
    var timeRemainingBoxWidth;
 
-   ctx.fillStyle = "lightyellow";
    ctx.fillStyle = "orange";
 
    timeRemainingBoxWidth = (calculation.timeAllowed / gameState.timeForSums) * virtualCanvasWidth;
@@ -359,25 +358,36 @@ function displayTimeOutMessage() {
    document.getElementById("resultPara").textContent = calculation.resultText;
 }
 
+function showNumberButtons() {
+   $("#numeralsDiv").toggleClass("hidden");
+   $("#playAgain").toggleClass("hidden");
+}
+
+function showPlayAgainButton() {
+   $("#numeralsDiv").toggleClass("hidden");
+   $("#playAgain").toggleClass("hidden");
+}
+
 function checkEnergy() {
    drawEnergyBars();
 
    if (goodRobot.energy < 0) {
       clearTimeout(gameState.timerId);
       clearInterval(calculation.intervalId);
-      //temporary for now . . .
+
       document.getElementById("questionAndAnswersPara").textContent = "Bad Robot Wins!";
       document.getElementById("resultPara").textContent = "Oh no!";
+      showPlayAgainButton();
       return;
    }
 
    if (badRobot.energy < 0) {
       clearTimeout(gameState.timerId);
       clearInterval(calculation.intervalId);
-      //temporary for now . . .
+
       document.getElementById("questionAndAnswersPara").textContent = "Good Robot Wins!";
       document.getElementById("resultPara").textContent = "Hooray!";
-
+      showPlayAgainButton();
       return;
    }
 }
@@ -453,8 +463,7 @@ function getNextQuestionIfAlive() {
 }
 
 function drawInitialEnergyBars() {
-   goodRobot.energy = gameState.goodRobotMaxEnergy;
-   badRobot.energy = gameState.badRobotMaxEnergy;
+   setInitialRobotEnergy();
    drawEnergyBars();
 }
 
@@ -489,6 +498,11 @@ function processAttemptedSumAnswer(digitPressed) {
 	}
 }
 
+function setInitialRobotEnergy() {
+   goodRobot.energy = gameState.goodRobotMaxEnergy;
+   badRobot.energy = gameState.badRobotMaxEnergy;
+}
+
 function noBattleInProgress() {
    return !gameState.battleInProgress;
 }
@@ -511,6 +525,14 @@ function pressedAKey(e) {
    if (key.isDigit(unicode)) {
          interpretNumberInput(unicodeToNumeral(unicode));
    }
+}
+
+function startAnotherGame() {
+   showNumberButtons();
+   enableNumberButtons();
+   setInitialRobotEnergy();
+   drawInitialEnergyBars();
+   humanReadyToDoSums();
 }
 
 function playGame() {
