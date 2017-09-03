@@ -382,6 +382,16 @@ function checkEnergy() {
    }
 }
 
+function processSums() {
+   calculation.timeAllowed--;
+
+	if (calculation.timeAllowed > 0) {
+      displayTimerValue();
+	} else {
+      handleTimerRunDown();
+	}
+}
+
 function resetForNextQuestion() {
    calculation.wipeText();
    setUpQuestion();
@@ -419,16 +429,6 @@ function handleTimerRunDown() {
    displayTimeOutMessage();
    resetCanvas();
    getNextQuestionReadyIfBothRobotsAlive();
-}
-
-function processSums() {
-   calculation.timeAllowed--;
-
-	if (calculation.timeAllowed > 0) {
-      displayTimerValue();
-	} else {
-      handleTimerRunDown();
-	}
 }
 
 function humanReadyToDoSums() {
