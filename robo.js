@@ -392,6 +392,29 @@ function checkEnergy() {
    }
 }
 
+function showFeedbackToAnswer(feedback) {
+   stopQuestion();
+   calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
+   document.getElementById("resultPara").textContent = calculation.resultText;
+}
+
+function getNextQuestionReadyIfBothRobotsAlive() {
+   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
+      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
+   }
+}
+
+function handleTimerRunDown() {
+   showFeedbackToAnswer("Too Slow!");
+   goodRobot.energy--;
+   checkEnergy();
+   calculation.inProgress = false;
+
+   displayTimeOutMessage();
+   resetCanvas();
+   getNextQuestionReadyIfBothRobotsAlive();
+}
+
 function processSums() {
    calculation.timeAllowed--;
 
@@ -412,33 +435,9 @@ function resetForNextQuestion() {
    calculation.intervalId = setInterval(processSums, 1000);
 }
 
-
-function getNextQuestionReadyIfBothRobotsAlive() {
-   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
-   }
-}
-
 function stopQuestion() {
    clearInterval(calculation.intervalId);
    disableNumberButtons();
-}
-
-function showFeedbackToAnswer(feedback) {
-   stopQuestion();
-   calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
-   document.getElementById("resultPara").textContent = calculation.resultText;
-}
-
-function handleTimerRunDown() {
-   showFeedbackToAnswer("Too Slow!");
-   goodRobot.energy--;
-   checkEnergy();
-   calculation.inProgress = false;
-
-   displayTimeOutMessage();
-   resetCanvas();
-   getNextQuestionReadyIfBothRobotsAlive();
 }
 
 function humanReadyToDoSums() {
