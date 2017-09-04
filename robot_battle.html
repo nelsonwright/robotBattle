@@ -9,10 +9,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
    <script>
       $(document).ready(function() {
-         // we may need to do something here at some point...
-
-         // just for testing...
-         // playGame();
+         $("#playGameButton, #gameLoading").toggleClass("hidden");
       });
    </script>
 </head>
@@ -34,9 +31,17 @@
    		</p>
    	</div>
 
-   	<div class="centerStuff">
+   	<div id="playGameButton" class="centerStuff hidden">
    		<button onclick="playGame()">Play the game</button>
    	</div>
+
+      <div id="gameLoading" class="centerStuff">
+         <p>
+            Loading . . .
+         </p>
+         <img src="./images/loading.gif" />
+      </div>
+
    </div> <!-- end of introDiv -->
 
 

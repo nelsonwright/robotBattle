@@ -392,16 +392,25 @@ function checkEnergy() {
    }
 }
 
+function stopQuestion() {
+   clearInterval(calculation.intervalId);
+   disableNumberButtons();
+}
+
 function showFeedbackToAnswer(feedback) {
    stopQuestion();
    calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
    document.getElementById("resultPara").textContent = calculation.resultText;
 }
 
-function getNextQuestionReadyIfBothRobotsAlive() {
-   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
-   }
+function processSums() {
+   calculation.timeAllowed--;
+
+	if (calculation.timeAllowed > 0) {
+      displayTimerValue();
+	} else {
+      handleTimerRunDown();
+	}
 }
 
 function handleTimerRunDown() {
@@ -415,16 +424,6 @@ function handleTimerRunDown() {
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
-function processSums() {
-   calculation.timeAllowed--;
-
-	if (calculation.timeAllowed > 0) {
-      displayTimerValue();
-	} else {
-      handleTimerRunDown();
-	}
-}
-
 function resetForNextQuestion() {
    calculation.wipeText();
    setUpQuestion();
@@ -435,9 +434,10 @@ function resetForNextQuestion() {
    calculation.intervalId = setInterval(processSums, 1000);
 }
 
-function stopQuestion() {
-   clearInterval(calculation.intervalId);
-   disableNumberButtons();
+function getNextQuestionReadyIfBothRobotsAlive() {
+   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
+      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
+   }
 }
 
 function humanReadyToDoSums() {
