@@ -23,8 +23,9 @@ var gameState = {
    battleInProgress: false,   // to indicate if we're battling a robot
    timeForSums: 10,				// how many seconds you have to complete a sum
    timerId: null,             // timerId for when we want to pause for a bit
-   goodRobotMaxEnergy: 8,
-   badRobotMaxEnergy: 8
+   goodRobotMaxEnergy: 8,     // how many energy cells the good robot starts with
+   badRobotMaxEnergy: 8,      // how many energy cells the bad robot starts with
+   pauseBetweenQuestions: 2.5 // time in seconds between questions
 };
 
 var screenState = {
@@ -40,6 +41,7 @@ var screenState = {
       this.canvas.badRobot = document.getElementById("badRobot");
       this.canvas.goodEnergy = document.getElementById("energyBarGood");
       this.canvas.badEnergy = document.getElementById("energyBarBad");
+      this.canvas.timer = document.getElementById("questionTimer");
    }
 }
 
@@ -146,6 +148,34 @@ function drawChestLights(ctx) {
       ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
 
       ctx.stroke();
+      ctx.fill();
+   }
+}
+
+function rippleGoodRobotChestLights() {
+   var y = yOffset - 157;
+   var x = 87;
+   var areaWidth = 100;
+   var circleRadius = 5;
+   var i;  //loop counter
+   var randomColour;
+   var ctx;
+
+   if (screenState.canvas.goodRobot.getContext) {
+      ctx = screenState.canvas.goodRobot.getContext("2d");
+   }
+
+   // ctx.save();
+
+   ctx.lineWidth=3;
+
+   for (i=0; i<3; i++) {
+      randomColour = "#" + Math.floor(Math.random()*16777215).toString(16);
+      ctx.fillStyle = randomColour;
+      ctx.beginPath();
+      ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
+      ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
+
       ctx.fill();
    }
 }
@@ -258,9 +288,9 @@ function scaleBadRobot() {
 
 // end of robot drawing section
 
-/***********************************************
-*   Stuff to do with drawing the countdown timer
-************************************************/
+/*******************************
+*   draw the countdown timer
+*******************************/
 function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
    var timeRemainingBoxWidth;
 
@@ -271,9 +301,9 @@ function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
 }
 // end of countdown timer drawing section
 
-/********************************************
-*   Stuff to do with drawing the energy bars
-*********************************************/
+/**************************
+*   draw the energy bars
+***************************/
 function drawStrokedRectWithGradient(ctx, position, colour, canvas) {
    var width = canvas.width;
    var halfWidth = width / 2;
@@ -365,16 +395,22 @@ function enableNumberButtons() {
 }
 
 function resetTimerCanvas() {
-   var timerCanvas = document.getElementById("questionTimer");
-   timerCanvas.width = timerCanvas.width;
+   screenState.canvas.timer.width = screenState.canvas.timer.width;
+}
+
+function resetGoodRobotChestLights() {
+   var ctx;
+
+   if (screenState.canvas.goodRobot.getContext) {
+      ctx = screenState.canvas.goodRobot.getContext("2d");
+      drawChestLights(ctx);
+   }
 }
 
 function displayTimerValue() {
-   var timerCanvas = document.getElementById("questionTimer");
-
-   if (timerCanvas.getContext) {
+   if (screenState.canvas.timer.getContext) {
       resetTimerCanvas();
-      drawTimer(timerCanvas.getContext("2d"), calculation.timeAllowed, timerCanvas.width);
+      drawTimer(screenState.canvas.timer.getContext("2d"), calculation.timeAllowed, screenState.canvas.timer.width);
    }
 }
 
@@ -429,7 +465,7 @@ function showFeedbackToAnswer(feedback) {
 
 function getNextQuestionReadyIfBothRobotsAlive() {
    if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
+      gameState.intervalId = setTimeout(resetForNextQuestion, gameState.pauseBetweenQuestions * 1000);
    }
 }
 
@@ -449,6 +485,7 @@ function processSums() {
 
 	if (calculation.timeAllowed > 0) {
       displayTimerValue();
+      rippleGoodRobotChestLights();
 	} else {
       handleTimerRunDown();
 	}
@@ -480,6 +517,7 @@ function humanReadyToDoSums() {
 }
 
 function getNextQuestionIfAlive() {
+   resetGoodRobotChestLights();
    checkEnergy();
    calculation.inProgress = false;
    getNextQuestionReadyIfBothRobotsAlive();
