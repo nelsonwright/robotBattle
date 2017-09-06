@@ -9,7 +9,8 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
    <script>
       $(document).ready(function() {
-         $("#playGameButton, #gameLoading").toggleClass("hidden");
+         $("#playGameButtonDiv, #gameLoadingDiv").toggleClass("hidden");
+         $("#playGameButton").focus();
       });
    </script>
 </head>
@@ -31,11 +32,11 @@
    		</p>
    	</div>
 
-   	<div id="playGameButton" class="centerStuff hidden">
-   		<button onclick="playGame()">Play the game</button>
+   	<div id="playGameButtonDiv" class="centerStuff hidden">
+   		<button id="playGameButton" onclick="playGame()">Play the game</button>
    	</div>
 
-      <div id="gameLoading" class="centerStuff">
+      <div id="gameLoadingDiv" class="centerStuff">
          <p>
             Loading . . .
          </p>

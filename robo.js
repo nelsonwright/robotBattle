@@ -27,6 +27,22 @@ var gameState = {
    badRobotMaxEnergy: 8
 };
 
+var screenState = {
+   canvas: {
+      timer: null,
+      goodRobot: null,
+      goodEnergy: null,
+      badRobot: null,
+      badEnergy: null
+   },
+   setup() {
+      this.canvas.goodRobot = document.getElementById("goodRobot");
+      this.canvas.badRobot = document.getElementById("badRobot");
+      this.canvas.goodEnergy = document.getElementById("energyBarGood");
+      this.canvas.badEnergy = document.getElementById("energyBarBad");
+   }
+}
+
 var goodRobot = {
    energy: null
 };
@@ -219,17 +235,27 @@ function drawRobot(ctx, colour) {
 }
 
 function drawRobots() {
-   var goodRobotCanvas = document.getElementById("goodRobot");
-   var badRobotCanvas = document.getElementById("badRobot");
-
-   if (goodRobotCanvas.getContext) {
-      drawRobot(goodRobotCanvas.getContext("2d"), "firebrick");
+   if (screenState.canvas.goodRobot.getContext) {
+      drawRobot(screenState.canvas.goodRobot.getContext("2d"), "firebrick");
    }
 
-   if (badRobotCanvas.getContext) {
-      drawRobot(badRobotCanvas.getContext("2d"), "limegreen");
+   if (screenState.canvas.badRobot.getContext) {
+      drawRobot(screenState.canvas.badRobot.getContext("2d"), "limegreen");
    }
 }
+
+function scaleBadRobot() {
+   screenState.canvas.badRobot.width = screenState.canvas.badRobot.width;
+   var ctx = screenState.canvas.badRobot.getContext("2d");
+
+   if (screenState.canvas.badRobot.getContext) {
+      ctx.save();
+      // ctx.scale(0.5, 0.5);
+      ctx.rotate((Math.PI / 180) * 25);
+   }
+   drawRobot(ctx, "limegreen");
+}
+
 // end of robot drawing section
 
 /***********************************************
@@ -284,15 +310,13 @@ function drawBadRobotEnergyBar(badEnergyBarCanvas) {
 }
 
 function drawEnergyBars() {
-   var goodEnergyBarCanvas = document.getElementById("energyBarGood");
-   var badEnergyBarCanvas = document.getElementById("energyBarBad");
 
-   if (goodEnergyBarCanvas.getContext) {
-      drawGoodRobotEnergyBar(goodEnergyBarCanvas);
+   if (screenState.canvas.goodEnergy.getContext) {
+      drawGoodRobotEnergyBar(screenState.canvas.goodEnergy);
    }
 
-   if (badEnergyBarCanvas.getContext) {
-      drawBadRobotEnergyBar(badEnergyBarCanvas);
+   if (screenState.canvas.badEnergy.getContext) {
+      drawBadRobotEnergyBar(screenState.canvas.badEnergy);
    }
 }
 
@@ -340,7 +364,7 @@ function enableNumberButtons() {
    setNumberButtonsDisabled(false);
 }
 
-function resetCanvas() {
+function resetTimerCanvas() {
    var timerCanvas = document.getElementById("questionTimer");
    timerCanvas.width = timerCanvas.width;
 }
@@ -349,7 +373,7 @@ function displayTimerValue() {
    var timerCanvas = document.getElementById("questionTimer");
 
    if (timerCanvas.getContext) {
-      resetCanvas();
+      resetTimerCanvas();
       drawTimer(timerCanvas.getContext("2d"), calculation.timeAllowed, timerCanvas.width);
    }
 }
@@ -403,6 +427,23 @@ function showFeedbackToAnswer(feedback) {
    document.getElementById("resultPara").textContent = calculation.resultText;
 }
 
+function getNextQuestionReadyIfBothRobotsAlive() {
+   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
+      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
+   }
+}
+
+function handleTimerRunDown() {
+   showFeedbackToAnswer("Too Slow!");
+   goodRobot.energy--;
+   checkEnergy();
+   calculation.inProgress = false;
+
+   displayTimeOutMessage();
+   resetTimerCanvas();
+   getNextQuestionReadyIfBothRobotsAlive();
+}
+
 function processSums() {
    calculation.timeAllowed--;
 
@@ -413,17 +454,6 @@ function processSums() {
 	}
 }
 
-function handleTimerRunDown() {
-   showFeedbackToAnswer("Too Slow!");
-   goodRobot.energy--;
-   checkEnergy();
-   calculation.inProgress = false;
-
-   displayTimeOutMessage();
-   resetCanvas();
-   getNextQuestionReadyIfBothRobotsAlive();
-}
-
 function resetForNextQuestion() {
    calculation.wipeText();
    setUpQuestion();
@@ -432,12 +462,6 @@ function resetForNextQuestion() {
    calculation.inProgress = true;
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
-}
-
-function getNextQuestionReadyIfBothRobotsAlive() {
-   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, 2500);
-   }
 }
 
 function humanReadyToDoSums() {
@@ -534,9 +558,14 @@ function startAnotherGame() {
    humanReadyToDoSums();
 }
 
-function playGame() {
+function swapIntroForGameScreen() {
    document.getElementById("introDiv").style.display = "none";
    document.getElementById("gameDiv").style.display = "block";
+}
+
+function playGame() {
+   swapIntroForGameScreen();
+   screenState.setup();
    drawRobots();
    drawInitialEnergyBars();
 }
