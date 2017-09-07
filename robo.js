@@ -36,14 +36,41 @@ var screenState = {
       badRobot: null,
       badEnergy: null
    },
+   context: {
+      timer: null,
+      goodRobot: null,
+      goodEnergy: null,
+      badRobot: null,
+      badEnergy: null
+   },
    setup() {
       this.canvas.goodRobot = document.getElementById("goodRobot");
       this.canvas.badRobot = document.getElementById("badRobot");
       this.canvas.goodEnergy = document.getElementById("energyBarGood");
       this.canvas.badEnergy = document.getElementById("energyBarBad");
       this.canvas.timer = document.getElementById("questionTimer");
+
+      if (this.canvas.timer.getContext) {
+         this.context.timer = this.canvas.timer.getContext("2d");
+      }
+
+      if (this.canvas.goodRobot.getContext) {
+         this.context.goodRobot = this.canvas.goodRobot.getContext("2d");
+      }
+
+      if (this.canvas.goodEnergy.getContext) {
+         this.context.goodEnergy = this.canvas.goodEnergy.getContext("2d");
+      }
+
+      if (this.canvas.badRobot.getContext) {
+         this.context.badRobot = this.canvas.badRobot.getContext("2d");
+      }
+
+      if (this.canvas.badEnergy.getContext) {
+         this.context.badEnergy = this.canvas.badEnergy.getContext("2d");
+      }
    }
-}
+};
 
 var goodRobot = {
    energy: null
@@ -159,11 +186,7 @@ function rippleGoodRobotChestLights() {
    var circleRadius = 5;
    var i;  //loop counter
    var randomColour;
-   var ctx;
-
-   if (screenState.canvas.goodRobot.getContext) {
-      ctx = screenState.canvas.goodRobot.getContext("2d");
-   }
+   var ctx = screenState.context.goodRobot;
 
    // ctx.save();
 
@@ -265,24 +288,18 @@ function drawRobot(ctx, colour) {
 }
 
 function drawRobots() {
-   if (screenState.canvas.goodRobot.getContext) {
-      drawRobot(screenState.canvas.goodRobot.getContext("2d"), "firebrick");
-   }
-
-   if (screenState.canvas.badRobot.getContext) {
-      drawRobot(screenState.canvas.badRobot.getContext("2d"), "limegreen");
-   }
+   drawRobot(screenState.context.goodRobot, "firebrick");
+   drawRobot(screenState.context.badRobot, "limegreen");
 }
 
 function scaleBadRobot() {
    screenState.canvas.badRobot.width = screenState.canvas.badRobot.width;
-   var ctx = screenState.canvas.badRobot.getContext("2d");
+   var ctx = screenState.context.badRobot;
 
-   if (screenState.canvas.badRobot.getContext) {
-      ctx.save();
-      // ctx.scale(0.5, 0.5);
-      ctx.rotate((Math.PI / 180) * 25);
-   }
+   ctx.save();
+   // ctx.scale(0.5, 0.5);
+   ctx.rotate((Math.PI / 180) * 25);
+
    drawRobot(ctx, "limegreen");
 }
 
@@ -322,32 +339,25 @@ function drawStrokedRectWithGradient(ctx, position, colour, canvas) {
    ctx.strokeRect(0, y, width, width);
 }
 
-function drawEnergyBar(energy, colour, canvas) {
-   canvas.width = canvas.width;
-   var ctx = canvas.getContext("2d");
-
+function drawEnergyBar(canvas, energy, colour, context) {
    for (var i=0; i<energy; i++) {
-      drawStrokedRectWithGradient(ctx, i, colour, canvas);
+      drawStrokedRectWithGradient(context, i, colour, canvas);
    }
 }
 
-function drawGoodRobotEnergyBar(goodEnergyBarCanvas) {
-   drawEnergyBar(goodRobot.energy, "firebrick", goodEnergyBarCanvas);
+function drawGoodRobotEnergyBar() {
+   screenState.canvas.goodEnergy.width = screenState.canvas.goodEnergy.width;
+   drawEnergyBar(screenState.canvas.goodEnergy, goodRobot.energy, "firebrick", screenState.context.goodEnergy);
 }
 
-function drawBadRobotEnergyBar(badEnergyBarCanvas) {
-   drawEnergyBar(badRobot.energy, "green", badEnergyBarCanvas);
+function drawBadRobotEnergyBar() {
+   screenState.canvas.badEnergy.width = screenState.canvas.badEnergy.width;
+   drawEnergyBar(screenState.canvas.badEnergy, badRobot.energy, "green", screenState.context.badEnergy);
 }
 
 function drawEnergyBars() {
-
-   if (screenState.canvas.goodEnergy.getContext) {
-      drawGoodRobotEnergyBar(screenState.canvas.goodEnergy);
-   }
-
-   if (screenState.canvas.badEnergy.getContext) {
-      drawBadRobotEnergyBar(screenState.canvas.badEnergy);
-   }
+   drawGoodRobotEnergyBar();
+   drawBadRobotEnergyBar();
 }
 
 // end of energy bar drawing section
@@ -399,19 +409,12 @@ function resetTimerCanvas() {
 }
 
 function resetGoodRobotChestLights() {
-   var ctx;
-
-   if (screenState.canvas.goodRobot.getContext) {
-      ctx = screenState.canvas.goodRobot.getContext("2d");
-      drawChestLights(ctx);
-   }
+   drawChestLights(screenState.context.goodRobot);
 }
 
 function displayTimerValue() {
-   if (screenState.canvas.timer.getContext) {
-      resetTimerCanvas();
-      drawTimer(screenState.canvas.timer.getContext("2d"), calculation.timeAllowed, screenState.canvas.timer.width);
-   }
+   resetTimerCanvas();
+   drawTimer(screenState.context.timer, calculation.timeAllowed, screenState.canvas.timer.width);
 }
 
 function displayTimeOutMessage() {
