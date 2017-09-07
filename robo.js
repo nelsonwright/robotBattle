@@ -73,7 +73,10 @@ var screenState = {
 };
 
 var goodRobot = {
-   energy: null
+   energy: null,
+   lightColours: [
+      "gold", "mediumpurple", "lightgreen", "white", "royalblue", "orange"
+   ]
 };
 
 var badRobot = {
@@ -143,8 +146,6 @@ function drawOffsetStrokedRect(ctx, x, y, width, height) {
 }
 
 function choosFillStyle(position) {
-   var fillstyle = "white"; //default
-
    switch(position) {
       case 0:
          fillstyle = "gold";
@@ -169,7 +170,7 @@ function drawChestLights(ctx) {
    ctx.lineWidth=3;
 
    for (i=0; i<3; i++) {
-      ctx.fillStyle = choosFillStyle(i);
+      ctx.fillStyle = goodRobot.lightColours[i];
       ctx.beginPath();
       ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
       ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
@@ -185,19 +186,21 @@ function rippleGoodRobotChestLights() {
    var areaWidth = 100;
    var circleRadius = 5;
    var i;  //loop counter
-   var randomColour;
+   var randomColourIndex;
    var ctx = screenState.context.goodRobot;
 
    // ctx.save();
 
    ctx.lineWidth=3;
 
-   for (i=0; i<3; i++) {
-      randomColour = "#" + Math.floor(Math.random()*16777215).toString(16);
-      ctx.fillStyle = randomColour;
+   for (i = 0; i < 2; i++) {
+      lightToChange = Math.floor(Math.random() * 3);
+      randomColourIndex = Math.floor(Math.random() * goodRobot.lightColours.length);
+
+      ctx.fillStyle = goodRobot.lightColours[randomColourIndex];
       ctx.beginPath();
-      ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
-      ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
+      ctx.moveTo(x + xOffset + lightToChange * (areaWidth/3), y);
+      ctx.arc(x + xOffset + lightToChange * (areaWidth/3), y, circleRadius, 0, 2*Math.PI);
 
       ctx.fill();
    }
@@ -480,6 +483,7 @@ function handleTimerRunDown() {
 
    displayTimeOutMessage();
    resetTimerCanvas();
+   resetGoodRobotChestLights();
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
