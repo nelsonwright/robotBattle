@@ -1,5 +1,5 @@
 // needed due to Inkscape calculating y values from bottom to top, rather than top to bottom
-var yOffset = 450;
+var yOffset = 455;
 
 // just to put the robot in a better place on the canvas
 var xOffset = 20;
@@ -75,14 +75,14 @@ var screenState = {
 var goodRobot = {
    energy: null,
    lightColours: [
-      "gold", "mediumpurple", "lightgreen", "white", "royalblue", "orange"
+      "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
    ]
 };
 
 var badRobot = {
    energy: null,
    lightColours: [
-       "crimson", "royalblue", "magenta", "gold", "turquoise", "plum"
+       "red", "royalblue", "magenta", "gold", "white", "plum"
    ]
 };
 
@@ -176,7 +176,7 @@ function drawBodyLights() {
    }
 }
 
-function chooseAndDrawLight(robot, ctx) {
+function chooseAndDrawLights(robot, ctx) {
    var i;  //loop counter
    var lightToChange;
    var randomColourIndex;
@@ -193,8 +193,8 @@ function chooseAndDrawLight(robot, ctx) {
 }
 
 function rippleRobotBodyLights() {
-   chooseAndDrawLight(goodRobot, screenState.context.goodRobot);
-   chooseAndDrawLight(badRobot, screenState.context.badRobot);
+   chooseAndDrawLights(goodRobot, screenState.context.goodRobot);
+   chooseAndDrawLights(badRobot, screenState.context.badRobot);
 }
 
 function drawBodyDecoration(ctx) {
@@ -274,8 +274,8 @@ function drawRobot(ctx, colour) {
    drawOffsetStrokedRect(ctx, 127, 0, 42, 125);
 
    // feet
-   drawOffsetStrokedRect(ctx, 48, 1, 65, 26);
-	drawOffsetStrokedRect(ctx, 127, 1, 68, 26);
+   drawOffsetStrokedRect(ctx, 48, 0, 65, 26);
+	drawOffsetStrokedRect(ctx, 127, 0, 68, 26);
 
    drawEyes(ctx);
    drawBodyDecoration(ctx);
