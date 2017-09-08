@@ -80,7 +80,10 @@ var goodRobot = {
 };
 
 var badRobot = {
-   energy: null
+   energy: null,
+   lightColours: [
+       "crimson", "royalblue", "magenta", "gold", "turquoise", "plum"
+   ]
 };
 
 var calculation = {
@@ -145,68 +148,56 @@ function drawOffsetStrokedRect(ctx, x, y, width, height) {
 	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
 }
 
-function choosFillStyle(position) {
-   switch(position) {
-      case 0:
-         fillstyle = "gold";
-         break;
-      case 1:
-         fillstyle = "mediumpurple";
-         break;
-      case 2:
-         fillstyle = "deepskyblue";
-         break;
-   }
-   return fillstyle;
-}
-
-function drawChestLights(ctx) {
+function drawBodyLight(ctx, position) {
    var y = yOffset - 157;
    var x = 87;
    var areaWidth = 100;
    var circleRadius = 5;
+
+   ctx.beginPath();
+   ctx.moveTo(x + xOffset + position * (areaWidth/3), y);
+   ctx.arc(x + xOffset + position * (areaWidth/3), y, circleRadius, 0, 2 * Math.PI);
+
+   ctx.stroke();
+   ctx.fill();
+}
+
+function drawBodyLights() {
    var i;  //loop counter
 
-   ctx.lineWidth=3;
+   screenState.context.goodRobot.lineWidth = 3;
+   screenState.context.badRobot.lineWidth = 3;
 
    for (i=0; i<3; i++) {
-      ctx.fillStyle = goodRobot.lightColours[i];
-      ctx.beginPath();
-      ctx.moveTo(x + xOffset + i*(areaWidth/3), y);
-      ctx.arc(x + xOffset + i*(areaWidth/3), y, circleRadius, 0, 2*Math.PI);
-
-      ctx.stroke();
-      ctx.fill();
+      screenState.context.goodRobot.fillStyle = goodRobot.lightColours[i];
+      drawBodyLight(screenState.context.goodRobot, i);
+      screenState.context.badRobot.fillStyle = badRobot.lightColours[i];
+      drawBodyLight(screenState.context.badRobot, i);
    }
 }
 
-function rippleGoodRobotChestLights() {
-   var y = yOffset - 157;
-   var x = 87;
-   var areaWidth = 100;
-   var circleRadius = 5;
+function chooseAndDrawLight(robot, ctx) {
    var i;  //loop counter
+   var lightToChange;
    var randomColourIndex;
-   var ctx = screenState.context.goodRobot;
 
-   // ctx.save();
-
-   ctx.lineWidth=3;
+   ctx.lineWidth = 3;
 
    for (i = 0; i < 2; i++) {
       lightToChange = Math.floor(Math.random() * 3);
-      randomColourIndex = Math.floor(Math.random() * goodRobot.lightColours.length);
+      randomColourIndex = Math.floor(Math.random() * robot.lightColours.length);
 
-      ctx.fillStyle = goodRobot.lightColours[randomColourIndex];
-      ctx.beginPath();
-      ctx.moveTo(x + xOffset + lightToChange * (areaWidth/3), y);
-      ctx.arc(x + xOffset + lightToChange * (areaWidth/3), y, circleRadius, 0, 2*Math.PI);
-
-      ctx.fill();
+      ctx.fillStyle = robot.lightColours[randomColourIndex];
+      drawBodyLight(ctx, lightToChange);
    }
 }
 
-function drawChestDecoration(ctx) {
+function rippleRobotBodyLights() {
+   chooseAndDrawLight(goodRobot, screenState.context.goodRobot);
+   chooseAndDrawLight(badRobot, screenState.context.badRobot);
+}
+
+function drawBodyDecoration(ctx) {
    var y = yOffset - 245;
    var x = 71;
    var width =  96;
@@ -218,7 +209,7 @@ function drawChestDecoration(ctx) {
 
    ctx.strokeRect(x + xOffset, y, width, height);
 
-   // draw the grille on the chest
+   // draw the grille on the body
    for (i=0; i<3; i++) {
          // horizontal lines
          ctx.beginPath();
@@ -235,7 +226,7 @@ function drawChestDecoration(ctx) {
       ctx.stroke();
    }
 
-   drawChestLights(ctx);
+   drawBodyLights(ctx);
 }
 
 function drawEyes(ctx) {
@@ -287,7 +278,7 @@ function drawRobot(ctx, colour) {
 	drawOffsetStrokedRect(ctx, 127, 1, 68, 26);
 
    drawEyes(ctx);
-   drawChestDecoration(ctx);
+   drawBodyDecoration(ctx);
 }
 
 function drawRobots() {
@@ -411,8 +402,8 @@ function resetTimerCanvas() {
    screenState.canvas.timer.width = screenState.canvas.timer.width;
 }
 
-function resetGoodRobotChestLights() {
-   drawChestLights(screenState.context.goodRobot);
+function resetGoodRobotBodyLights() {
+   drawBodyLights(screenState.context.goodRobot);
 }
 
 function displayTimerValue() {
@@ -483,7 +474,7 @@ function handleTimerRunDown() {
 
    displayTimeOutMessage();
    resetTimerCanvas();
-   resetGoodRobotChestLights();
+   resetGoodRobotBodyLights();
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
@@ -492,7 +483,7 @@ function processSums() {
 
 	if (calculation.timeAllowed > 0) {
       displayTimerValue();
-      rippleGoodRobotChestLights();
+      rippleRobotBodyLights();
 	} else {
       handleTimerRunDown();
 	}
@@ -524,7 +515,7 @@ function humanReadyToDoSums() {
 }
 
 function getNextQuestionIfAlive() {
-   resetGoodRobotChestLights();
+   resetGoodRobotBodyLights();
    checkEnergy();
    calculation.inProgress = false;
    getNextQuestionReadyIfBothRobotsAlive();
