@@ -7,16 +7,16 @@ var xOffset = 20;
 
 // these are the unicode values for the keyboard keys when pressed
 var key = Object.freeze({
-	isTopRowDigit(actionCode) {
-		return actionCode >= 48 && actionCode <= 57;
-	},
-	isKeypadDigit(actionCode) {
-		return actionCode >= 96 && actionCode <= 105;
-	},
-	isDigit(actionCode) {
-		return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
-	},
-	enter: 13	// the enter or return key
+   isTopRowDigit(actionCode) {
+      return actionCode >= 48 && actionCode <= 57;
+   },
+   isKeypadDigit(actionCode) {
+      return actionCode >= 96 && actionCode <= 105;
+   },
+   isDigit(actionCode) {
+      return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
+   },
+   enter: 13   // the enter or return key
 });
 
 var questionOutcome = Object.freeze({
@@ -27,13 +27,13 @@ var questionOutcome = Object.freeze({
 
 var gameState = {
    battleInProgress: false,      // to indicate if we're battling a robot
-   timeForSums: 10,				   // how many seconds you have to complete a sum
+   timeForSums: 10,              // how many seconds you have to complete a sum
    timerId: null,                // ID for when we want to pause for a bit
    goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
    badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
-   lightRippleIntervalId: null      // ID for light rippling, as above
+   lightRippleIntervalId: null   // ID for light rippling, as above
 };
 
 var screenState = {
@@ -152,8 +152,8 @@ var calculation = {
 *   Stuff to do with drawing the robots
 ***************************************/
 function drawOffsetStrokedRect(ctx, x, y, width, height) {
-	ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
-	ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
+   ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
+   ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
 }
 
 function drawBodyLight(ctx, position) {
@@ -259,10 +259,10 @@ function drawRobot(ctx, colour) {
    ctx.lineWidth = 3;
 
    // head
-	drawOffsetStrokedRect(ctx, 90, 293, 57, 84);
+   drawOffsetStrokedRect(ctx, 90, 293, 57, 84);
    drawOffsetStrokedRect(ctx, 64, 316, 109, 38);
 
-	// neck
+   // neck
    drawOffsetStrokedRect(ctx, 106, 285, 26, 8);
 
    // body
@@ -283,7 +283,7 @@ function drawRobot(ctx, colour) {
 
    // feet
    drawOffsetStrokedRect(ctx, 48, 0, 65, 26);
-	drawOffsetStrokedRect(ctx, 127, 0, 68, 26);
+   drawOffsetStrokedRect(ctx, 127, 0, 68, 26);
 
    drawEyes(ctx);
    drawBodyDecoration(ctx);
@@ -419,10 +419,6 @@ function displayTimerValue() {
    drawTimer(screenState.context.timer, calculation.timeAllowed, screenState.canvas.timer.width);
 }
 
-function displayTimeOutMessage() {
-   document.getElementById("resultPara").textContent = calculation.resultText;
-}
-
 function showNumberButtons() {
    $("#numeralsDiv").toggleClass("hidden");
    $("#playAgain").toggleClass("hidden");
@@ -431,6 +427,15 @@ function showNumberButtons() {
 function showPlayAgainButton() {
    $("#numeralsDiv").toggleClass("hidden");
    $("#playAgain").toggleClass("hidden");
+}
+
+function stopRipplingBodyLights() {
+   clearInterval(gameState.lightRippleIntervalId);
+   gameState.lightRippleIntervalId = null;
+}
+
+function startRipplingBodyLights() {
+   gameState.lightRippleIntervalId = setInterval(rippleRobotBodyLights, (1 / gameState.lightRippleFrequency) * 1000);
 }
 
 function stopTimers() {
@@ -484,15 +489,6 @@ function getNextQuestionReadyIfBothRobotsAlive() {
    }
 }
 
-function stopRipplingBodyLights() {
-   clearInterval(gameState.lightRippleIntervalId);
-   gameState.lightRippleIntervalId = null;
-}
-
-function startRipplingBodyLights() {
-   gameState.lightRippleIntervalId = setInterval(rippleRobotBodyLights, (1 / gameState.lightRippleFrequency) * 1000);
-}
-
 function handleTimerRunDown() {
    stopTimers();
    showFeedbackToAnswer(questionOutcome.tooSlow);
@@ -500,7 +496,6 @@ function handleTimerRunDown() {
    checkEnergy();
    calculation.inProgress = false;
 
-   displayTimeOutMessage();
    resetTimerCanvas();
    resetGoodRobotBodyLights();
    getNextQuestionReadyIfBothRobotsAlive();
@@ -508,15 +503,12 @@ function handleTimerRunDown() {
 
 function processSums() {
    calculation.timeAllowed--;
-   if (gameState.lightRippleIntervalId === null) {
-      startRipplingBodyLights();
-   }
 
-	if (calculation.timeAllowed > 0) {
+   if (calculation.timeAllowed > 0) {
       displayTimerValue();
-	} else {
+   } else {
       handleTimerRunDown();
-	}
+   }
 }
 
 function resetForNextQuestion() {
@@ -527,6 +519,7 @@ function resetForNextQuestion() {
    calculation.inProgress = true;
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
+   startRipplingBodyLights();
 }
 
 function humanReadyToDoSums() {
@@ -541,6 +534,7 @@ function humanReadyToDoSums() {
    calculation.inProgress = true;
 
    enableNumberButtons();
+   startRipplingBodyLights();
    calculation.intervalId = setInterval(processSums, 1000);
 }
 
@@ -578,11 +572,11 @@ function processAttemptedSumAnswer(digitPressed) {
    calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
    document.getElementById("questionAndAnswersPara").textContent = calculation.questionText + calculation.answerText;
 
-	if (calculation.correctDigitGuessed(digitPressed)) {
-		processCorrectDigit();
-	} else {
+   if (calculation.correctDigitGuessed(digitPressed)) {
+      processCorrectDigit();
+   } else {
       processIncorrectDigit();
-	}
+   }
 }
 
 function setInitialRobotEnergy() {
@@ -607,7 +601,7 @@ function clickedANumber(numberButton) {
 }
 
 function pressedAKey(e) {
-	var unicode = e.keyCode? e.keyCode : e.charCode;
+   var unicode = e.keyCode? e.keyCode : e.charCode;
 
    if (key.isDigit(unicode)) {
          interpretNumberInput(unicodeToNumeral(unicode));
