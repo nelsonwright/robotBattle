@@ -19,6 +19,12 @@ var key = Object.freeze({
 	enter: 13	// the enter or return key
 });
 
+var questionOutcome = Object.freeze({
+   correct: "Got it right!",
+   incorrect: "Wrong!",
+   tooSlow: "Too slow!"
+})
+
 var gameState = {
    battleInProgress: false,      // to indicate if we're battling a robot
    timeForSums: 10,				   // how many seconds you have to complete a sum
@@ -427,39 +433,48 @@ function showPlayAgainButton() {
    $("#playAgain").toggleClass("hidden");
 }
 
+function stopTimers() {
+   clearTimeout(gameState.timerId);
+   clearInterval(calculation.intervalId);
+   stopRipplingBodyLights();
+}
+
 function checkEnergy() {
    drawEnergyBars();
 
    if (goodRobot.energy < 0) {
-      clearTimeout(gameState.timerId);
-      clearInterval(calculation.intervalId);
+      stopTimers();
 
-      document.getElementById("questionAndAnswersPara").textContent = "Bad Robot Wins!";
-      document.getElementById("resultPara").textContent = "Oh no!";
+      $("#questionAndAnswersPara").text("Bad Robot Wins!");
+      $("#resultPara").text("Oh no!");
       showPlayAgainButton();
       return;
    }
 
    if (badRobot.energy < 0) {
-      clearTimeout(gameState.timerId);
-      clearInterval(calculation.intervalId);
+      stopTimers();
 
-      document.getElementById("questionAndAnswersPara").textContent = "Good Robot Wins!";
-      document.getElementById("resultPara").textContent = "Hooray!";
+      $("#questionAndAnswersPara").text("Good Robot Wins!");
+      $("#resultPara").text("Hooray!");
       showPlayAgainButton();
       return;
    }
 }
 
 function stopQuestion() {
-   clearInterval(calculation.intervalId);
-   stopRipplingBodyLights();
+   stopTimers();
    disableNumberButtons();
 }
 
-function showFeedbackToAnswer(feedback) {
+function showFeedbackToAnswer(outcome) {
    stopQuestion();
-   calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
+
+   if (outcome === questionOutcome.correct) {
+      calculation.resultText = outcome.toString();
+   } else {
+      calculation.resultText = outcome.toString() + " " + calculation.composeCorrectAnswerText();
+   }
+
    $("#resultPara").text(calculation.resultText);
 }
 
@@ -479,8 +494,8 @@ function startRipplingBodyLights() {
 }
 
 function handleTimerRunDown() {
-   stopRipplingBodyLights();
-   showFeedbackToAnswer("Too Slow!");
+   stopTimers();
+   showFeedbackToAnswer(questionOutcome.tooSlow);
    goodRobot.energy--;
    checkEnergy();
    calculation.inProgress = false;
@@ -500,7 +515,6 @@ function processSums() {
 	if (calculation.timeAllowed > 0) {
       displayTimerValue();
 	} else {
-      stopRipplingBodyLights();
       handleTimerRunDown();
 	}
 }
@@ -547,19 +561,15 @@ function processCorrectDigit() {
 
    if (calculation.gotItAllCorrect()) {
       stopQuestion();
-
-      calculation.resultText = "Got it right!";
-      $("#resultPara").text(calculation.resultText);
-
-
+      showFeedbackToAnswer(questionOutcome.correct)
       badRobot.energy--;
       getNextQuestionIfAlive();
    }
 }
 
 function processIncorrectDigit() {
-   stopRipplingBodyLights();
-   showFeedbackToAnswer("Wrong!");
+   stopTimers();
+   showFeedbackToAnswer(questionOutcome.incorrect);
    goodRobot.energy--;
    getNextQuestionIfAlive();
 }
@@ -613,8 +623,7 @@ function startAnotherGame() {
 }
 
 function swapIntroForGameScreen() {
-   document.getElementById("introDiv").style.display = "none";
-   document.getElementById("gameDiv").style.display = "block";
+   $("#introDiv, #gameDiv").toggleClass("hidden");
 }
 
 function playGame() {
