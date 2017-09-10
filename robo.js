@@ -20,12 +20,14 @@ var key = Object.freeze({
 });
 
 var gameState = {
-   battleInProgress: false,   // to indicate if we're battling a robot
-   timeForSums: 10,				// how many seconds you have to complete a sum
-   timerId: null,             // timerId for when we want to pause for a bit
-   goodRobotMaxEnergy: 8,     // how many energy cells the good robot starts with
-   badRobotMaxEnergy: 8,      // how many energy cells the bad robot starts with
-   pauseBetweenQuestions: 2.5 // time in seconds between questions
+   battleInProgress: false,      // to indicate if we're battling a robot
+   timeForSums: 10,				   // how many seconds you have to complete a sum
+   timerId: null,                // ID for when we want to pause for a bit
+   goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
+   badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
+   pauseBetweenQuestions: 2.5,   // time in seconds between questions
+   lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
+   lightRippleIntervalId: null      // ID for light rippling, as above
 };
 
 var screenState = {
@@ -451,13 +453,14 @@ function checkEnergy() {
 
 function stopQuestion() {
    clearInterval(calculation.intervalId);
+   stopRipplingBodyLights();
    disableNumberButtons();
 }
 
 function showFeedbackToAnswer(feedback) {
    stopQuestion();
    calculation.resultText = feedback + " " + calculation.composeCorrectAnswerText();
-   document.getElementById("resultPara").textContent = calculation.resultText;
+   $("#resultPara").text(calculation.resultText);
 }
 
 function getNextQuestionReadyIfBothRobotsAlive() {
@@ -466,7 +469,17 @@ function getNextQuestionReadyIfBothRobotsAlive() {
    }
 }
 
+function stopRipplingBodyLights() {
+   clearInterval(gameState.lightRippleIntervalId);
+   gameState.lightRippleIntervalId = null;
+}
+
+function startRipplingBodyLights() {
+   gameState.lightRippleIntervalId = setInterval(rippleRobotBodyLights, (1 / gameState.lightRippleFrequency) * 1000);
+}
+
 function handleTimerRunDown() {
+   stopRipplingBodyLights();
    showFeedbackToAnswer("Too Slow!");
    goodRobot.energy--;
    checkEnergy();
@@ -480,11 +493,14 @@ function handleTimerRunDown() {
 
 function processSums() {
    calculation.timeAllowed--;
+   if (gameState.lightRippleIntervalId === null) {
+      startRipplingBodyLights();
+   }
 
 	if (calculation.timeAllowed > 0) {
       displayTimerValue();
-      rippleRobotBodyLights();
 	} else {
+      stopRipplingBodyLights();
       handleTimerRunDown();
 	}
 }
@@ -533,7 +549,8 @@ function processCorrectDigit() {
       stopQuestion();
 
       calculation.resultText = "Got it right!";
-      document.getElementById("resultPara").textContent = calculation.resultText;
+      $("#resultPara").text(calculation.resultText);
+
 
       badRobot.energy--;
       getNextQuestionIfAlive();
@@ -541,6 +558,7 @@ function processCorrectDigit() {
 }
 
 function processIncorrectDigit() {
+   stopRipplingBodyLights();
    showFeedbackToAnswer("Wrong!");
    goodRobot.energy--;
    getNextQuestionIfAlive();
