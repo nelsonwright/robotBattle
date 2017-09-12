@@ -23,7 +23,7 @@ var questionOutcome = Object.freeze({
    correct: "Got it right!",
    incorrect: "Wrong!",
    tooSlow: "Too slow!"
-})
+});
 
 var gameState = {
    battleInProgress: false,      // to indicate if we're battling a robot
@@ -82,16 +82,16 @@ var screenState = {
 
 var goodRobot = {
    energy: null,
-   lightColours: [
+   lightColours: Object.freeze([
       "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
-   ]
+   ])
 };
 
 var badRobot = {
    energy: null,
-   lightColours: [
+   lightColours: Object.freeze([
        "red", "royalblue", "magenta", "gold", "white", "plum"
-   ]
+   ])
 };
 
 var calculation = {
@@ -545,6 +545,11 @@ function getNextQuestionIfAlive() {
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
+function setInitialRobotEnergy() {
+   goodRobot.energy = gameState.goodRobotMaxEnergy;
+   badRobot.energy = gameState.badRobotMaxEnergy;
+}
+
 function drawInitialEnergyBars() {
    setInitialRobotEnergy();
    drawEnergyBars();
@@ -555,7 +560,7 @@ function processCorrectDigit() {
 
    if (calculation.gotItAllCorrect()) {
       stopQuestion();
-      showFeedbackToAnswer(questionOutcome.correct)
+      showFeedbackToAnswer(questionOutcome.correct);
       badRobot.energy--;
       getNextQuestionIfAlive();
    }
@@ -577,11 +582,6 @@ function processAttemptedSumAnswer(digitPressed) {
    } else {
       processIncorrectDigit();
    }
-}
-
-function setInitialRobotEnergy() {
-   goodRobot.energy = gameState.goodRobotMaxEnergy;
-   badRobot.energy = gameState.badRobotMaxEnergy;
 }
 
 function noBattleInProgress() {
