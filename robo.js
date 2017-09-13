@@ -1,9 +1,6 @@
-// needed due to Inkscape calculating y values from bottom to top, rather than top to bottom
-var yOffset = 455;
-
 // just to put the robot in a better place on the canvas
+var yOffset = 5;
 var xOffset = 20;
-
 
 // these are the unicode values for the keyboard keys when pressed
 var key = Object.freeze({
@@ -81,6 +78,7 @@ var screenState = {
 };
 
 var goodRobot = {
+   colour: "firebrick",
    energy: null,
    lightColours: Object.freeze([
       "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
@@ -88,6 +86,7 @@ var goodRobot = {
 };
 
 var badRobot = {
+   colour: "limegreen",
    energy: null,
    lightColours: Object.freeze([
        "red", "royalblue", "magenta", "gold", "white", "plum"
@@ -152,12 +151,19 @@ var calculation = {
 *   Stuff to do with drawing the robots
 ***************************************/
 function drawOffsetStrokedRect(ctx, x, y, width, height) {
-   ctx.fillRect(x + xOffset, yOffset - y - height, width, height);
-   ctx.strokeRect(x + xOffset, yOffset - y - height, width, height);
+   ctx.fillRect(x + xOffset, y + yOffset, width, height);
+   ctx.strokeRect(x + xOffset, y + yOffset, width, height);
+}
+
+function clearOffsetStrokedRect(ctx, x, y, width, height) {
+   ctx.clearRect(x + xOffset, y + yOffset, width, height);
+   ctx.strokeStyle = $('body').css("background-color");
+   ctx.lineWidth = 4;
+   ctx.strokeRect(x + xOffset, y + yOffset, width, height);
 }
 
 function drawBodyLight(ctx, position) {
-   var y = yOffset - 157;
+   var y = 152 + yOffset;
    var x = 87;
    var areaWidth = 100;
    var circleRadius = 5;
@@ -173,8 +179,8 @@ function drawBodyLight(ctx, position) {
 function drawBodyLights() {
    var i;  //loop counter
 
-   screenState.context.goodRobot.lineWidth = 3;
-   screenState.context.badRobot.lineWidth = 3;
+   screenState.context.goodRobot.lineWidth = 2;
+   screenState.context.badRobot.lineWidth = 2;
 
    for (i=0; i<3; i++) {
       screenState.context.goodRobot.fillStyle = goodRobot.lightColours[i];
@@ -189,7 +195,7 @@ function chooseAndDrawLights(robot, ctx) {
    var lightToChange;
    var randomColourIndex;
 
-   ctx.lineWidth = 3;
+   // ctx.lineWidth = 2;
 
    for (i = 0; i < 2; i++) {
       lightToChange = Math.floor(Math.random() * 3);
@@ -206,7 +212,7 @@ function rippleRobotBodyLights() {
 }
 
 function drawBodyDecoration(ctx) {
-   var y = yOffset - 245;
+   var y = 185 + yOffset;
    var x = 71;
    var width =  96;
    var height = 60;
@@ -238,9 +244,9 @@ function drawBodyDecoration(ctx) {
 }
 
 function drawEyes(ctx) {
-   var y = yOffset - 337;
+   var y = 337 + yOffset;
    ctx.fillStyle = "white";
-   ctx.lineWidth=5;
+   ctx.lineWidth = 4;
 
    ctx.beginPath();
    ctx.arc(100 + xOffset, y, 7, 0, 2*Math.PI);
@@ -253,10 +259,45 @@ function drawEyes(ctx) {
    ctx.fill();
 }
 
+function clearLeftArmAndHand(ctx) {
+   clearOffsetStrokedRect(ctx, 8, 170, 27, 117);
+   clearOffsetStrokedRect(ctx, 0, 141, 42, 32);
+}
+
+function drawLeftArmAndHand(ctx) {
+   drawOffsetStrokedRect(ctx, 8, 170, 27, 117);
+   drawOffsetStrokedRect(ctx, 0, 141, 42, 32);
+}
+
+function drawRightArmAndHand(ctx) {
+   drawOffsetStrokedRect(ctx, 201, 166, 27, 121);
+   drawOffsetStrokedRect(ctx, 194, 136, 42, 32);
+}
+
+function drawLeftArmAndHandUp(ctx) {
+   clearLeftArmAndHand(ctx);
+
+   ctx.fillStyle = goodRobot.colour;
+   ctx.strokeStyle = "black";
+
+   drawOffsetStrokedRect(ctx, 8, 260, 27, 160);
+   // drawOffsetStrokedRect(ctx, 0, 200, 42, 212);
+}
+
+function drawArmsAndHands(ctx) {
+   drawLeftArmAndHand(ctx);
+   drawRightArmAndHand(ctx);
+}
+
 function drawRobot(ctx, colour) {
+   // needed due to Inkscape calculating y values from bottom to top, rather than
+   // top to bottom, and the darwing points are taken from Inkscape
+   ctx.translate(0, screenState.canvas.goodRobot.height);
+   ctx.scale(1,-1);
+
    ctx.fillStyle = colour;
    ctx.strokestyle = "black";
-   ctx.lineWidth = 3;
+   ctx.lineWidth = 4;
 
    // head
    drawOffsetStrokedRect(ctx, 90, 293, 57, 84);
@@ -269,13 +310,7 @@ function drawRobot(ctx, colour) {
    drawOffsetStrokedRect(ctx, 50, 125, 136, 162);
    drawOffsetStrokedRect(ctx, 8, 260, 220, 27);
 
-   // arms
-   drawOffsetStrokedRect(ctx, 8, 170, 27, 117);
-   drawOffsetStrokedRect(ctx, 201, 166, 27, 121);
-
-   // hands
-   drawOffsetStrokedRect(ctx, 0, 141, 42, 32);
-   drawOffsetStrokedRect(ctx, 194, 136, 42, 32);
+   drawArmsAndHands(ctx);
 
    // legs
    drawOffsetStrokedRect(ctx, 71, 0, 42, 125);
@@ -290,19 +325,10 @@ function drawRobot(ctx, colour) {
 }
 
 function drawRobots() {
-   drawRobot(screenState.context.goodRobot, "firebrick");
-   drawRobot(screenState.context.badRobot, "limegreen");
-}
-
-function scaleBadRobot() {
+   screenState.canvas.goodRobot.width = screenState.canvas.goodRobot.width;
    screenState.canvas.badRobot.width = screenState.canvas.badRobot.width;
-   var ctx = screenState.context.badRobot;
-
-   ctx.save();
-   // ctx.scale(0.5, 0.5);
-   ctx.rotate((Math.PI / 180) * 25);
-
-   drawRobot(ctx, "limegreen");
+   drawRobot(screenState.context.goodRobot, goodRobot.colour);
+   drawRobot(screenState.context.badRobot, badRobot.colour);
 }
 
 // end of robot drawing section
@@ -560,6 +586,7 @@ function processCorrectDigit() {
 
    if (calculation.gotItAllCorrect()) {
       stopQuestion();
+      // drawLeftArmAndHandUp(screenState.context.goodRobot);
       showFeedbackToAnswer(questionOutcome.correct);
       badRobot.energy--;
       getNextQuestionIfAlive();
@@ -609,6 +636,7 @@ function pressedAKey(e) {
 }
 
 function startAnotherGame() {
+   drawRobots();
    showNumberButtons();
    enableNumberButtons();
    setInitialRobotEnergy();
