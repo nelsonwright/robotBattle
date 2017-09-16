@@ -36,21 +36,15 @@ var gameState = {
 var screenState = {
    canvas: {
       timer: null,
-      goodRobot: null,
       goodEnergy: null,
-      badRobot: null,
       badEnergy: null
    },
    context: {
       timer: null,
-      goodRobot: null,
       goodEnergy: null,
-      badRobot: null,
       badEnergy: null
    },
    setup() {
-      this.canvas.goodRobot = document.getElementById("goodRobot");
-      this.canvas.badRobot = document.getElementById("badRobot");
       this.canvas.goodEnergy = document.getElementById("energyBarGood");
       this.canvas.badEnergy = document.getElementById("energyBarBad");
       this.canvas.timer = document.getElementById("questionTimer");
@@ -59,16 +53,8 @@ var screenState = {
          this.context.timer = this.canvas.timer.getContext("2d");
       }
 
-      if (this.canvas.goodRobot.getContext) {
-         this.context.goodRobot = this.canvas.goodRobot.getContext("2d");
-      }
-
       if (this.canvas.goodEnergy.getContext) {
          this.context.goodEnergy = this.canvas.goodEnergy.getContext("2d");
-      }
-
-      if (this.canvas.badRobot.getContext) {
-         this.context.badRobot = this.canvas.badRobot.getContext("2d");
       }
 
       if (this.canvas.badEnergy.getContext) {
@@ -77,21 +63,16 @@ var screenState = {
    }
 };
 
-var goodRobot = {
-   colour: "firebrick",
-   energy: null,
-   lightColours: Object.freeze([
-      "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
-   ])
+function Robot() {
+   this.colour = null;
+   this.energy = null;
+   this.lightColours = null;
+   this.canvas = null;
+   this.context = null;
 };
 
-var badRobot = {
-   colour: "limegreen",
-   energy: null,
-   lightColours: Object.freeze([
-       "red", "royalblue", "magenta", "gold", "white", "plum"
-   ])
-};
+var goodRobot = new Robot();
+var badRobot = new Robot();
 
 var calculation = {
    firstFactor: null,
@@ -176,26 +157,23 @@ function drawBodyLight(ctx, position) {
    ctx.fill();
 }
 
-function drawBodyLights() {
+function drawBodyLights(robot) {
+   var ctx = robot.context;
    var i;  //loop counter
 
-   screenState.context.goodRobot.lineWidth = 2;
-   screenState.context.badRobot.lineWidth = 2;
+   ctx.lineWidth = 2;
 
    for (i=0; i<3; i++) {
-      screenState.context.goodRobot.fillStyle = goodRobot.lightColours[i];
-      drawBodyLight(screenState.context.goodRobot, i);
-      screenState.context.badRobot.fillStyle = badRobot.lightColours[i];
-      drawBodyLight(screenState.context.badRobot, i);
+      ctx.fillStyle = robot.lightColours[i];
+      drawBodyLight(ctx, i);
    }
 }
 
-function chooseAndDrawLights(robot, ctx) {
+function chooseAndDrawLights(robot) {
+   var ctx = robot.context;
    var i;  //loop counter
    var lightToChange;
    var randomColourIndex;
-
-   // ctx.lineWidth = 2;
 
    for (i = 0; i < 2; i++) {
       lightToChange = Math.floor(Math.random() * 3);
@@ -207,11 +185,12 @@ function chooseAndDrawLights(robot, ctx) {
 }
 
 function rippleRobotBodyLights() {
-   chooseAndDrawLights(goodRobot, screenState.context.goodRobot);
-   chooseAndDrawLights(badRobot, screenState.context.badRobot);
+   chooseAndDrawLights(goodRobot);
+   chooseAndDrawLights(badRobot);
 }
 
-function drawBodyDecoration(ctx) {
+function drawBodyDecoration(robot) {
+   var ctx = robot.context;
    var y = 185 + yOffset;
    var x = 71;
    var width =  96;
@@ -240,7 +219,7 @@ function drawBodyDecoration(ctx) {
       ctx.stroke();
    }
 
-   drawBodyLights(ctx);
+   drawBodyLights(robot);
 }
 
 function drawEyes(ctx) {
@@ -289,13 +268,18 @@ function drawArmsAndHands(ctx) {
    drawRightArmAndHand(ctx);
 }
 
-function drawRobot(ctx, colour) {
+function drawRobot(robot) {
+   var ctx = robot.context;
+
+   // first, blank the canvas . . .
+   robot.canvas.width = robot.canvas.width;
+
    // needed due to Inkscape calculating y values from bottom to top, rather than
-   // top to bottom, and the darwing points are taken from Inkscape
-   ctx.translate(0, screenState.canvas.goodRobot.height);
+   // top to bottom, and the drawing points are taken from Inkscape designs
+   ctx.translate(0, robot.canvas.height);
    ctx.scale(1,-1);
 
-   ctx.fillStyle = colour;
+   ctx.fillStyle = robot.colour;
    ctx.strokestyle = "black";
    ctx.lineWidth = 4;
 
@@ -321,14 +305,12 @@ function drawRobot(ctx, colour) {
    drawOffsetStrokedRect(ctx, 127, 0, 68, 26);
 
    drawEyes(ctx);
-   drawBodyDecoration(ctx);
+   drawBodyDecoration(robot);
 }
 
 function drawRobots() {
-   screenState.canvas.goodRobot.width = screenState.canvas.goodRobot.width;
-   screenState.canvas.badRobot.width = screenState.canvas.badRobot.width;
-   drawRobot(screenState.context.goodRobot, goodRobot.colour);
-   drawRobot(screenState.context.badRobot, badRobot.colour);
+   drawRobot(goodRobot);
+   drawRobot(badRobot);
 }
 
 // end of robot drawing section
@@ -390,6 +372,27 @@ function drawEnergyBars() {
 
 // end of energy bar drawing section
 
+function setRobotAttributes() {
+   goodRobot.colour = "firebrick";
+   goodRobot.lightColours = Object.freeze([
+      "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
+   ]);
+   goodRobot.canvas = document.getElementById("goodRobot");
+
+   if (goodRobot.canvas.getContext) {
+      goodRobot.context = goodRobot.canvas.getContext("2d");
+   }
+
+   badRobot.colour = "limegreen";
+   badRobot.lightColours = Object.freeze([
+      "red", "royalblue", "magenta", "gold", "white", "plum"
+   ]);
+   badRobot.canvas = document.getElementById("badRobot");
+
+   if (badRobot.canvas.getContext) {
+      badRobot.context = badRobot.canvas.getContext("2d");
+   }
+}
 
 function setUpQuestion() {
    document.getElementById("questionAndAnswersPara").textContent = calculation.createQuestionText();
@@ -437,7 +440,7 @@ function resetTimerCanvas() {
 }
 
 function resetGoodRobotBodyLights() {
-   drawBodyLights(screenState.context.goodRobot);
+   drawBodyLights(goodRobot);
 }
 
 function displayTimerValue() {
@@ -639,7 +642,6 @@ function startAnotherGame() {
    drawRobots();
    showNumberButtons();
    enableNumberButtons();
-   setInitialRobotEnergy();
    drawInitialEnergyBars();
    humanReadyToDoSums();
 }
@@ -650,6 +652,7 @@ function swapIntroForGameScreen() {
 
 function playGame() {
    swapIntroForGameScreen();
+   setRobotAttributes();
    screenState.setup();
    drawRobots();
    drawInitialEnergyBars();
