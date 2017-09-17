@@ -35,30 +35,16 @@ var gameState = {
 
 var screenState = {
    canvas: {
-      timer: null,
-      goodEnergy: null,
-      badEnergy: null
+      timer: null
    },
    context: {
-      timer: null,
-      goodEnergy: null,
-      badEnergy: null
+      timer: null
    },
    setup() {
-      this.canvas.goodEnergy = document.getElementById("energyBarGood");
-      this.canvas.badEnergy = document.getElementById("energyBarBad");
       this.canvas.timer = document.getElementById("questionTimer");
 
       if (this.canvas.timer.getContext) {
          this.context.timer = this.canvas.timer.getContext("2d");
-      }
-
-      if (this.canvas.goodEnergy.getContext) {
-         this.context.goodEnergy = this.canvas.goodEnergy.getContext("2d");
-      }
-
-      if (this.canvas.badEnergy.getContext) {
-         this.context.badEnergy = this.canvas.badEnergy.getContext("2d");
       }
    }
 };
@@ -73,6 +59,15 @@ function Robot() {
 
 var goodRobot = new Robot();
 var badRobot = new Robot();
+
+function EnergyBar() {
+   this.canvas = null;
+   this.context = null;
+   this.colour = null;
+}
+
+var goodEnergyBar = new EnergyBar();
+var badEnergyBar = new EnergyBar();
 
 var calculation = {
    firstFactor: null,
@@ -349,20 +344,21 @@ function drawStrokedRectWithGradient(ctx, position, colour, canvas) {
    ctx.strokeRect(0, y, width, width);
 }
 
-function drawEnergyBar(canvas, energy, colour, context) {
-   for (var i=0; i<energy; i++) {
-      drawStrokedRectWithGradient(context, i, colour, canvas);
+function drawEnergyBar(energyBar, robot) {
+   // blank the canvas before drawing anything . . .
+   energyBar.canvas.width = energyBar.canvas.width;
+
+   for (var i = 0; i < robot.energy; i++) {
+      drawStrokedRectWithGradient(energyBar.context, i, energyBar.colour, energyBar.canvas);
    }
 }
 
 function drawGoodRobotEnergyBar() {
-   screenState.canvas.goodEnergy.width = screenState.canvas.goodEnergy.width;
-   drawEnergyBar(screenState.canvas.goodEnergy, goodRobot.energy, "firebrick", screenState.context.goodEnergy);
+   drawEnergyBar(goodEnergyBar, goodRobot);
 }
 
 function drawBadRobotEnergyBar() {
-   screenState.canvas.badEnergy.width = screenState.canvas.badEnergy.width;
-   drawEnergyBar(screenState.canvas.badEnergy, badRobot.energy, "green", screenState.context.badEnergy);
+   drawEnergyBar(badEnergyBar, badRobot);
 }
 
 function drawEnergyBars() {
@@ -371,6 +367,22 @@ function drawEnergyBars() {
 }
 
 // end of energy bar drawing section
+
+function setEnergyBarAttributes() {
+   goodEnergyBar.canvas = document.getElementById("energyBarGood");
+   goodEnergyBar.colour = "firebrick";
+
+   if (goodEnergyBar.canvas.getContext) {
+      goodEnergyBar.context = (goodEnergyBar.canvas.getContext("2d"));
+   }
+
+   badEnergyBar.canvas = document.getElementById("energyBarBad");
+   badEnergyBar.colour = "green";
+
+   if (badEnergyBar.canvas.getContext) {
+      badEnergyBar.context = (badEnergyBar.canvas.getContext("2d"));
+   }
+}
 
 function setRobotAttributes() {
    goodRobot.colour = "firebrick";
@@ -392,6 +404,12 @@ function setRobotAttributes() {
    if (badRobot.canvas.getContext) {
       badRobot.context = badRobot.canvas.getContext("2d");
    }
+}
+
+function initialiseModels() {
+   setRobotAttributes();
+   setEnergyBarAttributes();
+   screenState.setup();
 }
 
 function setUpQuestion() {
@@ -652,8 +670,7 @@ function swapIntroForGameScreen() {
 
 function playGame() {
    swapIntroForGameScreen();
-   setRobotAttributes();
-   screenState.setup();
+   initialiseModels();
    drawRobots();
    drawInitialEnergyBars();
 }
