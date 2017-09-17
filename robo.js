@@ -53,16 +53,21 @@ function EnergyBar() {
 var goodEnergyBar = new EnergyBar();
 var badEnergyBar = new EnergyBar();
 
-function Timer(canvas) {
-   this.canvas = canvas;
-   this.context = null;
-   if (this.canvas.getContext) {
-      this.context = this.canvas.getContext("2d");
-   };
-   this.timeRemaining = null;
-}
+var timer = {
+   canvas: null,
+   context:  null,
+   timeRemaining: null,
+   setup(canvas) {
+      this.canvas = canvas;
 
-var timer;
+      if (canvas.getContext) {
+         this.context = canvas.getContext("2d");
+      }
+   },
+   setTimeRemaining() {
+      this.timeRemaining = gameState.timeForSums;
+   }
+};
 
 var calculation = {
    firstFactor: null,
@@ -397,10 +402,7 @@ function setRobotAttributes() {
 }
 
 function setTimerAttributes() {
-   timer = new Timer(document.getElementById("questionTimer"));
-   timer.setTimeRemaining = function() {
-      this.timeRemaining = gameState.timeForSums;
-   }
+   timer.setup(document.getElementById("questionTimer"))
 }
 
 function initialiseModels() {
