@@ -33,22 +33,6 @@ var gameState = {
    lightRippleIntervalId: null   // ID for light rippling, as above
 };
 
-var screenState = {
-   canvas: {
-      timer: null
-   },
-   context: {
-      timer: null
-   },
-   setup() {
-      this.canvas.timer = document.getElementById("questionTimer");
-
-      if (this.canvas.timer.getContext) {
-         this.context.timer = this.canvas.timer.getContext("2d");
-      }
-   }
-};
-
 function Robot() {
    this.colour = null;
    this.energy = null;
@@ -69,11 +53,21 @@ function EnergyBar() {
 var goodEnergyBar = new EnergyBar();
 var badEnergyBar = new EnergyBar();
 
+function Timer(canvas) {
+   this.canvas = canvas;
+   this.context = null;
+   if (this.canvas.getContext) {
+      this.context = this.canvas.getContext("2d");
+   };
+   this.timeRemaining = null;
+}
+
+var timer;
+
 var calculation = {
    firstFactor: null,
    secondFactor: null,
    digitToGuess: null,
-   timeAllowed: null, // how many seconds you're allowed to answer this particular calculation
    answerIndex: null,
    questionText: "",
    answerText: "",
@@ -114,9 +108,6 @@ var calculation = {
       this.resultText = " ";
       this.answerText = "";
       this.questionText = "";
-   },
-   setTimeAllowed() {
-      this.timeAllowed = gameState.timeForSums;
    },
    composeCorrectAnswerText() {
       return "It's " + this.product();
@@ -313,13 +304,12 @@ function drawRobots() {
 /*******************************
 *   draw the countdown timer
 *******************************/
-function drawTimer(ctx, timeRemaining, virtualCanvasWidth) {
+function drawTimer() {
    var timeRemainingBoxWidth;
+   timer.context.fillStyle = "orange";
 
-   ctx.fillStyle = "orange";
-
-   timeRemainingBoxWidth = (calculation.timeAllowed / gameState.timeForSums) * virtualCanvasWidth;
-   ctx.fillRect(0, 0, timeRemainingBoxWidth, 60);
+   timeRemainingBoxWidth = (timer.timeRemaining / gameState.timeForSums) * timer.canvas.width;
+   timer.context.fillRect(0, 0, timeRemainingBoxWidth, 60);
 }
 // end of countdown timer drawing section
 
@@ -406,16 +396,23 @@ function setRobotAttributes() {
    }
 }
 
+function setTimerAttributes() {
+   timer = new Timer(document.getElementById("questionTimer"));
+   timer.setTimeRemaining = function() {
+      this.timeRemaining = gameState.timeForSums;
+   }
+}
+
 function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
-   screenState.setup();
+   setTimerAttributes();
 }
 
 function setUpQuestion() {
    document.getElementById("questionAndAnswersPara").textContent = calculation.createQuestionText();
    document.getElementById("resultPara").textContent = calculation.resultText;
-   calculation.setTimeAllowed();
+   timer.setTimeRemaining();
    clearInterval(calculation.intervalId);
 }
 
@@ -454,7 +451,7 @@ function enableNumberButtons() {
 }
 
 function resetTimerCanvas() {
-   screenState.canvas.timer.width = screenState.canvas.timer.width;
+   timer.canvas.width = timer.canvas.width;
 }
 
 function resetGoodRobotBodyLights() {
@@ -463,7 +460,7 @@ function resetGoodRobotBodyLights() {
 
 function displayTimerValue() {
    resetTimerCanvas();
-   drawTimer(screenState.context.timer, calculation.timeAllowed, screenState.canvas.timer.width);
+   drawTimer();
 }
 
 function showNumberButtons() {
@@ -549,9 +546,9 @@ function handleTimerRunDown() {
 }
 
 function processSums() {
-   calculation.timeAllowed--;
+   timer.timeRemaining--;
 
-   if (calculation.timeAllowed > 0) {
+   if (timer.timeRemaining > 0) {
       displayTimerValue();
    } else {
       handleTimerRunDown();
@@ -607,7 +604,6 @@ function processCorrectDigit() {
 
    if (calculation.gotItAllCorrect()) {
       stopQuestion();
-      // drawLeftArmAndHandUp(screenState.context.goodRobot);
       showFeedbackToAnswer(questionOutcome.correct);
       badRobot.energy--;
       getNextQuestionIfAlive();
