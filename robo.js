@@ -69,7 +69,7 @@ function Robot() {
    this.lightColours = null;
    this.canvas = null;
    this.context = null;
-};
+}
 
 var goodRobot = new Robot();
 var badRobot = new Robot();
@@ -138,7 +138,7 @@ function drawOffsetStrokedRect(ctx, x, y, width, height) {
 
 function clearOffsetStrokedRect(ctx, x, y, width, height) {
    ctx.clearRect(x + xOffset, y + yOffset, width, height);
-   ctx.strokeStyle = $('body').css("background-color");
+   ctx.strokeStyle = $("body").css("background-color");
    ctx.lineWidth = 4;
    ctx.strokeRect(x + xOffset, y + yOffset, width, height);
 }
