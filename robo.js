@@ -33,16 +33,18 @@ var gameState = {
    lightRippleIntervalId: null   // ID for light rippling, as above
 };
 
-function Robot() {
-   this.colour = null;
-   this.energy = null;
-   this.lightColours = null;
-   this.canvas = null;
-   this.context = null;
+function Robot(colour, lightColours, canvas) {
+   this.colour = colour;
+   this.lightColours = Object.freeze(lightColours);
+   this.canvas = canvas;
+
+   if (this.canvas.getContext) {
+      this.context = this.canvas.getContext("2d");
+   }
 }
 
-var goodRobot = new Robot();
-var badRobot = new Robot();
+var goodRobot;
+var badRobot;
 
 function EnergyBar() {
    this.canvas = null;
@@ -120,7 +122,7 @@ var calculation = {
 };
 
 /**************************************
-*   Stuff to do with drawing the robots
+*   Stuff to do with drawing the robot
 ***************************************/
 function drawOffsetStrokedRect(ctx, x, y, width, height) {
    ctx.fillRect(x + xOffset, y + yOffset, width, height);
@@ -380,29 +382,15 @@ function setEnergyBarAttributes() {
 }
 
 function setRobotAttributes() {
-   goodRobot.colour = "firebrick";
-   goodRobot.lightColours = Object.freeze([
-      "gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"
-   ]);
-   goodRobot.canvas = document.getElementById("goodRobot");
+   var lightColours = ["gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"];
+   goodRobot = new Robot("firebrick", lightColours, document.getElementById("goodRobot"));
 
-   if (goodRobot.canvas.getContext) {
-      goodRobot.context = goodRobot.canvas.getContext("2d");
-   }
-
-   badRobot.colour = "limegreen";
-   badRobot.lightColours = Object.freeze([
-      "red", "royalblue", "magenta", "gold", "white", "plum"
-   ]);
-   badRobot.canvas = document.getElementById("badRobot");
-
-   if (badRobot.canvas.getContext) {
-      badRobot.context = badRobot.canvas.getContext("2d");
-   }
+   lightColours = ["red", "royalblue", "magenta", "gold", "white", "plum"];
+   badRobot = new Robot("limegreen", lightColours, document.getElementById("badRobot"));
 }
 
 function setTimerAttributes() {
-   timer.setup(document.getElementById("questionTimer"))
+   timer.setup(document.getElementById("questionTimer"));
 }
 
 function initialiseModels() {
