@@ -164,7 +164,7 @@ function Robot(colour, lightColours, canvas) {
       function drawLeftArmAndHandUp() {
          clearLeftArmAndHand();
 
-         self.context.fillStyle = goodRobot.colour;
+         self.context.fillStyle = self.colour;
          self.context.strokeStyle = "black";
 
          drawOffsetStrokedRect(self.context, 8, 260, 27, 160);
@@ -219,7 +219,7 @@ var badRobot;
 function rippleRobotBodyLights () {
    goodRobot.chooseAndDrawLights();
    badRobot.chooseAndDrawLights();
-};
+}
 
 function EnergyBar() {
    this.canvas = null;
