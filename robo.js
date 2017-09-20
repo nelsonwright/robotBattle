@@ -412,14 +412,17 @@ function unicodeToNumeral(numberCode) {
    return digitPressed;
 }
 
-function setNumberButtonsDisabled(state) {
-   var numbersDiv = document.getElementById("numeralsDiv");
-   var numberButtons = numbersDiv.getElementsByTagName("button");
-   var i; //loop counter
+function setNumberButtonsDisabled(disabledState) {
+   var buttons = $("#numeralsDiv button");
 
-   for (i = 0; i < numberButtons.length; i++) {
-      numberButtons[i].disabled = state;
-      numberButtons[i].style.opacity = state === true ? 0.5 : 1;
+   if (disabledState) {
+      buttons
+      .attr("disabled","disabled")
+      .fadeTo("fast", 0.5);
+   } else {
+      buttons
+      .removeAttr('disabled')
+      .fadeTo("fast", 1);
    }
 }
 
