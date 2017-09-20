@@ -72,6 +72,51 @@ function Robot(colour, lightColours, canvas) {
       self.context.fill();
    }
 
+   function drawEyes() {
+      var y = 337 + yOffset;
+      self.context.fillStyle = "white";
+      self.context.lineWidth = 4;
+
+      self.context.beginPath();
+      self.context.arc(100 + xOffset, y, 7, 0, 2*Math.PI);
+      self.context.stroke();
+      self.context.fill();
+
+      self.context.moveTo(138 + xOffset, y);
+      self.context.arc(138 + xOffset, y, 7, 0, 2*Math.PI);
+      self.context.stroke();
+      self.context.fill();
+   }
+
+   function clearLeftArmAndHand() {
+      clearOffsetStrokedRect(self.context, 8, 170, 27, 117);
+      clearOffsetStrokedRect(self.context, 0, 141, 42, 32);
+   }
+
+   function drawLeftArmAndHand() {
+      drawOffsetStrokedRect(self.context, 8, 170, 27, 117);
+      drawOffsetStrokedRect(self.context, 0, 141, 42, 32);
+   }
+
+   function drawRightArmAndHand() {
+      drawOffsetStrokedRect(self.context, 201, 166, 27, 121);
+      drawOffsetStrokedRect(self.context, 194, 136, 42, 32);
+   }
+
+   function drawLeftArmAndHandUp() {
+      clearLeftArmAndHand();
+
+      self.context.fillStyle = self.colour;
+      self.context.strokeStyle = "black";
+
+      drawOffsetStrokedRect(self.context, 8, 260, 27, 160);
+   }
+
+   function drawArmsAndHands() {
+      drawLeftArmAndHand();
+      drawRightArmAndHand();
+   }
+
    this.drawBodyLights = function() {
       var i;  //loop counter
 
@@ -128,51 +173,6 @@ function Robot(colour, lightColours, canvas) {
          }
 
          self.drawBodyLights();
-      }
-
-      function drawEyes() {
-         var y = 337 + yOffset;
-         self.context.fillStyle = "white";
-         self.context.lineWidth = 4;
-
-         self.context.beginPath();
-         self.context.arc(100 + xOffset, y, 7, 0, 2*Math.PI);
-         self.context.stroke();
-         self.context.fill();
-
-         self.context.moveTo(138 + xOffset, y);
-         self.context.arc(138 + xOffset, y, 7, 0, 2*Math.PI);
-         self.context.stroke();
-         self.context.fill();
-      }
-
-      function clearLeftArmAndHand() {
-         clearOffsetStrokedRect(self.context, 8, 170, 27, 117);
-         clearOffsetStrokedRect(self.context, 0, 141, 42, 32);
-      }
-
-      function drawLeftArmAndHand() {
-         drawOffsetStrokedRect(self.context, 8, 170, 27, 117);
-         drawOffsetStrokedRect(self.context, 0, 141, 42, 32);
-      }
-
-      function drawRightArmAndHand() {
-         drawOffsetStrokedRect(self.context, 201, 166, 27, 121);
-         drawOffsetStrokedRect(self.context, 194, 136, 42, 32);
-      }
-
-      function drawLeftArmAndHandUp() {
-         clearLeftArmAndHand();
-
-         self.context.fillStyle = self.colour;
-         self.context.strokeStyle = "black";
-
-         drawOffsetStrokedRect(self.context, 8, 260, 27, 160);
-      }
-
-      function drawArmsAndHands() {
-         drawLeftArmAndHand();
-         drawRightArmAndHand();
       }
 
       // first, blank the canvas . . .
@@ -431,9 +431,9 @@ function enableNumberButtons() {
    setNumberButtonsDisabled(false);
 }
 
-function resetGoodRobotBodyLights() {
-   // drawBodyLights(goodRobot);
+function resetRobotBodyLights() {
    goodRobot.drawBodyLights();
+   badRobot.drawBodyLights();
 }
 
 function displayTimerValue() {
@@ -519,7 +519,7 @@ function handleTimerRunDown() {
    calculation.inProgress = false;
 
    timer.clearCanvas();
-   resetGoodRobotBodyLights();
+   resetRobotBodyLights();
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
@@ -561,7 +561,7 @@ function humanReadyToDoSums() {
 }
 
 function getNextQuestionIfAlive() {
-   resetGoodRobotBodyLights();
+   resetRobotBodyLights();
    checkEnergy();
    calculation.inProgress = false;
    getNextQuestionReadyIfBothRobotsAlive();
