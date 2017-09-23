@@ -102,6 +102,18 @@ function setUpQuestion() {
    clearInterval(calculation.intervalId);
 }
 
+function setHandlers() {
+   $("#numeralsDiv button")
+      .on("click", function() {
+         interpretNumberInput(parseInt(this.textContent));
+      });
+
+   $("body")
+      .on("keyup", function(event) {
+         pressedAKey(event);
+      });
+}
+
 function setNumberButtonsDisabled(disabledState) {
    var $buttons = $("#numeralsDiv button");
 
@@ -311,10 +323,6 @@ function interpretNumberInput(number) {
    }
 }
 
-function clickedANumber(numberButton) {
-   interpretNumberInput(parseInt(numberButton.textContent));
-}
-
 function pressedAKey(e) {
    var unicode = e.keyCode? e.keyCode : e.charCode;
 
@@ -336,6 +344,7 @@ function swapIntroForGameScreen() {
 }
 
 function playGame() {
+   setHandlers();
    swapIntroForGameScreen();
    initialiseModels();
    drawRobots();
