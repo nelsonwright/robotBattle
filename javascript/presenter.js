@@ -114,26 +114,16 @@ function setHandlers() {
       });
 }
 
-function setNumberButtonsDisabled(disabledState) {
-   var $buttons = $("#numeralsDiv button");
-
-   if (disabledState) {
-      $buttons
+function disableNumberButtons() {
+   $("#numeralsDiv button")
       .attr("disabled","disabled")
       .fadeTo("fast", 0.5);
-   } else {
-      $buttons
-      .removeAttr("disabled")
-      .fadeTo("fast", 1);
-   }
-}
-
-function disableNumberButtons() {
-   setNumberButtonsDisabled(true);
 }
 
 function enableNumberButtons() {
-   setNumberButtonsDisabled(false);
+   $("#numeralsDiv button")
+      .removeAttr("disabled")
+      .fadeTo("fast", 1);
 }
 
 function resetRobotBodyLights() {
