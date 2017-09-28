@@ -34,3 +34,10 @@ function drawStrokedRectWithGradient(ctx, position, colour, canvas) {
    ctx.lineWidth = 2;
    ctx.strokeRect(0, y, width, width);
 }
+
+var screen = {
+   draw() {
+      goodRobot.draw();
+      badRobot.draw();
+   }
+}

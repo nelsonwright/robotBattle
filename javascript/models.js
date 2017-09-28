@@ -34,6 +34,7 @@ function Robot(colour, lightColours, canvas) {
    this.lightColours = Object.freeze(lightColours);
    this.canvas = canvas;
    this.context = null;
+   this.leftArmRaised = false;
 
    var self = this;
 
@@ -82,8 +83,8 @@ function Robot(colour, lightColours, canvas) {
    }
 
    function drawRightArmAndHand() {
-      drawOffsetStrokedRect(self.context, 201, 166, 27, 121);
-      drawOffsetStrokedRect(self.context, 194, 136, 42, 32);
+      drawOffsetStrokedRect(self.context, 201, 170, 27, 117);
+      drawOffsetStrokedRect(self.context, 194, 141, 42, 32);
    }
 
    function drawLeftArmAndHandUp() {
@@ -92,11 +93,17 @@ function Robot(colour, lightColours, canvas) {
       self.context.fillStyle = self.colour;
       self.context.strokeStyle = "black";
 
-      drawOffsetStrokedRect(self.context, 8, 260, 27, 160);
+      drawOffsetStrokedRect(self.context, 8, 260, 27, 117);
+      drawOffsetStrokedRect(self.context, 0, 378, 42, 32);
    }
 
    function drawArmsAndHands() {
-      drawLeftArmAndHand();
+      if (self.leftArmRaised) {
+         drawLeftArmAndHandUp();
+      } else {
+         drawLeftArmAndHand();
+      }
+
       drawRightArmAndHand();
    }
 

@@ -25,9 +25,8 @@ function rippleRobotBodyLights () {
    badRobot.chooseAndDrawLights();
 }
 
-function drawRobots() {
-   goodRobot.draw();
-   badRobot.draw();
+function drawScreen() {
+   screen.draw();
 }
 
 /**************************
@@ -192,9 +191,13 @@ function showFeedbackToAnswer(outcome) {
    stopQuestion();
 
    if (outcome === questionOutcome.correct) {
+      goodRobot.leftArmRaised = true;
       calculation.resultText = outcome.toString();
+      screen.draw();
    } else {
+      badRobot.leftArmRaised = true;
       calculation.resultText = outcome.toString() + " " + calculation.composeCorrectAnswerText();
+      screen.draw();
    }
 
    $("#resultPara").text(calculation.resultText);
@@ -236,6 +239,9 @@ function resetForNextQuestion() {
    calculation.inProgress = true;
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
+   goodRobot.leftArmRaised = false;
+   badRobot.leftArmRaised = false;
+   screen.draw();
    startRipplingBodyLights();
 }
 
@@ -337,6 +343,6 @@ function playGame() {
    setHandlers();
    swapIntroForGameScreen();
    initialiseModels();
-   drawRobots();
+   screen.draw();
    drawInitialEnergyBars();
 }
