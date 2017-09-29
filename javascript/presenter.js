@@ -37,7 +37,7 @@ function drawEnergyBar(energyBar, robot) {
    // blank the canvas before drawing anything . . .
    energyBar.canvas.width = energyBar.canvas.width;
 
-   for (var i = 0; i < robot.energy; i++) {
+   for (let i = 0; i < robot.energy; i++) {
       drawStrokedRectWithGradient(energyBar.context, i, energyBar.colour, energyBar.canvas);
    }
 }
