@@ -101,18 +101,6 @@ function setUpQuestion() {
    clearInterval(calculation.intervalId);
 }
 
-function setHandlers() {
-   $("#numeralsDiv button")
-      .on("click", function() {
-         interpretNumberInput(parseInt(this.textContent));
-      });
-
-   $("body")
-      .on("keyup", function(event) {
-         pressedAKey(event);
-      });
-}
-
 function disableNumberButtons() {
    $("#numeralsDiv button")
       .attr("disabled","disabled")
@@ -327,8 +315,21 @@ function pressedAKey(e) {
    }
 }
 
+function setHandlers() {
+   $("#numeralsDiv button")
+      .on("click", function() {
+         interpretNumberInput(parseInt(this.textContent));
+      });
+
+   $("body")
+      .on("keyup", function(event) {
+         pressedAKey(event);
+      });
+}
+
 function startAnotherGame() {
-   drawRobots();
+   initialiseModels();
+   screen.draw();
    drawInitialEnergyBars();
    showNumberButtons();
    enableNumberButtons();

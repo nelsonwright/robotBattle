@@ -40,4 +40,4 @@ var screen = {
       goodRobot.draw();
       badRobot.draw();
    }
-}
+};
