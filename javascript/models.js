@@ -108,22 +108,19 @@ function Robot(colour, lightColours, canvas) {
    }
 
    this.drawBodyLights = function() {
-      var i;  //loop counter
-
       self.context.lineWidth = 2;
 
-      for (i=0; i<3; i++) {
+      for (let i = 0; i < 3; i++) {
          self.context.fillStyle = this.lightColours[i];
          drawBodyLight(i);
       }
    };
 
    this.chooseAndDrawLights = function() {
-      var i;  //loop counter
       var lightToChange;
       var randomColourIndex;
 
-      for (i = 0; i < 2; i++) {
+      for (let i = 0; i < 2; i++) {
          lightToChange = Math.floor(Math.random() * 3);
          randomColourIndex = Math.floor(Math.random() * this.lightColours.length);
 
@@ -138,7 +135,6 @@ function Robot(colour, lightColours, canvas) {
          var x = 71;
          var width =  96;
          var height = 60;
-         var i; // loop counter
 
          self.context.strokeStyle = "black";
          self.context.lineWidth = 2;
@@ -146,7 +142,7 @@ function Robot(colour, lightColours, canvas) {
          self.context.strokeRect(x + xOffset, y, width, height);
 
          // draw the grille on the body
-         for (i=0; i<3; i++) {
+         for (let i = 0; i < 3; i++) {
                // horizontal lines
                self.context.beginPath();
                self.context.moveTo(x + xOffset, y + i*(height/3));
@@ -154,7 +150,7 @@ function Robot(colour, lightColours, canvas) {
                self.context.stroke();
          }
 
-         for (i=0; i<4; i++) {
+         for (let i = 0; i < 4; i++) {
             //vertical lines
             self.context.beginPath();
             self.context.moveTo(x + xOffset + i*(width/4), y);
