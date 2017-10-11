@@ -35,12 +35,48 @@ function Robot(colour, lightColours, canvas) {
    this.canvas = canvas;
    this.context = null;
    this.leftArmRaised = false;
+   this.electricityFlash = false;
+   this.electricityIntervalId;
 
    var self = this;
 
    if (this.canvas.getContext) {
       this.context = this.canvas.getContext("2d");
    }
+
+   this.drawElectricity = function(x, y) {
+
+      self.context.save();
+
+      self.context.strokeStyle = "gold";
+      self.context.lineWidth = 2;
+      self.context.globalAlpha = 0.9;
+
+      if (Math.random() > 0.5) {
+         self.context.fillStyle = "lightGoldenRodYellow ";
+      } else {
+         self.context.fillStyle = "gold";
+      }
+
+      self.context.beginPath();
+      self.context.moveTo(10 + x + xOffset, 46 + y + yOffset);
+
+      self.context.lineTo(26 + x + xOffset, 28 + y + yOffset);
+      self.context.lineTo(28 + x + xOffset, 46 + y + yOffset);
+      self.context.lineTo(55 + x + xOffset, 21 + y + yOffset);
+      self.context.lineTo(62 + x + xOffset, 41 + y + yOffset);
+      self.context.lineTo(92 + x + xOffset,  6 + y + yOffset);
+      self.context.lineTo(67 + x + xOffset, 22 + y + yOffset);
+      self.context.lineTo(58 + x + xOffset,  7 + y + yOffset);
+      self.context.lineTo(35 + x + xOffset, 28 + y + yOffset);
+      self.context.lineTo(29 + x + xOffset, 16 + y + yOffset);
+      self.context.lineTo(10 + x + xOffset, 46 + y + yOffset);
+
+      self.context.stroke();
+      self.context.fill();
+
+      self.context.restore();
+   };
 
    function drawBodyLight(position) {
       var y = 152 + yOffset;
@@ -161,6 +197,21 @@ function Robot(colour, lightColours, canvas) {
          self.drawBodyLights();
       }
 
+      function drawFlashingElectrity() {
+         var height = self.canvas.height;
+         var width = self.canvas.width;
+
+         var x = (width / 8) + ((width / 3) * Math.random());
+         var y = (height / 3) + ((height / 4) * Math.random());
+
+         if (self.electricityFlash) {
+            self.electricityIntervalId = setInterval(self.drawElectricity, 100, x, y);
+            self.electricityFlash = false;
+         } else {
+            clearInterval(self.electricityIntervalId);
+         }
+      }
+
       // first, blank the canvas . . .
       this.canvas.width = this.canvas.width;
 
@@ -196,6 +247,7 @@ function Robot(colour, lightColours, canvas) {
 
       drawEyes();
       drawBodyDecoration();
+      drawFlashingElectrity();
    };
 }
 

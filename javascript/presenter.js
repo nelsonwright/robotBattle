@@ -145,6 +145,8 @@ function startRipplingBodyLights() {
 function stopTimers() {
    clearTimeout(gameState.timerId);
    clearInterval(calculation.intervalId);
+   clearInterval(goodRobot.electricityIntervalId);
+   clearInterval(badRobot.electricityIntervalId);
    stopRipplingBodyLights();
 }
 
@@ -180,10 +182,12 @@ function showFeedbackToAnswer(outcome) {
 
    if (outcome === questionOutcome.correct) {
       goodRobot.leftArmRaised = true;
+      badRobot.electricityFlash = true;
       calculation.resultText = outcome.toString();
       screen.draw();
    } else {
       badRobot.leftArmRaised = true;
+      goodRobot.electricityFlash = true;
       calculation.resultText = outcome.toString() + " " + calculation.composeCorrectAnswerText();
       screen.draw();
    }
@@ -229,6 +233,9 @@ function resetForNextQuestion() {
    calculation.intervalId = setInterval(processSums, 1000);
    goodRobot.leftArmRaised = false;
    badRobot.leftArmRaised = false;
+   goodRobot.electricityFlash = false;
+   badRobot.electricityFlash = false;
+
    screen.draw();
    startRipplingBodyLights();
 }
