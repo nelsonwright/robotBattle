@@ -147,6 +147,8 @@ function stopTimers() {
    clearInterval(calculation.intervalId);
    clearInterval(goodRobot.electricityIntervalId);
    clearInterval(badRobot.electricityIntervalId);
+   clearInterval(goodRobot.explosionIntervalId);
+   clearInterval(badRobot.explosionIntervalId);
    stopRipplingBodyLights();
 }
 
@@ -158,6 +160,8 @@ function checkEnergy() {
 
       $("#questionAndAnswersPara").text("Bad Robot Wins!");
       $("#resultPara").text("Oh no!");
+      goodRobot.isExploding = true;
+      screen.draw();
       showPlayAgainButton();
       return;
    }
@@ -167,6 +171,8 @@ function checkEnergy() {
 
       $("#questionAndAnswersPara").text("Good Robot Wins!");
       $("#resultPara").text("Hooray!");
+      badRobot.isExploding = true;
+      screen.draw();
       showPlayAgainButton();
       return;
    }
