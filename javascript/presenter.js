@@ -161,6 +161,7 @@ function checkEnergy() {
       $("#questionAndAnswersPara").text("Bad Robot Wins!");
       $("#resultPara").text("Oh no!");
       goodRobot.isExploding = true;
+      badRobot.rightArmRaised = true;
       screen.draw();
       showPlayAgainButton();
       return;
@@ -172,6 +173,7 @@ function checkEnergy() {
       $("#questionAndAnswersPara").text("Good Robot Wins!");
       $("#resultPara").text("Hooray!");
       badRobot.isExploding = true;
+      goodRobot.rightArmRaised = true;
       screen.draw();
       showPlayAgainButton();
       return;
@@ -238,7 +240,9 @@ function resetForNextQuestion() {
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
    goodRobot.leftArmRaised = false;
+   goodRobot.righttArmRaised = false;
    badRobot.leftArmRaised = false;
+   badRobot.righttArmRaised = false;
    goodRobot.electricityFlash = false;
    badRobot.electricityFlash = false;
 

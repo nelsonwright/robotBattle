@@ -36,6 +36,7 @@ function Robot(colour, lightColours, canvas) {
    this.canvas = canvas;
    this.context = null;
    this.leftArmRaised = false;
+   this.rightArmRaised = false;
    this.electricityFlash = false;
    this.isExploding = false;
    this.electricityIntervalId;
@@ -125,19 +126,22 @@ function Robot(colour, lightColours, canvas) {
       clearOffsetStrokedRect(self.context, 0, 141, 42, 32);
    }
 
-   function drawLeftArmAndHand() {
-      drawOffsetStrokedRect(self.context, 8, 170, 27, 117);
-      drawOffsetStrokedRect(self.context, 0, 141, 42, 32);
-   }
-
    function drawRightArmAndHand() {
       drawOffsetStrokedRect(self.context, 201, 170, 27, 117);
       drawOffsetStrokedRect(self.context, 194, 141, 42, 32);
    }
 
-   function drawLeftArmAndHandUp() {
-      clearLeftArmAndHand();
+   function drawRightArmAndHandUp() {
+      drawOffsetStrokedRect(self.context, 201, 260, 27, 117);
+      drawOffsetStrokedRect(self.context, 194, 378, 42, 32);
+   }
 
+   function drawLeftArmAndHand() {
+      drawOffsetStrokedRect(self.context, 8, 170, 27, 117);
+      drawOffsetStrokedRect(self.context, 0, 141, 42, 32);
+   }
+
+   function drawLeftArmAndHandUp() {
       self.context.fillStyle = self.colour;
       self.context.strokeStyle = "black";
 
@@ -152,7 +156,11 @@ function Robot(colour, lightColours, canvas) {
          drawLeftArmAndHand();
       }
 
-      drawRightArmAndHand();
+      if (self.rightArmRaised) {
+         drawRightArmAndHandUp();
+      } else {
+         drawRightArmAndHand();
+      }
    }
 
    function drawBodyDecoration() {
