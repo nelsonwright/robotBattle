@@ -60,6 +60,11 @@ function setTimerAttributes() {
    timer.setup(document.getElementById("questionTimer"));
 }
 
+function setInitialRobotEnergy() {
+   goodRobot.energy = gameState.goodRobotMaxEnergy;
+   badRobot.energy = gameState.badRobotMaxEnergy;
+}
+
 function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
@@ -245,11 +250,6 @@ function getNextQuestionIfAlive() {
    checkEnergy();
    calculation.inProgress = false;
    getNextQuestionReadyIfBothRobotsAlive();
-}
-
-function setInitialRobotEnergy() {
-   goodRobot.energy = gameState.goodRobotMaxEnergy;
-   badRobot.energy = gameState.badRobotMaxEnergy;
 }
 
 function processCorrectDigit() {
