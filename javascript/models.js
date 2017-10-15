@@ -329,10 +329,20 @@ function Robot(colour, lightColours, canvas) {
    };
 }
 
-function EnergyBar() {
-   this.canvas = null;
+function EnergyBar(robot, canvas, colour) {
+   this.robot = robot;
+   this.canvas = canvas;
+   this.colour = colour;
    this.context = null;
-   this.colour = null;
+
+   this.draw = function() {
+      // blank the canvas before drawing anything . . .
+      this.canvas.width = this.canvas.width;
+
+      for (let i = 0; i < this.robot.energy; i++) {
+         drawStrokedRectWithGradient(this.context, i, this.colour, this.canvas);
+      }
+   }
 }
 
 var timer = {
