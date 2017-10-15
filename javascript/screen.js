@@ -39,5 +39,7 @@ var screen = {
    draw() {
       goodRobot.draw();
       badRobot.draw();
+      goodEnergyBar.draw();
+      badEnergyBar.draw();
    }
 };

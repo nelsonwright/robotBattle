@@ -1,9 +1,6 @@
 
-var goodEnergyBar = new EnergyBar();
-var badEnergyBar = new EnergyBar();
-
-var goodRobot;
-var badRobot;
+var goodEnergyBar, badEnergyBar;
+var goodRobot, badRobot;
 
 function unicodeToNumeral(numberCode) {
    // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
@@ -29,46 +26,22 @@ function drawScreen() {
    screen.draw();
 }
 
-/**************************
-*   draw the energy bars
-***************************/
-
-function drawEnergyBar(energyBar, robot) {
-   // blank the canvas before drawing anything . . .
-   energyBar.canvas.width = energyBar.canvas.width;
-
-   for (let i = 0; i < robot.energy; i++) {
-      drawStrokedRectWithGradient(energyBar.context, i, energyBar.colour, energyBar.canvas);
-   }
-}
-
-function drawGoodRobotEnergyBar() {
-   drawEnergyBar(goodEnergyBar, goodRobot);
-}
-
-function drawBadRobotEnergyBar() {
-   drawEnergyBar(badEnergyBar, badRobot);
-}
-
 function drawEnergyBars() {
-   drawGoodRobotEnergyBar();
-   drawBadRobotEnergyBar();
+   goodEnergyBar.draw();
+   badEnergyBar.draw();
 }
-// end of energy bar drawing section
 
 /********************
 * Initialise models
 ********************/
 function setEnergyBarAttributes() {
-   goodEnergyBar.canvas = document.getElementById("energyBarGood");
-   goodEnergyBar.colour = "firebrick";
+   goodEnergyBar = new EnergyBar(goodRobot, document.getElementById("energyBarGood"), "firebrick");
 
    if (goodEnergyBar.canvas.getContext) {
       goodEnergyBar.context = (goodEnergyBar.canvas.getContext("2d"));
    }
 
-   badEnergyBar.canvas = document.getElementById("energyBarBad");
-   badEnergyBar.colour = "green";
+   badEnergyBar = new EnergyBar(badRobot, document.getElementById("energyBarBad"), "green");
 
    if (badEnergyBar.canvas.getContext) {
       badEnergyBar.context = (badEnergyBar.canvas.getContext("2d"));
@@ -87,10 +60,16 @@ function setTimerAttributes() {
    timer.setup(document.getElementById("questionTimer"));
 }
 
+function setInitialRobotEnergy() {
+   goodRobot.energy = gameState.goodRobotMaxEnergy;
+   badRobot.energy = gameState.badRobotMaxEnergy;
+}
+
 function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
    setTimerAttributes();
+   setInitialRobotEnergy();
 }
 // end of model initialisation
 
@@ -162,7 +141,7 @@ function checkEnergy() {
       $("#resultPara").text("Oh no!");
       goodRobot.isExploding = true;
       badRobot.rightArmRaised = true;
-      screen.draw();
+      drawScreen();
       showPlayAgainButton();
       return;
    }
@@ -174,7 +153,7 @@ function checkEnergy() {
       $("#resultPara").text("Hooray!");
       badRobot.isExploding = true;
       goodRobot.rightArmRaised = true;
-      screen.draw();
+      drawScreen();
       showPlayAgainButton();
       return;
    }
@@ -192,12 +171,12 @@ function showFeedbackToAnswer(outcome) {
       goodRobot.leftArmRaised = true;
       badRobot.electricityFlash = true;
       calculation.resultText = outcome.toString();
-      screen.draw();
+      drawScreen();
    } else {
       badRobot.leftArmRaised = true;
       goodRobot.electricityFlash = true;
       calculation.resultText = outcome.toString() + " " + calculation.composeCorrectAnswerText();
-      screen.draw();
+      drawScreen();
    }
 
    $("#resultPara").text(calculation.resultText);
@@ -246,7 +225,7 @@ function resetForNextQuestion() {
    goodRobot.electricityFlash = false;
    badRobot.electricityFlash = false;
 
-   screen.draw();
+   drawScreen();
    startRipplingBodyLights();
 }
 
@@ -271,16 +250,6 @@ function getNextQuestionIfAlive() {
    checkEnergy();
    calculation.inProgress = false;
    getNextQuestionReadyIfBothRobotsAlive();
-}
-
-function setInitialRobotEnergy() {
-   goodRobot.energy = gameState.goodRobotMaxEnergy;
-   badRobot.energy = gameState.badRobotMaxEnergy;
-}
-
-function drawInitialEnergyBars() {
-   setInitialRobotEnergy();
-   drawEnergyBars();
 }
 
 function processCorrectDigit() {
@@ -346,8 +315,7 @@ function setHandlers() {
 
 function startAnotherGame() {
    initialiseModels();
-   screen.draw();
-   drawInitialEnergyBars();
+   drawScreen();
    showNumberButtons();
    enableNumberButtons();
    humanReadyToDoSums();
@@ -361,6 +329,5 @@ function playGame() {
    setHandlers();
    swapIntroForGameScreen();
    initialiseModels();
-   screen.draw();
-   drawInitialEnergyBars();
+   drawScreen();
 }
