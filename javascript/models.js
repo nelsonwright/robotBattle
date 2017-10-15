@@ -97,8 +97,8 @@ function Robot(colour, lightColours, canvas) {
    }
 
    function drawEyes(adjust) {
-      if (typeof adjust === 'undefined') {
-         var adjust = 0;
+      if (typeof adjust === "undefined") {
+         adjust = 0;
       }
 
       var y = 337 + yOffset + adjust;
