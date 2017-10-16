@@ -375,26 +375,47 @@ var calculation = {
    firstFactor: null,
    secondFactor: null,
    digitToGuess: null,
+   answerRequired: null,
    answerIndex: null,
+   type: null,
    questionText: "",
    answerText: "",
    resultText: null,
    inProgress: false, // indicates if we're answering a question at the moment
    intervalId: null,  // timer id for this question
    create() {
-      this.firstFactor = Math.floor(Math.random() * 10 + 2);
-      this.secondFactor = Math.floor(Math.random() * 10 + 2);
       this.answerIndex = 0;
+
+      // temporary for now, randomly choose addition or multiplication
+      if (Math.random() > 0.5) {
+         // addition . . .
+         this.type = "addition";
+         this.firstFactor = Math.floor(Math.random() * 9 + 1);
+         this.secondFactor = Math.floor(Math.random() * 9 + 1);
+         this.answerRequired = this.sum();
+      } else {
+         // multiplication . . .
+         this.type = "multiplication";
+         this.firstFactor = Math.floor(Math.random() * 10 + 2);
+         this.secondFactor = Math.floor(Math.random() * 10 + 2);
+         this.answerRequired = this.product();
+      }
+
       this.digitToGuess = this.calcDigitToGuess();
    },
    product() {
       return this.firstFactor * this.secondFactor;
    },
+   sum() {
+      return this.firstFactor + this.secondFactor;
+   },
    createQuestionText() {
       this.wipeText();
       this.create();
+      this.operand = this.type === "addition" ? "+" : "X";
+
       this.answerText = "?";
-      this.questionText = this.firstFactor + " X " + this.secondFactor + " = ";
+      this.questionText = this.firstFactor + " " + this.operand + " " + this.secondFactor + " = ";
       this.resultText = "Awaiting answer . . .";
       return this.questionText + " " + this.answerText;
    },
@@ -402,14 +423,14 @@ var calculation = {
       return digitGuessed === this.digitToGuess;
    },
    calcDigitToGuess () {
-      return parseInt(this.product().toString()[this.answerIndex]);
+      return parseInt(this.answerRequired.toString()[this.answerIndex]);
    },
    updateDigitToGuess() {
       this.answerIndex++;
       this.digitToGuess = this.calcDigitToGuess();
    },
    gotItAllCorrect() {
-      return this.answerIndex >= parseInt(this.product().toString().length);
+      return this.answerIndex >= this.answerRequired.toString().length;
    },
    wipeText() {
       this.resultText = " ";
@@ -417,6 +438,6 @@ var calculation = {
       this.questionText = "";
    },
    composeCorrectAnswerText() {
-      return "It's " + this.product();
+      return "It's " + this.answerRequired;
    }
 };
