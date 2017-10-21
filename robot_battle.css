@@ -52,7 +52,44 @@ button {
 
 button:hover {
     background-color: white;
-    color: green;
+    color: darkGreen;
+}
+
+.optionsDiv {
+	margin: 0 auto;
+	background-color: mistyrose;
+	width:75%;
+	padding: 2%;
+	margin-bottom: 2%;
+   overflow: auto;
+}
+
+.optionsDiv h3 {
+   text-align: left;
+   margin-top: -1%;
+}
+
+.optionsDiv input {
+   margin-left: 1%;
+   margin-top: 0.5%;
+}
+
+.optionsButton {
+   padding-top: 0.5%;
+   padding-bottom: 1%;
+   background-color: darkRed;
+   margin-right: 4vw;
+}
+
+.storyButton {
+   background-color: paleGoldenRod;
+   color: black;
+   margin-right: 4vw;
+}
+
+.gearSpan {
+   vertical-align: middle;
+   font-size: 300%;
 }
 
 .timerDiv {

@@ -18,6 +18,7 @@
       $(document).ready(function() {
          $("#playGameButtonDiv, #gameLoadingDiv").toggleClass("hidden");
          $("#playGameButton").focus();
+         setHandlers();
       });
    </script>
 </head>
@@ -39,8 +40,22 @@
    		</p>
    	</div>
 
+      <div class="optionsDiv hidden">
+         <h3>Options</h3>
+         <p>
+            <input type="checkbox" id="additionSingleDigits" value="additionSingleDigits" checked>Addition (single digits)<br>
+            <input type="checkbox" id="additionDoubleDigits" value="additionDoubleDigits" checked>Addition (double digits)<br>
+            <input type="checkbox" id="multiplication" value="multiplication" checked>Multiplication<br>
+         </p>
+      </div>
+
    	<div id="playGameButtonDiv" class="centerStuff hidden">
-   		<button id="playGameButton" onclick="playGame()">Play the game</button>
+         <button id="storyButton" class="storyButton hidden">Story</button>
+         <button id="optionsButton" class="optionsButton">
+            <span class="gearSpan">&#9881;</span>&nbsp;
+            Options
+         </button>
+   		<button id="playGameButton">Play the game</button>
    	</div>
 
       <div id="gameLoadingDiv" class="centerStuff">
