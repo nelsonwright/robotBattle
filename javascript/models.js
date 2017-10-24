@@ -22,7 +22,7 @@ var gameState = {
    battleInProgress: false,      // to indicate if we're battling a robot
    timeForSums: 10,              // how many seconds you have to complete a sum
    timerId: null,                // ID for when we want to pause for a bit
-   goodRobotMaxEnergy: 1,        // how many energy cells the good robot starts with
+   goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
    badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
@@ -390,26 +390,25 @@ var calculation = {
    inProgress: false, // indicates if we're answering a question at the moment
    intervalId: null,  // timer id for this question
    create() {
+      function getSelectedOptions() {
+         var selectedOptionsArray = [];
+
+         for (let option in options) {
+            if (options[option]) {
+               // if the option is selected, add to the array...
+               selectedOptionsArray.push(option);
+            }
+         }
+
+         return selectedOptionsArray;
+      }
+
       this.answerIndex = 0;
 
-      var selectedOptions = [];
+      var selectedOptions = getSelectedOptions();
+      var optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
 
-      if (options.additionSingleDigits) {
-         selectedOptions.push("additionSingleDigits");
-      }
-
-      if (options.additionDoubleDigits) {
-         selectedOptions.push("additionDoubleDigits");
-      }
-
-      if (options.multiplication) {
-         selectedOptions.push("multiplication");
-      }
-
-      var optionchosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
-      console.log("options is: " + optionchosen);
-
-      switch (optionchosen) {
+      switch (optionChosen) {
          case "additionSingleDigits":
             this.type = "addition";
             this.firstFactor = Math.floor(Math.random() * 9 + 1);
@@ -466,6 +465,6 @@ var calculation = {
       this.questionText = "";
    },
    composeCorrectAnswerText() {
-      return "It's " + this.answerRequired;
+      return `It's ${this.answerRequired}`;
    }
 };
