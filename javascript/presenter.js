@@ -35,9 +35,10 @@ function drawEnergyBars() {
 * Initialise models
 ********************/
 function saveOptions() {
-   options.additionSingleDigits = $(".optionsDiv  #additionSingleDigits").is(":checked");
-   options.additionDoubleDigits = $(".optionsDiv  #additionDoubleDigits").is(":checked");
-   options.multiplication = $(".optionsDiv #multiplication").is(":checked");
+   // create an object of just the selected/checked options . . .
+   selectedOptions = $(".optionsDiv input:checkbox:checked").map(function() {
+      return this.value;
+   });
 }
 
 function atLeastOneOptionSelected() {
