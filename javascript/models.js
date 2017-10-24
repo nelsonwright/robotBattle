@@ -30,6 +30,12 @@ var gameState = {
    explosionSpeed: 50            // time in millis between robot explosion frames
 };
 
+var options = {
+   additionSingleDigits: null,
+   additionDoubleDigits: null,
+   multiplication: null
+};
+
 function Robot(colour, lightColours, canvas) {
    this.colour = colour;
    this.lightColours = Object.freeze(lightColours);
@@ -386,19 +392,41 @@ var calculation = {
    create() {
       this.answerIndex = 0;
 
-      // temporary for now, randomly choose addition or multiplication
-      if (Math.random() > 0.5) {
-         // addition . . .
-         this.type = "addition";
-         this.firstFactor = Math.floor(Math.random() * 9 + 1);
-         this.secondFactor = Math.floor(Math.random() * 9 + 1);
-         this.answerRequired = this.sum();
-      } else {
-         // multiplication . . .
-         this.type = "multiplication";
-         this.firstFactor = Math.floor(Math.random() * 10 + 2);
-         this.secondFactor = Math.floor(Math.random() * 10 + 2);
-         this.answerRequired = this.product();
+      var selectedOptions = [];
+
+      if (options.additionSingleDigits) {
+         selectedOptions.push("additionSingleDigits");
+      }
+
+      if (options.additionDoubleDigits) {
+         selectedOptions.push("additionDoubleDigits");
+      }
+
+      if (options.multiplication) {
+         selectedOptions.push("multiplication");
+      }
+
+      var optionchosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
+      console.log("options is: " + optionchosen);
+
+      switch (optionchosen) {
+         case "additionSingleDigits":
+            this.type = "addition";
+            this.firstFactor = Math.floor(Math.random() * 9 + 1);
+            this.secondFactor = Math.floor(Math.random() * 9 + 1);
+            this.answerRequired = this.sum();
+            break;
+         case "additionDoubleDigits":
+               this.type = "addition";
+               this.firstFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
+               this.secondFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
+               this.answerRequired = this.sum();
+               break;
+         case "multiplication":
+            this.type = "multiplication";
+            this.firstFactor = Math.floor(Math.random() * 10 + 2);
+            this.secondFactor = Math.floor(Math.random() * 10 + 2);
+            this.answerRequired = this.product();
       }
 
       this.digitToGuess = this.calcDigitToGuess();

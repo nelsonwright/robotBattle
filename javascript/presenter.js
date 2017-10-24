@@ -34,6 +34,16 @@ function drawEnergyBars() {
 /********************
 * Initialise models
 ********************/
+function saveOptions() {
+   options.additionSingleDigits = $(".optionsDiv  #additionSingleDigits").is(":checked");
+   options.additionDoubleDigits = $(".optionsDiv  #additionDoubleDigits").is(":checked");
+   options.multiplication = $(".optionsDiv #multiplication").is(":checked");
+}
+
+function atLeastOneOptionSelected() {
+   return $(".optionsDiv input:checkbox:checked").length > 0
+}
+
 function setEnergyBarAttributes() {
    goodEnergyBar = new EnergyBar(goodRobot, document.getElementById("energyBarGood"), "firebrick");
 
@@ -103,13 +113,11 @@ function displayTimerValue() {
 }
 
 function showNumberButtons() {
-   $("#numeralsDiv").toggleClass("hidden");
-   $("#playAgain").toggleClass("hidden");
+   $("#numeralsDiv, #playAgain").toggleClass("hidden");
 }
 
 function showPlayAgainButton() {
-   $("#numeralsDiv").toggleClass("hidden");
-   $("#playAgain").toggleClass("hidden");
+   $("#numeralsDiv, #playAgain").toggleClass("hidden");
 }
 
 function stopRipplingBodyLights() {
@@ -311,6 +319,29 @@ function setHandlers() {
       .on("keyup", function(event) {
          pressedAKey(event);
       });
+
+   $("#optionsButton")
+      .on("click", function() {
+         $(".introText, .optionsDiv, #optionsButton, #storyButton")
+            .toggleClass("hidden");
+      });
+
+      $("#storyButton")
+      .on("click", function() {
+         $(".introText, .optionsDiv, #optionsButton, #storyButton")
+            .toggleClass("hidden");
+      });
+
+   $("#playGameButton")
+      .on("click", function() {
+         if (atLeastOneOptionSelected()) {
+               saveOptions();
+               playGame();
+         } else {
+            // it would be good to do something nicer than this at some point ...
+            alert("You need to select at least one option");
+         }
+      });
 }
 
 function startAnotherGame() {
@@ -326,7 +357,6 @@ function swapIntroForGameScreen() {
 }
 
 function playGame() {
-   setHandlers();
    swapIntroForGameScreen();
    initialiseModels();
    drawScreen();
