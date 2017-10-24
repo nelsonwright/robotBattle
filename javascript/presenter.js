@@ -183,7 +183,7 @@ function showFeedbackToAnswer(outcome) {
    } else {
       badRobot.leftArmRaised = true;
       goodRobot.electricityFlash = true;
-      calculation.resultText = outcome.toString() + " " + calculation.composeCorrectAnswerText();
+      calculation.resultText = `${outcome.toString()} ${calculation.composeCorrectAnswerText()}`;
       drawScreen();
    }
 
