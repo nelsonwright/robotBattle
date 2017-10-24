@@ -30,11 +30,7 @@ var gameState = {
    explosionSpeed: 50            // time in millis between robot explosion frames
 };
 
-var options = {
-   additionSingleDigits: null,
-   additionDoubleDigits: null,
-   multiplication: null
-};
+var selectedOptions;
 
 function Robot(colour, lightColours, canvas) {
    this.colour = colour;
@@ -390,22 +386,7 @@ var calculation = {
    inProgress: false, // indicates if we're answering a question at the moment
    intervalId: null,  // timer id for this question
    create() {
-      function getSelectedOptions() {
-         var selectedOptionsArray = [];
-
-         for (let option in options) {
-            if (options[option]) {
-               // if the option is selected, add to the array...
-               selectedOptionsArray.push(option);
-            }
-         }
-
-         return selectedOptionsArray;
-      }
-
       this.answerIndex = 0;
-
-      var selectedOptions = getSelectedOptions();
       var optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
 
       switch (optionChosen) {
