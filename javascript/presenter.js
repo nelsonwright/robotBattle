@@ -84,8 +84,8 @@ function initialiseModels() {
 // end of model initialisation
 
 function setUpQuestion() {
-   document.getElementById("questionAndAnswersPara").textContent = calculation.createQuestionText();
-   document.getElementById("resultPara").textContent = calculation.resultText;
+   $("#questionAndAnswersPara").text(calculation.createQuestionText());
+   $("#resultPara").text(calculation.resultText);
    timer.setTimeRemaining();
    clearInterval(calculation.intervalId);
 }
@@ -238,9 +238,10 @@ function resetForNextQuestion() {
 }
 
 function humanReadyToDoSums() {
-   document.getElementById("humanReady").className="hidden";
-   document.getElementById("questionAndAnswersPara").className="questionAndAnswersPara";
-   document.getElementById("resultPara").className="";
+   $("#humanReady").hide();
+   $("#questionAndAnswersPara").show();
+   $("#resultPara").show();
+
    setUpQuestion();
    displayTimerValue();
 
@@ -280,7 +281,7 @@ function processIncorrectDigit() {
 
 function processAttemptedSumAnswer(digitPressed) {
    calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-   document.getElementById("questionAndAnswersPara").textContent = calculation.questionText + calculation.answerText;
+   $("#questionAndAnswersPara").text(calculation.questionText + calculation.answerText);
 
    if (calculation.correctDigitGuessed(digitPressed)) {
       processCorrectDigit();

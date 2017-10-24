@@ -22,7 +22,7 @@ var gameState = {
    battleInProgress: false,      // to indicate if we're battling a robot
    timeForSums: 10,              // how many seconds you have to complete a sum
    timerId: null,                // ID for when we want to pause for a bit
-   goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
+   goodRobotMaxEnergy: 1,        // how many energy cells the good robot starts with
    badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
@@ -443,9 +443,9 @@ var calculation = {
       this.operand = this.type === "addition" ? "+" : "X";
 
       this.answerText = "?";
-      this.questionText = this.firstFactor + " " + this.operand + " " + this.secondFactor + " = ";
+      this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = `;
       this.resultText = "Awaiting answer . . .";
-      return this.questionText + " " + this.answerText;
+      return this.questionText + this.answerText;
    },
    correctDigitGuessed(digitGuessed) {
       return digitGuessed === this.digitToGuess;
