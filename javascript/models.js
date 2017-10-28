@@ -397,16 +397,23 @@ var calculation = {
             this.answerRequired = this.sum();
             break;
          case "additionDoubleDigits":
-               this.type = "addition";
-               this.firstFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
-               this.secondFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
-               this.answerRequired = this.sum();
-               break;
-         case "multiplication":
+            this.type = "addition";
+            this.firstFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
+            this.secondFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
+            this.answerRequired = this.sum();
+            break;
+         case "multiplication_2_to_10":
             this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 10 + 2);
-            this.secondFactor = Math.floor(Math.random() * 10 + 2);
+            this.firstFactor = Math.floor(Math.random() * 8) + 2;
+            this.secondFactor = Math.floor(Math.random() * 8) + 2;
             this.answerRequired = this.product();
+            break;
+         case "multiplication_2_to_12":
+            this.type = "multiplication";
+            this.firstFactor = Math.floor(Math.random() * 10) + 2;
+            this.secondFactor = Math.floor(Math.random() * 10) + 2;
+            this.answerRequired = this.product();
+            break;
       }
 
       this.digitToGuess = this.calcDigitToGuess();
