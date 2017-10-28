@@ -322,16 +322,25 @@ function setHandlers() {
          pressedAKey(event);
       });
 
+   // these two methods below duplicate code a lot, but can't quite see how to
+   // do it all in one method right now.  Hmm.
+
    $("#optionsButton")
       .on("click", function() {
-         $(".introText, .optionsDiv, #optionsButton, #storyButton")
-            .toggleClass("hidden");
+         $(this)
+            .fadeOut("fast", function() {
+               $(".optionsDiv, .introText").slideToggle("slow");
+               $("#storyButton").fadeIn("fast");
+            });
       });
 
-      $("#storyButton")
+   $("#storyButton")
       .on("click", function() {
-         $(".introText, .optionsDiv, #optionsButton, #storyButton")
-            .toggleClass("hidden");
+         $(this)
+            .fadeOut("fast", function() {
+               $(".optionsDiv, .introText").slideToggle("slow");
+               $("#optionsButton").fadeIn("fast");
+            });
       });
 
    $("#playGameButton")
