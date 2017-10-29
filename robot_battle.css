@@ -74,6 +74,11 @@ button:hover {
    margin-top: 0.5%;
 }
 
+.optionGroupHeader {
+   font-weight: bold;
+   font-size: 120%;
+}
+
 .optionsButton {
    padding-top: 0.5%;
    padding-bottom: 1%;

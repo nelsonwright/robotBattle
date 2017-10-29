@@ -392,26 +392,39 @@ var calculation = {
       switch (optionChosen) {
          case "additionSingleDigits":
             this.type = "addition";
-            this.firstFactor = Math.floor(Math.random() * 9 + 1);
-            this.secondFactor = Math.floor(Math.random() * 9 + 1);
+            this.firstFactor = Math.floor(Math.random() * 9) + 1;
+            this.secondFactor = Math.floor(Math.random() * 9) + 1;
             this.answerRequired = this.sum();
             break;
          case "additionDoubleDigits":
             this.type = "addition";
-            this.firstFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
-            this.secondFactor = Math.floor(Math.random() * 9 + 10) + Math.floor(Math.random() * 39 + 1);
+            this.firstFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
+            this.secondFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
             this.answerRequired = this.sum();
+            break;
+
+         case "multiplication_2_to_5":
+            this.type = "multiplication";
+            this.firstFactor = Math.floor(Math.random() * 4) + 2;
+            this.secondFactor = Math.floor(Math.random() * 4) + 2;
+            this.answerRequired = this.product();
+            break;
+         case "multiplication_6_to_10":
+            this.type = "multiplication";
+            this.firstFactor = Math.floor(Math.random() * 5) + 6;
+            this.secondFactor = Math.floor(Math.random() * 5) + 6;
+            this.answerRequired = this.product();
             break;
          case "multiplication_2_to_10":
             this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 8) + 2;
-            this.secondFactor = Math.floor(Math.random() * 8) + 2;
+            this.firstFactor = Math.floor(Math.random() * 9) + 2;
+            this.secondFactor = Math.floor(Math.random() * 9) + 2;
             this.answerRequired = this.product();
             break;
          case "multiplication_2_to_12":
             this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 10) + 2;
-            this.secondFactor = Math.floor(Math.random() * 10) + 2;
+            this.firstFactor = Math.floor(Math.random() * 11) + 2;
+            this.secondFactor = Math.floor(Math.random() * 11) + 2;
             this.answerRequired = this.product();
             break;
       }
