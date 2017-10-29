@@ -149,6 +149,7 @@ function checkEnergy() {
       $("#questionAndAnswersPara").text("Bad Robot Wins!");
       $("#resultPara").text("Oh no!");
       goodRobot.isExploding = true;
+      badRobot.leftArmRaised = true;
       badRobot.rightArmRaised = true;
       drawScreen();
       showPlayAgainButton();
@@ -161,6 +162,7 @@ function checkEnergy() {
       $("#questionAndAnswersPara").text("Good Robot Wins!");
       $("#resultPara").text("Hooray!");
       badRobot.isExploding = true;
+      goodRobot.leftArmRaised = true;
       goodRobot.rightArmRaised = true;
       drawScreen();
       showPlayAgainButton();
@@ -173,16 +175,26 @@ function stopQuestion() {
    disableNumberButtons();
 }
 
+function pickRightOrLeftArmToRaise(robot) {
+   if (Math.random() > 0.5) {
+      robot.rightArmRaised = true;
+      // robot.leftArmRaised = false;
+   } else {
+      robot.leftArmRaised = true;
+      // robot.rightArmRaised = false;
+   }
+}
+
 function showFeedbackToAnswer(outcome) {
    stopQuestion();
 
    if (outcome === questionOutcome.correct) {
-      goodRobot.leftArmRaised = true;
+      pickRightOrLeftArmToRaise(goodRobot);
       badRobot.electricityFlash = true;
       calculation.resultText = outcome.toString();
       drawScreen();
    } else {
-      badRobot.leftArmRaised = true;
+      pickRightOrLeftArmToRaise(badRobot);
       goodRobot.electricityFlash = true;
       calculation.resultText = `${outcome.toString()} ${calculation.composeCorrectAnswerText()}`;
       drawScreen();
@@ -228,9 +240,9 @@ function resetForNextQuestion() {
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
    goodRobot.leftArmRaised = false;
-   goodRobot.righttArmRaised = false;
+   goodRobot.rightArmRaised = false;
    badRobot.leftArmRaised = false;
-   badRobot.righttArmRaised = false;
+   badRobot.rightArmRaised = false;
    goodRobot.electricityFlash = false;
    badRobot.electricityFlash = false;
 
