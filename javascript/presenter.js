@@ -35,9 +35,11 @@ function drawEnergyBars() {
 * Initialise models
 ********************/
 function saveOptions() {
-   // create an object of just the selected/checked options . . .
-   selectedOptions = $(".optionsDiv input:checkbox:checked").map(function() {
-      return this.value;
+   // create an object of just the selected/checked options, excluding headers . . .
+   selectedOptions = $(".optionsDiv input:checkbox:checked")
+      .not(".optionsDiv input:checkbox[name$='Header']")
+      .map(function() {
+         return this.value;
    });
 }
 
@@ -178,10 +180,8 @@ function stopQuestion() {
 function pickRightOrLeftArmToRaise(robot) {
    if (Math.random() > 0.5) {
       robot.rightArmRaised = true;
-      // robot.leftArmRaised = false;
    } else {
       robot.leftArmRaised = true;
-      // robot.rightArmRaised = false;
    }
 }
 
@@ -364,6 +364,13 @@ function setHandlers() {
             // it would be good to do something nicer than this at some point ...
             alert("You need to select at least one option");
          }
+      });
+
+   //handlers for checkboxes that are for groups of options with a name ending in "...Header"
+   $(".optionsDiv input:checkbox[name$='Header']")
+      .on("click", function() {
+         var checkedState = $(this).prop('checked');
+         $(this).siblings('input').prop('checked', checkedState);
       });
 }
 
