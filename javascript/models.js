@@ -380,6 +380,7 @@ var calculation = {
    answerRequired: null,
    answerIndex: null,
    type: null,
+   optionChosen: null,
    questionText: "",
    answerText: "",
    resultText: null,
@@ -387,9 +388,10 @@ var calculation = {
    intervalId: null,  // timer id for this question
    create() {
       this.answerIndex = 0;
-      var optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
+      this.answerText = "?";
+      this.optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
 
-      switch (optionChosen) {
+      switch (this.optionChosen) {
          case "additionSingleDigits":
             this.type = "addition";
             this.firstFactor = Math.floor(Math.random() * 9) + 1;
@@ -401,6 +403,18 @@ var calculation = {
             this.firstFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
             this.secondFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
             this.answerRequired = this.sum();
+            break;
+         case "numberBondsTo10":
+            this.type = "addition";
+            this.firstFactor = Math.floor(Math.random() * 10)  + 1;
+            this.secondFactor = 10;
+            this.answerRequired = this.secondFactor - this.firstFactor;
+            break;
+         case "numberBondsTo20":
+            this.type = "addition";
+            this.firstFactor = Math.floor(Math.random() * 20)  + 1;
+            this.secondFactor = 20;
+            this.answerRequired = this.secondFactor - this.firstFactor;
             break;
 
          case "multiplication_2_to_5":
@@ -442,10 +456,22 @@ var calculation = {
       this.create();
       this.operand = this.type === "addition" ? "+" : "X";
 
-      this.answerText = "?";
-      this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = `;
+      if (this.optionChosen.match("numberBonds")) {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
+      } else {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
+      }
+
       this.resultText = "Awaiting answer . . .";
-      return this.questionText + this.answerText;
+      return this.questionText;
+   },
+   deriveUpdatedQuestionText() {
+      if (this.optionChosen.match("numberBonds")) {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
+      } else {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
+      }
+      return this.questionText;
    },
    correctDigitGuessed(digitGuessed) {
       return digitGuessed === this.digitToGuess;

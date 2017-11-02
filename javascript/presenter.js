@@ -294,7 +294,7 @@ function processIncorrectDigit() {
 
 function processAttemptedSumAnswer(digitPressed) {
    calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-   $("#questionAndAnswersPara").text(calculation.questionText + calculation.answerText);
+   $("#questionAndAnswersPara").text(calculation.deriveUpdatedQuestionText());
 
    if (calculation.correctDigitGuessed(digitPressed)) {
       processCorrectDigit();
@@ -341,7 +341,7 @@ function setHandlers() {
       .on("click", function() {
          $(this)
             .fadeOut("fast", function() {
-               $(".optionsDiv, .introText").slideToggle("slow");
+               $(".optionsDiv, .introText").slideToggle(300);
                $("#storyButton").fadeIn("fast");
             });
       });
@@ -350,7 +350,7 @@ function setHandlers() {
       .on("click", function() {
          $(this)
             .fadeOut("fast", function() {
-               $(".optionsDiv, .introText").slideToggle("slow");
+               $(".optionsDiv, .introText").slideToggle(300);
                $("#optionsButton").fadeIn("fast");
             });
       });
