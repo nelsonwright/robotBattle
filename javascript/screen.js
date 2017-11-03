@@ -41,5 +41,6 @@ var screen = {
       badRobot.draw();
       goodEnergyBar.draw();
       badEnergyBar.draw();
+      calculation.draw();
    }
 };
