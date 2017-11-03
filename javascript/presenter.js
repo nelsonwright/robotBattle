@@ -44,7 +44,7 @@ function saveOptions() {
 }
 
 function atLeastOneOptionSelected() {
-   return $(".optionsDiv input:checkbox:checked").length > 0
+   return $(".optionsDiv input:checkbox:checked").length > 0;
 }
 
 function setEnergyBarAttributes() {
