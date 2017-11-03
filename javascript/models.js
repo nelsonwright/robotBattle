@@ -465,13 +465,14 @@ var calculation = {
       this.resultText = "Awaiting answer . . .";
       return this.questionText;
    },
-   deriveUpdatedQuestionText() {
+   updateQuestionText(digitPressed) {
+      this.answerText = this.answerText === "?" ? digitPressed : this.answerText + digitPressed.toString();
+
       if (this.optionChosen.match("numberBonds")) {
          this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
       } else {
          this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
       }
-      return this.questionText;
    },
    correctDigitGuessed(digitGuessed) {
       return digitGuessed === this.digitToGuess;
@@ -493,5 +494,9 @@ var calculation = {
    },
    composeCorrectAnswerText() {
       return `It's ${this.answerRequired}`;
+   },
+   draw() {
+      $("#questionAndAnswersPara").text(this.questionText);
+      $("#resultPara").text(this.resultText);
    }
 };

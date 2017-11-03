@@ -199,8 +199,6 @@ function showFeedbackToAnswer(outcome) {
       calculation.resultText = `${outcome.toString()} ${calculation.composeCorrectAnswerText()}`;
       drawScreen();
    }
-
-   $("#resultPara").text(calculation.resultText);
 }
 
 function getNextQuestionReadyIfBothRobotsAlive() {
@@ -293,8 +291,8 @@ function processIncorrectDigit() {
 }
 
 function processAttemptedSumAnswer(digitPressed) {
-   calculation.answerText = calculation.answerText === "?" ? digitPressed : calculation.answerText + digitPressed.toString();
-   $("#questionAndAnswersPara").text(calculation.deriveUpdatedQuestionText());
+   calculation.updateQuestionText(digitPressed);
+   drawScreen();
 
    if (calculation.correctDigitGuessed(digitPressed)) {
       processCorrectDigit();
