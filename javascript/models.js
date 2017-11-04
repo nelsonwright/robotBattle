@@ -417,6 +417,19 @@ var calculation = {
             this.answerRequired = this.secondFactor - this.firstFactor;
             break;
 
+         case "subtractionSingleDigits":
+            this.type = "subtraction";
+            this.firstFactor = Math.floor(Math.random() * 9) + 1;
+            this.secondFactor = Math.floor(Math.random() * this.firstFactor);
+            this.answerRequired = this.firstFactor - this.secondFactor;
+            break;
+         case "subtractionDoubleDigits":
+            this.type = "subtraction";
+            this.firstFactor = Math.floor(Math.random() * 10) + 10
+            this.secondFactor = Math.floor(Math.random() * this.firstFactor);
+            this.answerRequired = this.firstFactor - this.secondFactor;
+            break;
+
          case "multiplication_2_to_5":
             this.type = "multiplication";
             this.firstFactor = Math.floor(Math.random() * 4) + 2;
@@ -451,28 +464,39 @@ var calculation = {
    sum() {
       return this.firstFactor + this.secondFactor;
    },
+   setQuestionText() {
+      if (this.optionChosen.match("numberBonds")) {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
+      } else {
+         this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
+      }
+   },
    createQuestionText() {
       this.wipeText();
       this.create();
       this.operand = this.type === "addition" ? "+" : "X";
 
-      if (this.optionChosen.match("numberBonds")) {
-         this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
-      } else {
-         this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
+      switch(this.type) {
+         case "addition":
+            this.operand = "+";
+            break;
+         case "subtraction":
+            this.operand = "-";
+            break;
+         case "multiplication":
+            this.operand = "X";
+            break;
+         default:
+            console.log("unknown type" + this.type);
       }
 
+      this.setQuestionText();
       this.resultText = "Awaiting answer . . .";
       return this.questionText;
    },
    updateQuestionText(digitPressed) {
       this.answerText = this.answerText === "?" ? digitPressed : this.answerText + digitPressed.toString();
-
-      if (this.optionChosen.match("numberBonds")) {
-         this.questionText = `${this.firstFactor} ${this.operand} ${this.answerText} = ${this.secondFactor}`;
-      } else {
-         this.questionText = `${this.firstFactor} ${this.operand} ${this.secondFactor} = ${this.answerText}`;
-      }
+      this.setQuestionText();
    },
    correctDigitGuessed(digitGuessed) {
       return digitGuessed === this.digitToGuess;
