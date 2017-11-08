@@ -226,7 +226,10 @@ function Robot(colour, lightColours, canvas) {
       self.context.translate(0, self.canvas.height);
       self.context.scale(1,-1);
 
-      self.context.fillStyle = self.colour;
+      var textureImage = document.getElementById("rustTexture");
+      patternFill = self.context.createPattern(textureImage, "repeat");
+      self.context.fillStyle = patternFill;
+
       self.context.strokestyle = "black";
       self.context.lineWidth = 4;
 
@@ -242,12 +245,9 @@ function Robot(colour, lightColours, canvas) {
       drawOffsetStrokedRect(self.context, 106, 285 + adjust, 26, 8);
 
       // body
-      self.context.save();
-      self.context.fillStyle = self.colour;
       drawOffsetStrokedRect(self.context, 50, 125, 136, 162);
       drawOffsetStrokedRect(self.context, 8, 260, 220, 27);
       drawBodyDecoration();
-      self.context.restore();
 
       drawArmsAndHands();
 
@@ -260,7 +260,7 @@ function Robot(colour, lightColours, canvas) {
       drawOffsetStrokedRect(self.context, 127, 0, 68, 26);
    }
 
-   function explode () {
+   function explode() {
       self.explodeFactor = 1;
       self.explosionIntervalId = setInterval(explodeLimbs, gameState.explosionSpeed);
    }
@@ -269,7 +269,12 @@ function Robot(colour, lightColours, canvas) {
       self.context.lineWidth = 2;
 
       for (let i = 0; i < 3; i++) {
-         self.context.fillStyle = this.lightColours[i];
+         if (self.isExploding) {
+            self.context.fillStyle = "black";
+         } else {
+            self.context.fillStyle = this.lightColours[i];
+         }
+
          drawBodyLight(i);
       }
    };
@@ -298,7 +303,7 @@ function Robot(colour, lightColours, canvas) {
 
       this.context.fillStyle = this.colour;
       this.context.strokestyle = "black";
-      this.context.lineWidth = 4;
+      this.context.lineWidth = 4
 
       // head
       drawOffsetStrokedRect(this.context, 90, 293, 57, 84);
