@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
+   <!-- Global site tag (gtag.js) - Google Analytics -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109211566-1"></script>
+   <script>
+     window.dataLayer = window.dataLayer || [];
+     function gtag(){dataLayer.push(arguments);}
+     gtag('js', new Date());
+
+     gtag('config', 'UA-109211566-1');
+   </script>
+
 	<meta charset="UTF-8">
 	<title>Robot Battle</title>
    <meta name="description" content="A browser-based game involving robots and arithmetic">
    <meta name="author" content="Nelson Wright">
-   <meta name="keywords" content="game, javaScript, robot battle, arithmetic, arithmetic game">
-
+   <meta name="keywords" content="game, javaScript, robot, battle, robot battle, arithmetic, arithmetic game, free arithmetic game">
 
 	<link rel="stylesheet" type="text/css" href="robot_battle.css">
    <script src="./javascript/models.js"></script>
@@ -14,6 +23,7 @@
    <script src="./javascript/screen.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
+   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
    <script>
       $(document).ready(function() {
          $("#playGameButtonDiv, #gameLoadingDiv").toggleClass("hidden");
@@ -77,6 +87,7 @@
             Loading . . .
          </p>
          <img src="./images/loading.gif" />
+         <img id="rustTexture" src="./images/rust.png" class="hidden"/>
       </div>
 
    </div> <!-- end of introDiv -->
