@@ -121,6 +121,7 @@ function showNumberButtons() {
 
 function showPlayAgainButton() {
    $("#numeralsDiv, #playAgain").toggleClass("hidden");
+   $("#playAgain button").focus();
 }
 
 function stopRipplingBodyLights() {
@@ -148,8 +149,9 @@ function checkEnergy() {
    if (goodRobot.energy < 0) {
       stopTimers();
 
-      $("#questionAndAnswersPara").text("Bad Robot Wins!");
-      $("#resultPara").text("Oh no!");
+      calculation.questionText = "Bad Robot Wins!";
+      calculation.resultText = "Oh no!";
+
       goodRobot.isExploding = true;
       badRobot.leftArmRaised = true;
       badRobot.rightArmRaised = true;
@@ -161,8 +163,9 @@ function checkEnergy() {
    if (badRobot.energy < 0) {
       stopTimers();
 
-      $("#questionAndAnswersPara").text("Good Robot Wins!");
-      $("#resultPara").text("Hooray!");
+      calculation.questionText = "Good Robot Wins!";
+      calculation.resultText = "Hooray!";
+
       badRobot.isExploding = true;
       goodRobot.leftArmRaised = true;
       goodRobot.rightArmRaised = true;
