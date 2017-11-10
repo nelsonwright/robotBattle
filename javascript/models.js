@@ -23,7 +23,7 @@ var gameState = {
    timeForSums: 10,              // how many seconds you have to complete a sum
    timerId: null,                // ID for when we want to pause for a bit
    goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
-   badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
+   badRobotMaxEnergy: 0,         // how many energy cells the bad robot starts with
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
    lightRippleIntervalId: null,  // ID for light rippling, as above
@@ -151,7 +151,7 @@ function Robot(colour, lightColours, canvas) {
       drawOffsetStrokedRect(self.context, 0, 378, 42, 32);
    }
 
-   function drawArmsAndHands() {
+   function drawArmsAndHands(adjust) {
       if (self.leftArmRaised) {
          drawLeftArmAndHandUp();
       } else {
@@ -218,6 +218,7 @@ function Robot(colour, lightColours, canvas) {
    function explodeLimbs() {
       if (self.explodeFactor > 20) {
          clearInterval(self.explosionIntervalId);
+         self.canvas.width = self.canvas.width;
          return;
       }
 
@@ -245,19 +246,36 @@ function Robot(colour, lightColours, canvas) {
       drawOffsetStrokedRect(self.context, 106, 285 + adjust, 26, 8);
 
       // body
+      self.context.save();
+      self.context.rotate(self.explodeFactor * 5 * Math.PI / 180);
+
       drawOffsetStrokedRect(self.context, 50, 125, 136, 162);
       drawOffsetStrokedRect(self.context, 8, 260, 220, 27);
       drawBodyDecoration();
+      self.context.restore();
 
+      // arms and hands
+      self.context.save();
+      self.context.rotate(0 - self.explodeFactor * 7 * Math.PI / 180);
       drawArmsAndHands();
+      self.context.restore();
 
       // legs
+      self.context.save();
+      self.context.translate(0, adjust * 4);
+      self.context.rotate(0 - self.explodeFactor * 4 * Math.PI / 180);
+
       drawOffsetStrokedRect(self.context, 71, 0, 42, 125);
       drawOffsetStrokedRect(self.context, 127, 0, 42, 125);
+      self.context.restore();
 
       // feet
+      self.context.save();
+      self.context.translate(adjust * 1.5, adjust * 1.5);
+
       drawOffsetStrokedRect(self.context, 48, 0, 65, 26);
       drawOffsetStrokedRect(self.context, 127, 0, 68, 26);
+      self.context.restore();
    }
 
    function explode() {
