@@ -23,7 +23,7 @@ var gameState = {
    timeForSums: 10,              // how many seconds you have to complete a sum
    timerId: null,                // ID for when we want to pause for a bit
    goodRobotMaxEnergy: 8,        // how many energy cells the good robot starts with
-   badRobotMaxEnergy: 0,         // how many energy cells the bad robot starts with
+   badRobotMaxEnergy: 8,         // how many energy cells the bad robot starts with
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
    lightRippleIntervalId: null,  // ID for light rippling, as above
