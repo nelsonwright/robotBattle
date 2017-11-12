@@ -27,7 +27,7 @@ var gameState = {
    pauseBetweenQuestions: 2.5,   // time in seconds between questions
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
    lightRippleIntervalId: null,  // ID for light rippling, as above
-   explosionSpeed: 50            // time in millis between robot explosion frames
+   explosionSpeed: 100           // time in millis between robot explosion frames
 };
 
 var selectedOptions;
