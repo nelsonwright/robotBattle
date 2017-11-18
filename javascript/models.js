@@ -431,6 +431,15 @@ var calculation = {
    inProgress: false, // indicates if we're answering a question at the moment
    intervalId: null,  // timer id for this question
    create() {
+      var self = this;
+
+      function setUpMultiplication() {
+         self.type = "multiplication";
+         self.firstFactor = self.randomNumber_2_to_12();
+         self.secondFactor = self.optionChosen.split("_", 1);
+         self.answerRequired = self.product();
+      }
+
       this.answerIndex = 0;
       this.answerText = "?";
       this.optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
@@ -474,33 +483,28 @@ var calculation = {
             this.answerRequired = this.firstFactor - this.secondFactor;
             break;
 
-         case "multiplication_2_to_5":
-            this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 4) + 2;
-            this.secondFactor = Math.floor(Math.random() * 4) + 2;
-            this.answerRequired = this.product();
+         case "2_times_table":
+         case "3_times_table":
+         case "4_times_table":
+         case "5_times_table":
+         case "6_times_table":
+         case "7_times_table":
+         case "8_times_table":
+         case "9_times_table":
+         case "10_times_table":
+         case "11_times_table":
+         case "12_times_table":
+            setUpMultiplication();
             break;
-         case "multiplication_6_to_10":
-            this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 5) + 6;
-            this.secondFactor = Math.floor(Math.random() * 5) + 6;
-            this.answerRequired = this.product();
-            break;
-         case "multiplication_2_to_10":
-            this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 9) + 2;
-            this.secondFactor = Math.floor(Math.random() * 9) + 2;
-            this.answerRequired = this.product();
-            break;
-         case "multiplication_2_to_12":
-            this.type = "multiplication";
-            this.firstFactor = Math.floor(Math.random() * 11) + 2;
-            this.secondFactor = Math.floor(Math.random() * 11) + 2;
-            this.answerRequired = this.product();
+         default:
+            console.log("Unknown optionChosen: " + this.optionChosen);
             break;
       }
 
       this.digitToGuess = this.calcDigitToGuess();
+   },
+   randomNumber_2_to_12() {
+      return Math.floor(Math.random() * 11) + 2
    },
    product() {
       return this.firstFactor * this.secondFactor;
