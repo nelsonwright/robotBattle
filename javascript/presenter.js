@@ -89,7 +89,7 @@ function initialiseModels() {
 function setUpQuestion() {
    $("#questionAndAnswersPara").text(calculation.createQuestionText());
    $("#resultPara").text(calculation.resultText);
-   timer.setTimeRemaining();
+   timer.setTimeRemaining(gameState.timeForSums);
    clearInterval(calculation.intervalId);
 }
 
