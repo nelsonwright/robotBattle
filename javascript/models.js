@@ -391,32 +391,6 @@ function EnergyBar(robot, canvas, colour) {
    }
 }
 
-var timer = {
-   canvas: null,
-   context:  null,
-   timeRemaining: null,
-   setup(canvas) {
-      this.canvas = canvas;
-
-      if (canvas.getContext) {
-         this.context = canvas.getContext("2d");
-      }
-   },
-   setTimeRemaining() {
-      this.timeRemaining = gameState.timeForSums;
-   },
-   draw() {
-      var timeRemainingBoxWidth;
-      this.context.fillStyle = "orange";
-
-      timeRemainingBoxWidth = (timer.timeRemaining / gameState.timeForSums) * timer.canvas.width;
-      this.context.fillRect(0, 0, timeRemainingBoxWidth, 60);
-   },
-   clearCanvas() {
-      this.canvas.width = this.canvas.width;
-   }
-};
-
 var calculation = {
    firstFactor: null,
    secondFactor: null,
