@@ -308,6 +308,10 @@ function noBattleInProgress() {
    return !gameState.battleInProgress;
 }
 
+function battleInProgress() {
+   return gameState.battleInProgress;
+}
+
 function interpretNumberInput(number) {
    if (calculation.inProgress) {
       processAttemptedSumAnswer(number);
@@ -319,7 +323,7 @@ function interpretNumberInput(number) {
 function pressedAKey(e) {
    var unicode = e.keyCode? e.keyCode : e.charCode;
 
-   if (key.isDigit(unicode)) {
+   if (key.isDigit(unicode) && battleInProgress()) {
          interpretNumberInput(unicodeToNumeral(unicode));
    }
 }
@@ -357,6 +361,7 @@ function setHandlers() {
       });
 
    $("#playGameButton")
+      .focus()
       .on("click", function() {
          if (atLeastOneOptionSelected()) {
                saveOptions();
@@ -385,6 +390,7 @@ function startAnotherGame() {
 
 function swapIntroForGameScreen() {
    $("#introDiv, #gameDiv").toggleClass("hidden");
+   $("#humanReady button").focus();
 }
 
 function playGame() {

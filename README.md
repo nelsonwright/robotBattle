@@ -6,7 +6,7 @@ Robot Battle is a browser-based game that aims to teach children (or adults) ari
 
 I'll be refactoring as I go, but the main part of the game will be in Javascript.
 
-To start the game, just point your browser at: robot_battle.html.  You can see a working build at: http://www.robotbattle.co.uk/
+To start the game, just point your browser at: index.html.  You can see a working build at: http://www.robotbattle.co.uk/
 
 Feel free to get in touch if you want to get involved, or just submit a pull request.  You can find me at:
 
