@@ -89,7 +89,7 @@ function initialiseModels() {
 function setUpQuestion() {
    $("#questionAndAnswersPara").text(calculation.createQuestionText());
    $("#resultPara").text(calculation.resultText);
-   timer.setTimeRemaining(gameState.timeForSums);
+   timer.setTimeForQuestion(gameState.timeForSums);
    clearInterval(calculation.intervalId);
 }
 
@@ -111,7 +111,6 @@ function resetRobotBodyLights() {
 }
 
 function displayTimerValue() {
-   timer.clearCanvas();
    timer.draw();
 }
 
