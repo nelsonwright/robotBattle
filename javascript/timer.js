@@ -37,4 +37,4 @@ var timer = (function() {
       draw
    };
 
-})();
+}());
