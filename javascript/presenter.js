@@ -23,7 +23,7 @@ function rippleRobotBodyLights () {
 }
 
 function drawScreen() {
-   screen.draw();
+   screen.draw(goodRobot, badRobot, goodEnergyBar, badEnergyBar, calculation);
 }
 
 function drawEnergyBars() {
@@ -345,7 +345,7 @@ function setHandlers() {
       .on("click", function() {
          $(this)
             .fadeOut("fast", function() {
-               $(".optionsDiv, .introText").slideToggle(300);
+               $(".optionsDiv, .introText").slideToggle(gameState.optionsSpeed);
                $("#storyButton").fadeIn("fast");
             });
       });
@@ -354,7 +354,7 @@ function setHandlers() {
       .on("click", function() {
          $(this)
             .fadeOut("fast", function() {
-               $(".optionsDiv, .introText").slideToggle(300);
+               $(".optionsDiv, .introText").slideToggle(gameState.optionsSpeed);
                $("#optionsButton").fadeIn("fast");
             });
       });
