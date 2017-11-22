@@ -15,7 +15,7 @@ var screen = (function() {
       ctx.strokeStyle = $("body").css("background-color");
       ctx.lineWidth = 4;
       ctx.strokeRect(x + xOffset, y + yOffset, width, height);
-   }
+   };
 
    var drawStrokedRectWithGradient = function(ctx, position, colour, canvas) {
       var width = canvas.width;
