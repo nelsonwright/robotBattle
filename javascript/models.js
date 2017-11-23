@@ -236,7 +236,8 @@ function Robot(colour, lightColours, canvas) {
       self.context.restore();
    }
 
-   function explodeLimbs() {
+   function explodeLimbs(patternFill) {
+
       if (self.explodeFactor > 20) {
          clearInterval(self.explosionIntervalId);
          self.canvas.width = self.canvas.width;
@@ -248,7 +249,7 @@ function Robot(colour, lightColours, canvas) {
       self.context.translate(0, self.canvas.height);
       self.context.scale(1,-1);
 
-      patternFill = self.context.createPattern(self.textureImage, "repeat");
+
       self.context.fillStyle = patternFill;
 
       self.context.strokestyle = "black";
@@ -301,8 +302,10 @@ function Robot(colour, lightColours, canvas) {
    }
 
    function explode() {
+      var patternFill = self.context.createPattern(self.textureImage, "repeat");
+
       self.explodeFactor = 1;
-      self.explosionIntervalId = setInterval(explodeLimbs, gameState.explosionSpeed);
+      self.explosionIntervalId = setInterval(explodeLimbs, gameState.explosionSpeed, patternFill);
    }
 
    this.drawBodyLights = function() {
@@ -343,7 +346,7 @@ function Robot(colour, lightColours, canvas) {
 
       this.context.fillStyle = this.colour;
       this.context.strokestyle = "black";
-      this.context.lineWidth = 4
+      this.context.lineWidth = 4;
 
       // head
       screen.drawOffsetStrokedRect(this.context, 90, 293, 57, 84);
@@ -389,7 +392,7 @@ function EnergyBar(robot, canvas, colour) {
       for (let i = 0; i < this.robot.energy; i++) {
          screen.drawStrokedRectWithGradient(this.context, i, this.colour, this.canvas);
       }
-   }
+   };
 }
 
 var calculation = {
@@ -410,7 +413,7 @@ var calculation = {
 
       function setUpMultiplication() {
          self.type = "multiplication";
-         self.firstFactor = self.randomNumber_2_to_12();
+         self.firstFactor = self.randomNumberTwoToTwelve();
          self.secondFactor = self.optionChosen.split("_", 1);
          self.answerRequired = self.product();
       }
@@ -453,7 +456,7 @@ var calculation = {
             break;
          case "subtractionDoubleDigits":
             this.type = "subtraction";
-            this.firstFactor = Math.floor(Math.random() * 10) + 10
+            this.firstFactor = Math.floor(Math.random() * 10) + 10;
             this.secondFactor = Math.floor(Math.random() * this.firstFactor);
             this.answerRequired = this.firstFactor - this.secondFactor;
             break;
@@ -472,14 +475,14 @@ var calculation = {
             setUpMultiplication();
             break;
          default:
-            console.log("Unknown optionChosen: " + this.optionChosen);
+            // no recognised option
             break;
       }
 
       this.digitToGuess = this.calcDigitToGuess();
    },
-   randomNumber_2_to_12() {
-      return Math.floor(Math.random() * 11) + 2
+   randomNumberTwoToTwelve() {
+      return Math.floor(Math.random() * 11) + 2;
    },
    product() {
       return this.firstFactor * this.secondFactor;
@@ -510,7 +513,8 @@ var calculation = {
             this.operand = "X";
             break;
          default:
-            console.log("unknown type" + this.type);
+            // unknown type, hopefully shouldn't happen
+            break;
       }
 
       this.setQuestionText();
