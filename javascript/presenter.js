@@ -87,8 +87,8 @@ function initialiseModels() {
 // end of model initialisation
 
 function setUpQuestion() {
-   $("#questionAndAnswersPara").text(calculation.createQuestionText());
-   $("#resultPara").text(calculation.resultText);
+   $("#questionAndAnswersPara").text(calculation.createQuestionText(selectedOptions));
+   $("#resultPara").text(calculation.getResultText());
    timer.setTimeForQuestion(gameState.timeForSums);
    clearInterval(calculation.intervalId);
 }
@@ -148,8 +148,8 @@ function checkEnergy() {
    if (goodRobot.energy < 0) {
       stopTimers();
 
-      calculation.questionText = "Bad Robot Wins!";
-      calculation.resultText = "Oh no!";
+      calculation.setQuestionText("Bad Robot Wins!");
+      calculation.setResultText("Oh no!");
 
       goodRobot.isExploding = true;
       badRobot.leftArmRaised = true;
@@ -162,8 +162,8 @@ function checkEnergy() {
    if (badRobot.energy < 0) {
       stopTimers();
 
-      calculation.questionText = "Good Robot Wins!";
-      calculation.resultText = "Hooray!";
+      calculation.setQuestionText("Good Robot Wins!");
+      calculation.setResultText("Hooray!");
 
       badRobot.isExploding = true;
       goodRobot.leftArmRaised = true;
@@ -193,12 +193,12 @@ function showFeedbackToAnswer(outcome) {
    if (outcome === questionOutcome.correct) {
       pickRightOrLeftArmToRaise(goodRobot);
       badRobot.electricityFlash = true;
-      calculation.resultText = outcome.toString();
+      calculation.setResultText(outcome.toString());
       drawScreen();
    } else {
       pickRightOrLeftArmToRaise(badRobot);
       goodRobot.electricityFlash = true;
-      calculation.resultText = `${outcome.toString()} ${calculation.composeCorrectAnswerText()}`;
+      calculation.setResultText(`${outcome.toString()} ${calculation.composeCorrectAnswerText()}`);
       drawScreen();
    }
 }
@@ -214,7 +214,7 @@ function handleTimerRunDown() {
    showFeedbackToAnswer(questionOutcome.tooSlow);
    goodRobot.energy--;
    checkEnergy();
-   calculation.inProgress = false;
+   calculation.setInProgress(false);
 
    timer.clearCanvas();
    resetRobotBodyLights();
@@ -236,7 +236,7 @@ function resetForNextQuestion() {
    setUpQuestion();
    displayTimerValue();
 
-   calculation.inProgress = true;
+   calculation.setInProgress(true);
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
    goodRobot.leftArmRaised = false;
@@ -260,7 +260,7 @@ function humanReadyToDoSums() {
 
    // we'll need to set these up at different points later, but for now, both here is ok . . .
    gameState.battleInProgress = true;
-   calculation.inProgress = true;
+   calculation.setInProgress(true);
 
    enableNumberButtons();
    startRipplingBodyLights();
@@ -270,7 +270,7 @@ function humanReadyToDoSums() {
 function getNextQuestionIfAlive() {
    resetRobotBodyLights();
    checkEnergy();
-   calculation.inProgress = false;
+   calculation.setInProgress(false);
    getNextQuestionReadyIfBothRobotsAlive();
 }
 
@@ -312,7 +312,7 @@ function battleInProgress() {
 }
 
 function interpretNumberInput(number) {
-   if (calculation.inProgress) {
+   if (calculation.isInProgress()) {
       processAttemptedSumAnswer(number);
    } else if (noBattleInProgress()) {
       humanReadyToDoSums();
