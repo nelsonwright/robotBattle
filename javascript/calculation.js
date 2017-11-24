@@ -1,7 +1,7 @@
 // creates the questions and expected answers
 var calculation = (function() {
    var firstFactor, secondFactor, digitToGuess, answerRequired, answerIndex,
-      type, optionChosen, resultText;
+      type, optionChosen, resultText, operand;
    var questionText = "";
    var answerText = "";
    var inProgress = false;  // indicates if we're answering a question at the moment
@@ -10,7 +10,7 @@ var calculation = (function() {
 
    function randomNumberTwoToTwelve () {
       return Math.floor(Math.random() * 11) + 2;
-   };
+   }
 
    function product() {
       return firstFactor * secondFactor;
@@ -36,7 +36,7 @@ var calculation = (function() {
    };
 
    function calcDigitToGuess () {
-      return parseInt(answerRequired.toString()[answerIndex]);
+      return parseInt(answerRequired.toString().charAt(answerIndex));
    };
 
    function create(selectedOptions) {
@@ -104,6 +104,12 @@ var calculation = (function() {
       digitToGuess = calcDigitToGuess();
    }
 
+   var wipeText = function() {
+      resultText = " ";
+      answerText = "";
+      questionText = "";
+   };
+
    var createQuestionText = function(selectedOptions) {
       wipeText();
       create(selectedOptions);
@@ -140,7 +146,7 @@ var calculation = (function() {
 
    var getResultText = function() {
       return resultText;
-   }
+   };
 
    var setInProgress = function(state) {
       inProgress = state;
@@ -163,12 +169,6 @@ var calculation = (function() {
       return answerIndex >= answerRequired.toString().length;
    };
 
-   var wipeText = function() {
-      resultText = " ";
-      answerText = "";
-      questionText = "";
-   };
-
    var composeCorrectAnswerText = function() {
       return `It's ${answerRequired}`;
    };
@@ -180,6 +180,7 @@ var calculation = (function() {
 
    return {
       intervalId,
+      wipeText,
       createQuestionText,
       updateQuestionText,
       setQuestionText,
@@ -190,7 +191,6 @@ var calculation = (function() {
       correctDigitGuessed,
       updateDigitToGuess,
       gotItAllCorrect,
-      wipeText,
       composeCorrectAnswerText,
       draw
    };
