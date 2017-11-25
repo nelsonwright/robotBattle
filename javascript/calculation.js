@@ -6,10 +6,23 @@ var calculation = (function() {
    var answerText = "";
    var inProgress = false;  // indicates if we're answering a question at the moment
    var intervalId; // timer id for this question
-   var self = this;
 
-   function randomNumberTwoToTwelve () {
+
+   // hmm. should probably put these next four functions into their own helper module . . .
+   function randomNumberTwoToTwelve() {
       return Math.floor(Math.random() * 11) + 2;
+   }
+
+   function randomSingleDigit() {
+      return Math.floor(Math.random() * 9) + 1;
+   }
+
+   function randomButLessThan(number) {
+      return Math.floor(Math.random() * number);
+   }
+
+   function randomBetween(first, second) {
+      return  Math.floor(Math.random() * (second + 1) - first) + first;
    }
 
    function product() {
@@ -33,7 +46,7 @@ var calculation = (function() {
       } else {
          questionText = `${firstFactor} ${operand} ${secondFactor} = ${answerText}`;
       }
-   };
+   }
 
    function calcDigitToGuess () {
       return parseInt(answerRequired.toString().charAt(answerIndex));
@@ -47,39 +60,39 @@ var calculation = (function() {
       switch (optionChosen) {
          case "additionSingleDigits":
             type = "addition";
-            firstFactor = Math.floor(Math.random() * 9) + 1;
-            secondFactor = Math.floor(Math.random() * 9) + 1;
+            firstFactor = randomSingleDigit();
+            secondFactor = randomSingleDigit();
             answerRequired = sum();
             break;
          case "additionDoubleDigits":
             type = "addition";
-            firstFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
-            secondFactor = Math.floor(Math.random() * 10) + 10 + Math.floor(Math.random() * 40) + 1;
+            firstFactor = randomBetween(10, 99);
+            secondFactor = randomBetween(10, 99);
             answerRequired = sum();
             break;
          case "numberBondsTo10":
             type = "addition";
-            firstFactor = Math.floor(Math.random() * 10)  + 1;
+            firstFactor = randomBetween(1, 10);
             secondFactor = 10;
             answerRequired = secondFactor - firstFactor;
             break;
          case "numberBondsTo20":
             type = "addition";
-            firstFactor = Math.floor(Math.random() * 20)  + 1;
+            firstFactor = randomBetween(1, 20);
             secondFactor = 20;
             answerRequired = secondFactor - firstFactor;
             break;
 
          case "subtractionSingleDigits":
             type = "subtraction";
-            firstFactor = Math.floor(Math.random() * 9) + 1;
-            secondFactor = Math.floor(Math.random() * firstFactor);
+            firstFactor = randomSingleDigit();
+            secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;
          case "subtractionDoubleDigits":
             type = "subtraction";
-            firstFactor = Math.floor(Math.random() * 10) + 10;
-            secondFactor = Math.floor(Math.random() * firstFactor);
+            firstFactor = randomBetween(1, 99);
+            secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;
 
