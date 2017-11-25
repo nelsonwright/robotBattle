@@ -22,7 +22,7 @@ var calculation = (function() {
    }
 
    function randomBetween(first, second) {
-      return  Math.floor(Math.random() * (second + 1) - first) + first;
+      return  Math.floor(Math.random() * ((second + 1) - first)) + first;
    }
 
    function product() {
@@ -50,7 +50,7 @@ var calculation = (function() {
 
    function calcDigitToGuess () {
       return parseInt(answerRequired.toString().charAt(answerIndex));
-   };
+   }
 
    function create(selectedOptions) {
       answerIndex = 0;
@@ -91,7 +91,7 @@ var calculation = (function() {
             break;
          case "subtractionDoubleDigits":
             type = "subtraction";
-            firstFactor = randomBetween(1, 99);
+            firstFactor = randomBetween(20, 99);
             secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;

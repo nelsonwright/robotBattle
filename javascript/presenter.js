@@ -374,8 +374,8 @@ function setHandlers() {
    //handlers for checkboxes that are for groups of options with a name ending in "...Header"
    $(".optionsDiv input:checkbox[name$='Header']")
       .on("click", function() {
-         var checkedState = $(this).prop('checked');
-         $(this).siblings('input').prop('checked', checkedState);
+         var checkedState = $(this).prop("checked");
+         $(this).siblings('input').prop("checked", checkedState);
       });
 }
 
