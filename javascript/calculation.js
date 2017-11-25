@@ -1,7 +1,7 @@
 // creates the questions and expected answers
 var calculation = (function() {
    var firstFactor, secondFactor, digitToGuess, answerRequired, answerIndex,
-      type, optionChosen, resultText, operand;
+       optionChosen, resultText, operand;
    var questionText = "";
    var answerText = "";
    var inProgress = false;  // indicates if we're answering a question at the moment
@@ -33,15 +33,14 @@ var calculation = (function() {
       return firstFactor + secondFactor;
    }
 
-   function setUpMultiplication(optionChosen) {
-      type = "multiplication";
+   function calculateMultiplicationComponentsFor(optionChosen) {
       firstFactor = randomNumberTwoToTwelve();
-      secondFactor = optionChosen.split("_", 1);
+      secondFactor = optionChosen.split("_", 2)[1];
       answerRequired = product();
    }
 
    function setTextForQuestion() {
-      if (optionChosen.match("numberBonds")) {
+      if (optionChosen.match("NumberBonds")) {
          questionText = `${firstFactor} ${operand} ${answerText} = ${secondFactor}`;
       } else {
          questionText = `${firstFactor} ${operand} ${secondFactor} = ${answerText}`;
@@ -52,66 +51,73 @@ var calculation = (function() {
       return parseInt(answerRequired.toString().charAt(answerIndex));
    }
 
-   function create(selectedOptions) {
-      answerIndex = 0;
-      answerText = "?";
-      optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
-
+   function calculateAdditionComponentsFor(optionChosen) {
       switch (optionChosen) {
          case "additionSingleDigits":
-            type = "addition";
             firstFactor = randomSingleDigit();
             secondFactor = randomSingleDigit();
             answerRequired = sum();
             break;
          case "additionDoubleDigits":
-            type = "addition";
             firstFactor = randomBetween(10, 99);
             secondFactor = randomBetween(10, 99);
             answerRequired = sum();
             break;
-         case "numberBondsTo10":
-            type = "addition";
+         case "additionNumberBondsTo10":
             firstFactor = randomBetween(1, 10);
             secondFactor = 10;
             answerRequired = secondFactor - firstFactor;
             break;
-         case "numberBondsTo20":
-            type = "addition";
-            firstFactor = randomBetween(1, 20);
+         case "additionNumberBondsTo20":
+            firstFactor = randomBetween(0, 20);
             secondFactor = 20;
             answerRequired = secondFactor - firstFactor;
             break;
+      }
+   }
 
+   function calculateSubtractionComponentsFor(optionChosen) {
+      switch (optionChosen) {
          case "subtractionSingleDigits":
-            type = "subtraction";
             firstFactor = randomSingleDigit();
             secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;
          case "subtractionDoubleDigits":
-            type = "subtraction";
             firstFactor = randomBetween(20, 99);
             secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;
+      }
+   }
 
-         case "2_times_table":
-         case "3_times_table":
-         case "4_times_table":
-         case "5_times_table":
-         case "6_times_table":
-         case "7_times_table":
-         case "8_times_table":
-         case "9_times_table":
-         case "10_times_table":
-         case "11_times_table":
-         case "12_times_table":
-            setUpMultiplication(optionChosen);
-            break;
-         default:
-            // no recognised option
-            break;
+   function create(selectedOptions) {
+      answerIndex = 0;
+      answerText = "?";
+      optionChosen = selectedOptions[Math.floor(Math.random() * selectedOptions.length)];
+
+      // TODO: use html5 data attributes on the html instead of this monstrosity, e.g.
+      // instead of
+      // <input type="checkbox" value="additionSingleDigits" checked>
+      // have
+      //<input type="checkbox" value="addition" data-calcType="SingleDigits" checked>
+
+      // regex: just match the lower case part before any upper case letters or underscore
+      var typeChosen = optionChosen.toString().match(/\b([a-z]+)(?=[A-Z]|_)/)[1];
+
+      switch (typeChosen) {
+         case "addition":
+            operand = "+";
+            calculateAdditionComponentsFor(optionChosen);
+         break;
+         case "subtraction":
+            operand = "-";
+            calculateSubtractionComponentsFor(optionChosen);
+         break;
+         case "multiplication":
+            operand = "X";
+            calculateMultiplicationComponentsFor(optionChosen);
+         break;
       }
 
       digitToGuess = calcDigitToGuess();
@@ -126,19 +132,6 @@ var calculation = (function() {
    var createQuestionText = function(selectedOptions) {
       wipeText();
       create(selectedOptions);
-
-      switch(type) {
-         case "addition":
-            operand = "+";
-            break;
-         case "subtraction":
-            operand = "-";
-            break;
-         case "multiplication":
-            operand = "X";
-            break;
-      }
-
       setTextForQuestion();
       resultText = "Awaiting answer . . .";
       return questionText;
