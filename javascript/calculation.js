@@ -33,12 +33,6 @@ var calculation = (function() {
       return firstFactor + secondFactor;
    }
 
-   function calculateMultiplicationComponentsFor(optionChosen) {
-      firstFactor = randomNumberTwoToTwelve();
-      secondFactor = optionChosen.split("_", 2)[1];
-      answerRequired = product();
-   }
-
    function setTextForQuestion() {
       if (optionChosen.match("NumberBonds")) {
          questionText = `${firstFactor} ${operand} ${answerText} = ${secondFactor}`;
@@ -49,6 +43,12 @@ var calculation = (function() {
 
    function calcDigitToGuess () {
       return parseInt(answerRequired.toString().charAt(answerIndex));
+   }
+
+   function calculateMultiplicationComponentsFor(optionChosen) {
+      firstFactor = randomNumberTwoToTwelve();
+      secondFactor = optionChosen.split("_", 2)[1];
+      answerRequired = product();
    }
 
    function calculateAdditionComponentsFor(optionChosen) {
@@ -91,6 +91,12 @@ var calculation = (function() {
       }
    }
 
+   function calculateDivisionComponentsFor(optionChosen) {
+      secondFactor = optionChosen.split("_", 2)[1];
+      firstFactor = randomNumberTwoToTwelve() * secondFactor;
+      answerRequired = firstFactor / secondFactor;
+   }
+
    function create(selectedOptions) {
       answerIndex = 0;
       answerText = "?";
@@ -117,6 +123,10 @@ var calculation = (function() {
          case "multiplication":
             operand = "X";
             calculateMultiplicationComponentsFor(optionChosen);
+         break;
+         case "division":
+            operand = "÷";
+            calculateDivisionComponentsFor(optionChosen);
          break;
       }
 
