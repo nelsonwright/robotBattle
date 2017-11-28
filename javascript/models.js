@@ -28,10 +28,8 @@ var gameState = {
    lightRippleFrequency: 2,      // how many times a second to ripple the robot body lights
    lightRippleIntervalId: null,  // ID for light rippling, as above
    explosionSpeed: 100,          // time in millis between robot explosion frames
-   optionsSpeed: 300            // time in millis to show the options
+   optionsSpeed: 300             // time in millis to show the options
 };
-
-var selectedOptions;
 
 function Robot(colour, lightColours, canvas) {
    this.colour = colour;
@@ -375,22 +373,6 @@ function Robot(colour, lightColours, canvas) {
 
       if (this.isExploding) {
          explode();
-      }
-   };
-}
-
-function EnergyBar(robot, canvas, colour) {
-   this.robot = robot;
-   this.canvas = canvas;
-   this.colour = colour;
-   this.context = null;
-
-   this.draw = function() {
-      // blank the canvas before drawing anything . . .
-      this.canvas.width = this.canvas.width;
-
-      for (let i = 0; i < this.robot.energy; i++) {
-         screen.drawStrokedRectWithGradient(this.context, i, this.colour, this.canvas);
       }
    };
 }

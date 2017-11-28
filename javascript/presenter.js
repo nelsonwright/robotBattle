@@ -1,6 +1,7 @@
 
 var goodEnergyBar, badEnergyBar;
 var goodRobot, badRobot;
+var selectedOptions;
 
 function unicodeToNumeral(numberCode) {
    // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
@@ -49,16 +50,7 @@ function atLeastOneOptionSelected() {
 
 function setEnergyBarAttributes() {
    goodEnergyBar = new EnergyBar(goodRobot, document.getElementById("energyBarGood"), "firebrick");
-
-   if (goodEnergyBar.canvas.getContext) {
-      goodEnergyBar.context = (goodEnergyBar.canvas.getContext("2d"));
-   }
-
    badEnergyBar = new EnergyBar(badRobot, document.getElementById("energyBarBad"), "green");
-
-   if (badEnergyBar.canvas.getContext) {
-      badEnergyBar.context = (badEnergyBar.canvas.getContext("2d"));
-   }
 }
 
 function setRobotAttributes() {

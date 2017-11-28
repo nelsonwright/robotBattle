@@ -10,7 +10,9 @@ I'll be refactoring as I go, but the main part of the game will be in Javascript
 
 To start the game, just point your browser at: index.html.  You can see a working build at: http://www.robotbattle.co.uk/
 
-Feel free to get in touch if you want to get involved, or just submit a pull request.  You can find me at:
+Feel free to get in touch if you want to get involved, or just submit a pull request.
+
+You can find me at:
 
 me@nelsonwright.co.uk
 
