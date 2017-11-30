@@ -25,13 +25,15 @@
    <script src="./javascript/screen.js"></script>
    <script src="./javascript/timer.js"></script>
    <script src="./javascript/calculation.js"></script>
-   <script src="./javascript/energyBar.js"></script>
+   <script src="./javascript/energy_bar.js"></script>
+   <script src="./javascript/robot.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
    <script>
       $(document).ready(function() {
-         $("#playGameButtonDiv, #gameLoadingDiv").toggleClass("hidden");
+         $("#playGameButtonDiv").show();
+         $("#gameLoadingDiv").hide();
          setHandlers();
       });
    </script>
@@ -98,7 +100,7 @@
          </p>
       </div>
 
-   	<div id="playGameButtonDiv" class="centerStuff hidden">
+   	<div id="playGameButtonDiv" class="centerStuff">
          <button id="storyButton" class="storyButton hidden">Story</button>
          <button id="optionsButton" class="optionsButton">
             <span class="gearSpan">&#9881;</span>&nbsp;
