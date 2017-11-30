@@ -133,6 +133,12 @@ var calculation = (function() {
       digitToGuess = calcDigitToGuess();
    }
 
+   var questionOutcome = Object.freeze({
+      correct: "Got it right!",
+      incorrect: "Wrong!",
+      tooSlow: "Too slow!"
+   });
+
    var wipeText = function() {
       resultText = " ";
       answerText = "";
@@ -196,6 +202,7 @@ var calculation = (function() {
 
    return {
       intervalId,
+      questionOutcome,
       wipeText,
       createQuestionText,
       updateQuestionText,

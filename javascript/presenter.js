@@ -55,26 +55,20 @@ function setEnergyBarAttributes() {
 
 function setRobotAttributes() {
    var lightColours = ["gold", "mediumpurple", "limegreen", "white", "royalblue", "orange"];
-   goodRobot = new Robot("firebrick", lightColours, document.getElementById("goodRobot"));
+   goodRobot = new Robot("firebrick", lightColours, document.getElementById("goodRobot"), gameState.goodRobotMaxEnergy);
 
    lightColours = ["red", "royalblue", "magenta", "gold", "white", "plum"];
-   badRobot = new Robot("limegreen", lightColours, document.getElementById("badRobot"));
+   badRobot = new Robot("limegreen", lightColours, document.getElementById("badRobot"), gameState.badRobotMaxEnergy);
 }
 
 function setTimerAttributes() {
    timer.setup(document.getElementById("questionTimer"));
 }
 
-function setInitialRobotEnergy() {
-   goodRobot.energy = gameState.goodRobotMaxEnergy;
-   badRobot.energy = gameState.badRobotMaxEnergy;
-}
-
 function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
    setTimerAttributes();
-   setInitialRobotEnergy();
 }
 // end of model initialisation
 
@@ -107,12 +101,19 @@ function displayTimerValue() {
 }
 
 function showNumberButtons() {
-   $("#numeralsDiv, #playAgain").toggleClass("hidden");
+   $("#playAgain").hide();
+   $("#numeralsDiv").show();
+   enableNumberButtons();
 }
 
 function showPlayAgainButton() {
-   $("#numeralsDiv, #playAgain").toggleClass("hidden");
-   $("#playAgain button").focus();
+   $("#numeralsDiv").hide();
+   $("#playAgain")
+      .delay(3500)
+      .fadeIn("slow", function() {
+         $("#playAgain button").focus();
+      }
+   );
 }
 
 function stopRipplingBodyLights() {
@@ -127,39 +128,35 @@ function startRipplingBodyLights() {
 function stopTimers() {
    clearTimeout(gameState.timerId);
    clearInterval(calculation.intervalId);
-   clearInterval(goodRobot.electricityIntervalId);
-   clearInterval(badRobot.electricityIntervalId);
-   clearInterval(goodRobot.explosionIntervalId);
-   clearInterval(badRobot.explosionIntervalId);
    stopRipplingBodyLights();
 }
 
 function checkEnergy() {
    drawEnergyBars();
 
-   if (goodRobot.energy < 0) {
+   if (goodRobot.runOutOfEnergy()) {
       stopTimers();
 
       calculation.setQuestionText("Bad Robot Wins!");
       calculation.setResultText("Oh no!");
 
-      goodRobot.isExploding = true;
-      badRobot.leftArmRaised = true;
-      badRobot.rightArmRaised = true;
+      goodRobot.setToExplode();
+      badRobot.setLeftArmRaised(true);
+      badRobot.setRightArmRaised(true);
       drawScreen();
       showPlayAgainButton();
       return;
    }
 
-   if (badRobot.energy < 0) {
+   if (badRobot.runOutOfEnergy()) {
       stopTimers();
 
       calculation.setQuestionText("Good Robot Wins!");
       calculation.setResultText("Hooray!");
 
-      badRobot.isExploding = true;
-      goodRobot.leftArmRaised = true;
-      goodRobot.rightArmRaised = true;
+      badRobot.setToExplode();
+      goodRobot.setLeftArmRaised();
+      goodRobot.setRightArmRaised();
       drawScreen();
       showPlayAgainButton();
       return;
@@ -182,29 +179,29 @@ function pickRightOrLeftArmToRaise(robot) {
 function showFeedbackToAnswer(outcome) {
    stopQuestion();
 
-   if (outcome === questionOutcome.correct) {
+   if (outcome === calculation.questionOutcome.correct) {
       pickRightOrLeftArmToRaise(goodRobot);
-      badRobot.electricityFlash = true;
+      badRobot.setElectricityToFlash();
       calculation.setResultText(outcome.toString());
       drawScreen();
    } else {
       pickRightOrLeftArmToRaise(badRobot);
-      goodRobot.electricityFlash = true;
+      goodRobot.setElectricityToFlash();
       calculation.setResultText(`${outcome.toString()} ${calculation.composeCorrectAnswerText()}`);
       drawScreen();
    }
 }
 
 function getNextQuestionReadyIfBothRobotsAlive() {
-   if (goodRobot.energy >= 0 && badRobot.energy >= 0) {
+   if (goodRobot.hasEnergy() && badRobot.hasEnergy()) {
       gameState.intervalId = setTimeout(resetForNextQuestion, gameState.pauseBetweenQuestions * 1000);
    }
 }
 
 function handleTimerRunDown() {
    stopTimers();
-   showFeedbackToAnswer(questionOutcome.tooSlow);
-   goodRobot.energy--;
+   showFeedbackToAnswer(calculation.questionOutcome.tooSlow);
+   goodRobot.reduceEnergy();
    checkEnergy();
    calculation.setInProgress(false);
 
@@ -231,12 +228,10 @@ function resetForNextQuestion() {
    calculation.setInProgress(true);
    enableNumberButtons();
    calculation.intervalId = setInterval(processSums, 1000);
-   goodRobot.leftArmRaised = false;
-   goodRobot.rightArmRaised = false;
-   badRobot.leftArmRaised = false;
-   badRobot.rightArmRaised = false;
-   goodRobot.electricityFlash = false;
-   badRobot.electricityFlash = false;
+   goodRobot.setLeftArmRaised(false);
+   goodRobot.setRightArmRaised(false);
+   badRobot.setLeftArmRaised(false);
+   badRobot.setRightArmRaised(false);
 
    drawScreen();
    startRipplingBodyLights();
@@ -271,16 +266,19 @@ function processCorrectDigit() {
 
    if (calculation.gotItAllCorrect()) {
       stopQuestion();
-      showFeedbackToAnswer(questionOutcome.correct);
-      badRobot.energy--;
+
+      // TODO: at some stage, we shouldn't reach in to the calculation object and
+      // access this directly, law of demeter and all that . . .
+      showFeedbackToAnswer(calculation.questionOutcome.correct);
+      badRobot.reduceEnergy();
       getNextQuestionIfAlive();
    }
 }
 
 function processIncorrectDigit() {
    stopTimers();
-   showFeedbackToAnswer(questionOutcome.incorrect);
-   goodRobot.energy--;
+   showFeedbackToAnswer(calculation.questionOutcome.incorrect);
+   goodRobot.reduceEnergy();
    getNextQuestionIfAlive();
 }
 
@@ -375,12 +373,12 @@ function startAnotherGame() {
    initialiseModels();
    drawScreen();
    showNumberButtons();
-   enableNumberButtons();
    humanReadyToDoSums();
 }
 
 function swapIntroForGameScreen() {
-   $("#introDiv, #gameDiv").toggleClass("hidden");
+   $("#introDiv").hide();
+   $("#gameDiv").show();
    $("#humanReady button").focus();
 }
 
