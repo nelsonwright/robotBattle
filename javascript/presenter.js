@@ -155,8 +155,8 @@ function checkEnergy() {
       calculation.setResultText("Hooray!");
 
       badRobot.setToExplode();
-      goodRobot.setLeftArmRaised();
-      goodRobot.setRightArmRaised();
+      goodRobot.setLeftArmRaised(true);
+      goodRobot.setRightArmRaised(true);
       drawScreen();
       showPlayAgainButton();
       return;
@@ -170,9 +170,9 @@ function stopQuestion() {
 
 function pickRightOrLeftArmToRaise(robot) {
    if (Math.random() > 0.5) {
-      robot.rightArmRaised = true;
+      robot.setRightArmRaised(true);
    } else {
-      robot.leftArmRaised = true;
+      robot.setLeftArmRaised(true);
    }
 }
 
