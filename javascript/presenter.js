@@ -356,8 +356,13 @@ function setHandlers() {
                saveOptions();
                playGame();
          } else {
-            // it would be good to do something nicer than this at some point ...
-            alert("You need to select at least one option");
+            if ($("#optionsButton").is(":visible")) {
+               $("#optionsButton")
+               .effect("highlight")
+               .effect("shake");
+            } else {
+               $(this).effect("shake");
+            }
          }
       });
 

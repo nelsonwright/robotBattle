@@ -27,8 +27,12 @@
    <script src="./javascript/calculation.js"></script>
    <script src="./javascript/energy_bar.js"></script>
    <script src="./javascript/robot.js"></script>
+
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
+   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
    <script>
       $(document).ready(function() {
@@ -59,44 +63,44 @@
       <div class="optionsDiv hidden">
          <h3>Options</h3>
          <p>
-            <span class="optionGroupHeader">Addition</span><input type="checkbox" name="additionHeader" checked><br>
-            <input type="checkbox" value="additionSingleDigits" checked> Addition (single digits)<br>
-            <input type="checkbox" value="additionDoubleDigits" checked> Addition (double digits)<br>
-            <input type="checkbox" value="additionNumberBondsTo10" checked> Number bonds (to ten)<br>
-            <input type="checkbox" value="additionNumberBondsTo20" checked> Number bonds (to twenty)<br>
+            <span class="optionGroupHeader">Addition</span><input type="checkbox" name="additionHeader"><br>
+            <input type="checkbox" value="additionSingleDigits"> Addition (single digits)<br>
+            <input type="checkbox" value="additionDoubleDigits"> Addition (double digits)<br>
+            <input type="checkbox" value="additionNumberBondsTo10"> Number bonds (to ten)<br>
+            <input type="checkbox" value="additionNumberBondsTo20"> Number bonds (to twenty)<br>
          </p>
          <p>
-            <span class="optionGroupHeader">Subtraction</span><input type="checkbox" name="subtractionHeader" checked><br>
-            <input type="checkbox" value="subtractionSingleDigits" checked> Subtraction (single digits)<br>
-            <input type="checkbox" value="subtractionDoubleDigits" checked> Subtraction (double digits)<br>
+            <span class="optionGroupHeader">Subtraction</span><input type="checkbox" name="subtractionHeader"><br>
+            <input type="checkbox" value="subtractionSingleDigits"> Subtraction (single digits)<br>
+            <input type="checkbox" value="subtractionDoubleDigits"> Subtraction (double digits)<br>
          </p>
          <p>
-            <span class="optionGroupHeader">Multiplication</span><input type="checkbox" name="multiplicationTablesHeader" checked><br>
-            <input type="checkbox" value="multiplication_2_times_table" checked> 2 times table<br>
-            <input type="checkbox" value="multiplication_3_times_table" checked> 3 times table<br>
-            <input type="checkbox" value="multiplication_4_times_table" checked> 4 times table<br>
-            <input type="checkbox" value="multiplication_5_times_table" checked> 5 times table<br>
-            <input type="checkbox" value="multiplication_6_times_table" checked> 6 times table<br>
-            <input type="checkbox" value="multiplication_7_times_table" checked> 7 times table<br>
-            <input type="checkbox" value="multiplication_8_times_table" checked> 8 times table<br>
-            <input type="checkbox" value="multiplication_9_times_table" checked> 9 times table<br>
-            <input type="checkbox" value="multiplication_10_times_table" checked> 10 times table<br>
-            <input type="checkbox" value="multiplication_11_times_table" checked> 11 times table<br>
-            <input type="checkbox" value="multiplication_12_times_table" checked> 12 times table<br>
+            <span class="optionGroupHeader">Multiplication</span><input type="checkbox" name="multiplicationTablesHeader"><br>
+            <input type="checkbox" value="multiplication_2_times_table"> 2 times table<br>
+            <input type="checkbox" value="multiplication_3_times_table"> 3 times table<br>
+            <input type="checkbox" value="multiplication_4_times_table"> 4 times table<br>
+            <input type="checkbox" value="multiplication_5_times_table"> 5 times table<br>
+            <input type="checkbox" value="multiplication_6_times_table"> 6 times table<br>
+            <input type="checkbox" value="multiplication_7_times_table"> 7 times table<br>
+            <input type="checkbox" value="multiplication_8_times_table"> 8 times table<br>
+            <input type="checkbox" value="multiplication_9_times_table"> 9 times table<br>
+            <input type="checkbox" value="multiplication_10_times_table"> 10 times table<br>
+            <input type="checkbox" value="multiplication_11_times_table"> 11 times table<br>
+            <input type="checkbox" value="multiplication_12_times_table"> 12 times table<br>
          </p>
          <p>
-            <span class="optionGroupHeader">Division</span><input type="checkbox" name="divisionHeader" checked><br>
-            <input type="checkbox" value="division_2" checked> Division by 2<br>
-            <input type="checkbox" value="division_3" checked> Division by 3<br>
-            <input type="checkbox" value="division_4" checked> Division by 4<br>
-            <input type="checkbox" value="division_5" checked> Division by 5<br>
-            <input type="checkbox" value="division_6" checked> Division by 5<br>
-            <input type="checkbox" value="division_7" checked> Division by 7<br>
-            <input type="checkbox" value="division_8" checked> Division by 8<br>
-            <input type="checkbox" value="division_9" checked> Division by 9<br>
-            <input type="checkbox" value="division_10" checked> Division by 10<br>
-            <input type="checkbox" value="division_11" checked> Division by 11<br>
-            <input type="checkbox" value="division_12" checked> Division by 12<br>
+            <span class="optionGroupHeader">Division</span><input type="checkbox" name="divisionHeader"><br>
+            <input type="checkbox" value="division_2"> Division by 2<br>
+            <input type="checkbox" value="division_3"> Division by 3<br>
+            <input type="checkbox" value="division_4"> Division by 4<br>
+            <input type="checkbox" value="division_5"> Division by 5<br>
+            <input type="checkbox" value="division_6"> Division by 5<br>
+            <input type="checkbox" value="division_7"> Division by 7<br>
+            <input type="checkbox" value="division_8"> Division by 8<br>
+            <input type="checkbox" value="division_9"> Division by 9<br>
+            <input type="checkbox" value="division_10"> Division by 10<br>
+            <input type="checkbox" value="division_11"> Division by 11<br>
+            <input type="checkbox" value="division_12"> Division by 12<br>
          </p>
       </div>
 
