@@ -362,6 +362,8 @@ function setHandlers() {
                .effect("shake");
             } else {
                $(this).effect("shake");
+               $(".optionsDiv p")
+               .effect("highlight");
             }
          }
       });
