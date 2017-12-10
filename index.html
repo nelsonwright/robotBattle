@@ -125,7 +125,7 @@
    </div> <!-- end of introDiv -->
 
 
-   <div id ="gameDiv" class="hidden">
+   <div id="gameDiv" class="hidden">
       <div id="timerDiv" class="timerDiv">
          <canvas id="questionTimer" class = "questionTimer" width="1000" height="60">
             The Timer
@@ -178,7 +178,11 @@
 
       <div id="playAgain" class="playAgain hidden">
          <p>
-            <button onClick="startAnotherGame()">Tap to play again, human!</button>
+            <button id="startAnotherGameButton">Tap to play again, human!</button>
+            <button id="showOptionsAfterGameButton" class="optionsAfterGameButton">
+               <span class="gearSpanAfterGame">&#9881;</span>
+               Options
+            </button>
          </p>
       <div>
 

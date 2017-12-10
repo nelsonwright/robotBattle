@@ -196,8 +196,15 @@ var calculation = (function() {
    };
 
    var draw = function() {
-      $("#questionAndAnswersPara").text(questionText);
-      $("#resultPara").text(resultText);
+      if (inProgress) {
+         $("#humanReady").hide();
+         $("#questionAndAnswersPara,#resultPara").show();
+         $("#questionAndAnswersPara").text(questionText);
+         $("#resultPara").text(resultText);
+      } else {
+         $("#humanReady").show();
+         $("#questionAndAnswersPara,#resultPara").hide();
+      }
    };
 
    return {

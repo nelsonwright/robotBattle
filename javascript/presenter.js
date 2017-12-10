@@ -1,4 +1,3 @@
-
 var goodEnergyBar, badEnergyBar;
 var goodRobot, badRobot;
 var selectedOptions;
@@ -69,6 +68,11 @@ function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
    setTimerAttributes();
+   gameState.battleInProgress = false;
+   calculation.wipeText();
+   calculation.setInProgress(false);
+   timer.clearCanvas();
+   showNumberButtons();
 }
 // end of model initialisation
 
@@ -111,7 +115,7 @@ function showPlayAgainButton() {
    $("#playAgain")
       .delay(3500)
       .fadeIn("slow", function() {
-         $("#playAgain button").focus();
+         $("#startAnotherGameButton").focus();
       }
    );
 }
@@ -145,7 +149,6 @@ function checkEnergy() {
       badRobot.setRightArmRaised(true);
       drawScreen();
       showPlayAgainButton();
-      return;
    }
 
    if (badRobot.runOutOfEnergy()) {
@@ -159,7 +162,6 @@ function checkEnergy() {
       goodRobot.setRightArmRaised(true);
       drawScreen();
       showPlayAgainButton();
-      return;
    }
 }
 
@@ -238,10 +240,6 @@ function resetForNextQuestion() {
 }
 
 function humanReadyToDoSums() {
-   $("#humanReady").hide();
-   $("#questionAndAnswersPara").show();
-   $("#resultPara").show();
-
    setUpQuestion();
    displayTimerValue();
 
@@ -249,9 +247,11 @@ function humanReadyToDoSums() {
    gameState.battleInProgress = true;
    calculation.setInProgress(true);
 
+   showNumberButtons();
    enableNumberButtons();
    startRipplingBodyLights();
    calculation.intervalId = setInterval(processSums, 1000);
+   drawScreen();
 }
 
 function getNextQuestionIfAlive() {
@@ -349,6 +349,27 @@ function setHandlers() {
             });
       });
 
+   $("#startAnotherGameButton")
+      .on("click", function() {
+         $("#playAgain")
+            .fadeOut("fast", function() {
+               startAnotherGame();
+            });
+      });
+
+   $("#showOptionsAfterGameButton")
+      .on("click", function() {
+         $("#playAgain")
+            .fadeOut("fast", function() {
+               $("#gameDiv").hide();
+               $("#introDiv").show();
+               $(".introText").hide();
+               $("#storyButton").show();
+               $("#optionsButton").hide();
+               $(".optionsDiv").fadeIn();
+            });
+      });
+
    $("#playGameButton")
       .focus()
       .on("click", function() {
@@ -379,18 +400,17 @@ function setHandlers() {
 function startAnotherGame() {
    initialiseModels();
    drawScreen();
-   showNumberButtons();
-   humanReadyToDoSums();
+   $("#humanReady button").focus();
 }
 
 function swapIntroForGameScreen() {
    $("#introDiv").hide();
    $("#gameDiv").show();
-   $("#humanReady button").focus();
 }
 
 function playGame() {
    swapIntroForGameScreen();
    initialiseModels();
    drawScreen();
+   $("#humanReady button").focus();
 }

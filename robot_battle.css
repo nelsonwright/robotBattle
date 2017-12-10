@@ -97,6 +97,11 @@ button:hover {
    font-size: 300%;
 }
 
+.gearSpanAfterGame {
+   vertical-align: middle;
+   font-size: 150%;
+}
+
 .timerDiv {
    text-align: center;
    width: 82vw;
@@ -155,9 +160,8 @@ button:hover {
 .playAgain {
    margin: 0 auto;
 	width:44%;
-   margin-top: 2%;
-   height: 10vw;
-   padding: 2%;
+   /*height: 9vw;*/
+   padding: 1%;
 }
 
 .playAgain p {
@@ -165,6 +169,13 @@ button:hover {
    font-size: 3vw;
    font-weight: bold;
    margin: 2%;
+}
+
+.optionsAfterGameButton {
+   margin-top: 2vw;
+   padding-left: 2vw;
+   padding-right: 2vw;
+   background-color: darkRed;
 }
 
 .goodRobot {
