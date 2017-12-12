@@ -1,4 +1,4 @@
-h1, h3 {
+h1, h3, h4 {
 	font-family: 'Orbitron', sans-serif;
 	text-align: center;
 }
@@ -20,7 +20,7 @@ body {
 }
 
 
-p {
+p, label {
 	font-family: 'Open Sans', verdana, arial, helvetica, sans-serif;
 	color: black;
 	font-size: large;
@@ -198,6 +198,35 @@ button:hover {
 .energyBarBad {
 	float:right;
    width:4.5vw;
+}
+
+.sliderDiv {
+   width:40%;
+   float:right;
+}
+
+.sliderDiv {
+   padding-left: 3vw;
+   padding-right: 3vw;
+   text-align: center;
+   font-size: 1.5em;
+}
+
+.sliderDiv span {
+   font-family: 'Open Sans', verdana, arial, helvetica, sans-serif;
+   font-weight: bold;
+}
+
+.sliderDiv h4 {
+   margin-top: 0;
+}
+
+.sliderDiv #timerValue {
+   background-color: mistyrose;
+}
+
+.sliderDiv #theSlider {
+   background-color: orange;
 }
 
 .hidden {
