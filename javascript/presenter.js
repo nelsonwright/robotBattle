@@ -2,6 +2,20 @@ var goodEnergyBar, badEnergyBar;
 var goodRobot, badRobot;
 var selectedOptions;
 
+// these are the unicode values for the keyboard keys when pressed
+var key = Object.freeze({
+   isTopRowDigit(actionCode) {
+      return actionCode >= 48 && actionCode <= 57;
+   },
+   isKeypadDigit(actionCode) {
+      return actionCode >= 96 && actionCode <= 105;
+   },
+   isDigit(actionCode) {
+      return this.isTopRowDigit(actionCode) || this.isKeypadDigit(actionCode);
+   },
+   enter: 13   // the enter or return key
+});
+
 function unicodeToNumeral(numberCode) {
    // the digits 0-9 on the top row of the keyboard are unicode values 48 - 57
    // the numeric keypad digits are unicode values 96 - 105
@@ -64,6 +78,18 @@ function setTimerAttributes() {
    timer.setup(document.getElementById("questionTimer"));
 }
 
+function enableNumberButtons() {
+   $("#numeralsDiv button")
+      .removeAttr("disabled")
+      .fadeTo("fast", 1);
+}
+
+function showNumberButtons() {
+   $("#playAgain").hide();
+   $("#numeralsDiv").show();
+   enableNumberButtons();
+}
+
 function initialiseModels() {
    setRobotAttributes();
    setEnergyBarAttributes();
@@ -89,12 +115,6 @@ function disableNumberButtons() {
       .fadeTo("fast", 0.5);
 }
 
-function enableNumberButtons() {
-   $("#numeralsDiv button")
-      .removeAttr("disabled")
-      .fadeTo("fast", 1);
-}
-
 function resetRobotBodyLights() {
    goodRobot.drawBodyLights();
    badRobot.drawBodyLights();
@@ -102,12 +122,6 @@ function resetRobotBodyLights() {
 
 function displayTimerValue() {
    timer.draw();
-}
-
-function showNumberButtons() {
-   $("#playAgain").hide();
-   $("#numeralsDiv").show();
-   enableNumberButtons();
 }
 
 function showPlayAgainButton() {

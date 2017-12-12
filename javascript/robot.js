@@ -128,6 +128,20 @@ var Robot = function(colour, lightColours, canvas, energy) {
       }
    }
 
+   var drawBodyLights = function() {
+      context.lineWidth = 2;
+
+      for (let i = 0; i < 3; i++) {
+         if (isExploding) {
+            context.fillStyle = "black";
+         } else {
+            context.fillStyle = lightColours[i];
+         }
+
+         drawBodyLight(i);
+      }
+   };
+
    function drawBodyDecoration() {
       var y = 185 + screen.yOffset;
       var x = 71;
@@ -269,20 +283,6 @@ var Robot = function(colour, lightColours, canvas, energy) {
       explosionIntervalId = setInterval(explodeLimbs, gameState.explosionSpeed, patternFill);
    }
 
-   var drawBodyLights = function() {
-      context.lineWidth = 2;
-
-      for (let i = 0; i < 3; i++) {
-         if (isExploding) {
-            context.fillStyle = "black";
-         } else {
-            context.fillStyle = lightColours[i];
-         }
-
-         drawBodyLight(i);
-      }
-   };
-
    var chooseAndDrawLights = function() {
       var lightToChange;
       var randomColourIndex;
@@ -298,35 +298,35 @@ var Robot = function(colour, lightColours, canvas, energy) {
 
    var setElectricityToFlash = function() {
       electricityFlash = true;
-   }
+   };
 
    var setToExplode = function() {
       isExploding = true;
-   }
+   };
 
    var getEnergy = function() {
       return energy;
-   }
+   };
 
    var runOutOfEnergy = function() {
       return energy < 0;
-   }
+   };
 
    var hasEnergy = function() {
       return energy >= 0;
-   }
+   };
 
    var reduceEnergy = function() {
       energy --;
-   }
+   };
 
    var setLeftArmRaised = function(state) {
       leftArmRaised = state;
-   }
+   };
 
    var setRightArmRaised = function(state) {
       rightArmRaised = state;
-   }
+   };
 
    var draw = function() {
       // first, blank the canvas . . .
@@ -383,5 +383,5 @@ var Robot = function(colour, lightColours, canvas, energy) {
       setLeftArmRaised,
       setRightArmRaised,
       draw
-   }
+   };
 }

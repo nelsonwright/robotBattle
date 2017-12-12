@@ -16,7 +16,7 @@ var timer = (function() {
 
    var timeLeft = function() {
       return this.timeRemaining;
-   }
+   };
 
    var clearCanvas = function() {
       this.canvas.width = this.canvas.width;
@@ -24,7 +24,7 @@ var timer = (function() {
 
    var decrement = function() {
       this.timeRemaining--;
-   }
+   };
 
    var draw = function() {
       var timeRemainingBoxWidth;
