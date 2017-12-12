@@ -213,9 +213,9 @@ function handleTimerRunDown() {
 }
 
 function processSums() {
-   timer.timeRemaining--;
+   timer.decrement();
 
-   if (timer.timeRemaining > 0) {
+   if (timer.timeLeft() > 0) {
       displayTimerValue();
    } else {
       handleTimerRunDown();
