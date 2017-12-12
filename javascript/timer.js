@@ -14,8 +14,16 @@ var timer = (function() {
       this.totalTimeForQuestion = timeRemaining;
    };
 
+   var timeLeft = function() {
+      return this.timeRemaining;
+   };
+
    var clearCanvas = function() {
       this.canvas.width = this.canvas.width;
+   };
+
+   var decrement = function() {
+      this.timeRemaining--;
    };
 
    var draw = function() {
@@ -33,7 +41,9 @@ var timer = (function() {
    return {
       setup,
       setTimeForQuestion,
+      timeLeft,
       clearCanvas,
+      decrement,
       draw
    };
 
