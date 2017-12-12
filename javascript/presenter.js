@@ -55,6 +55,7 @@ function saveOptions() {
       .map(function() {
          return this.value;
    });
+   gameState.timeForSums = $( "#theSlider" ).slider( "option", "value" );;
 }
 
 function atLeastOneOptionSelected() {
@@ -350,6 +351,8 @@ function setHandlers() {
          $(this)
             .fadeOut("fast", function() {
                $(".optionsDiv, .introText").slideToggle(gameState.optionsSpeed);
+               var timerSeconds = $( "#theSlider" ).slider( "option", "value" );
+               $( "#timerValue" ).text( timerSeconds );
                $("#storyButton").fadeIn("fast");
             });
       });
@@ -409,6 +412,17 @@ function setHandlers() {
          var checkedState = $(this).prop("checked");
          $(this).siblings('input').prop("checked", checkedState);
       });
+
+
+   $( "#theSlider" ).slider({
+       range: "max",
+       min: 2,
+       max: 15,
+       value: gameState.timeForSums, // default value
+       slide: function( event, ui ) {
+         $( "#timerValue" ).text( ui.value );
+       }
+   });
 }
 
 function startAnotherGame() {
