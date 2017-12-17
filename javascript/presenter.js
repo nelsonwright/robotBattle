@@ -76,7 +76,8 @@ function setRobotAttributes() {
 }
 
 function setTimerAttributes() {
-   timer.setup(document.getElementById("questionTimer"));
+   var timerCanvas = document.getElementById("questionTimer");
+   timer.setup(timerCanvas);
 }
 
 function enableNumberButtons() {
@@ -211,7 +212,7 @@ function showFeedbackToAnswer(outcome) {
 
 function getNextQuestionReadyIfBothRobotsAlive() {
    if (goodRobot.hasEnergy() && badRobot.hasEnergy()) {
-      gameState.intervalId = setTimeout(resetForNextQuestion, gameState.pauseBetweenQuestions * 1000);
+      setTimeout(resetForNextQuestion, gameState.pauseBetweenQuestions * 1000);
    }
 }
 
@@ -228,7 +229,7 @@ function handleTimerRunDown() {
 }
 
 function processSums() {
-   timer.decrement();
+   timer.decrement(gameState.timerInterval / 1000);
 
    if (timer.timeLeft() > 0) {
       displayTimerValue();
@@ -237,36 +238,40 @@ function processSums() {
    }
 }
 
-function resetForNextQuestion() {
-   calculation.wipeText();
-   setUpQuestion();
-   displayTimerValue();
-
+function startCalculationTimer() {
    calculation.setInProgress(true);
-   enableNumberButtons();
-   calculation.intervalId = setInterval(processSums, 1000);
+   calculation.intervalId = setInterval(processSums, gameState.timerInterval);
+}
+
+function putRobotArmsDown() {
    goodRobot.setLeftArmRaised(false);
    goodRobot.setRightArmRaised(false);
    badRobot.setLeftArmRaised(false);
    badRobot.setRightArmRaised(false);
+}
 
-   drawScreen();
+function commenceQuestion() {
+   startCalculationTimer();
+   enableNumberButtons();
    startRipplingBodyLights();
+   drawScreen();
+}
+
+function resetForNextQuestion() {
+   calculation.wipeText();
+   setUpQuestion();
+   displayTimerValue();
+   putRobotArmsDown();
+
+   commenceQuestion();
 }
 
 function humanReadyToDoSums() {
    setUpQuestion();
    displayTimerValue();
-
-   // we'll need to set these up at different points later, but for now, both here is ok . . .
    gameState.battleInProgress = true;
-   calculation.setInProgress(true);
 
-   showNumberButtons();
-   enableNumberButtons();
-   startRipplingBodyLights();
-   calculation.intervalId = setInterval(processSums, 1000);
-   drawScreen();
+   commenceQuestion();
 }
 
 function getNextQuestionIfAlive() {
