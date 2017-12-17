@@ -22,8 +22,8 @@ var timer = (function() {
       this.canvas.width = this.canvas.width;
    };
 
-   var decrement = function() {
-      this.timeRemaining--;
+   var decrement = function(timeToDecrement) {
+      this.timeRemaining = this.timeRemaining - timeToDecrement;
    };
 
    var draw = function() {
