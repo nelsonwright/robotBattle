@@ -1,7 +1,7 @@
 // creates the questions and expected answers
 var calculation = (function() {
-   var firstFactor, secondFactor, digitToGuess, answerRequired, answerIndex,
-       optionChosen, resultText, operand;
+   var firstFactor, secondFactor, thirdFactor, digitToGuess, answerRequired,
+       answerIndex, optionChosen, resultText, operand;
    var questionText = "";
    var answerText = "";
    var inProgress = false;  // indicates if we're answering a question at the moment
@@ -36,6 +36,8 @@ var calculation = (function() {
    function setTextForQuestion() {
       if (optionChosen.match("NumberBonds")) {
          questionText = `${firstFactor} ${operand} ${answerText} = ${secondFactor}`;
+      } else if (optionChosen.match("sequence")) {
+         questionText = `${firstFactor}${operand}${secondFactor}${operand}${answerText}${operand}${thirdFactor}`;
       } else {
          questionText = `${firstFactor} ${operand} ${secondFactor} = ${answerText}`;
       }
@@ -49,6 +51,15 @@ var calculation = (function() {
       firstFactor = randomNumberTwoToTwelve();
       secondFactor = optionChosen.split("_", 2)[1];
       answerRequired = product();
+   }
+
+   function calculateSequenceComponentsFor(optionChosen) {
+      var sequenceChosen = parseInt(optionChosen.split("_", 2)[1]);
+      var startOfSequence = sequenceChosen * randomBetween(0, 9);
+      firstFactor = startOfSequence;
+      secondFactor = startOfSequence + sequenceChosen;
+      answerRequired = startOfSequence + (sequenceChosen * 2);
+      thirdFactor = startOfSequence + (sequenceChosen * 3);
    }
 
    function calculateAdditionComponentsFor(optionChosen) {
@@ -119,6 +130,10 @@ var calculation = (function() {
          case "subtraction":
             operand = "-";
             calculateSubtractionComponentsFor(optionChosen);
+         break;
+         case "sequence":
+            operand = "...";
+            calculateSequenceComponentsFor(optionChosen);
          break;
          case "multiplication":
             operand = "X";
