@@ -201,15 +201,13 @@ button:hover {
 }
 
 .sliderDiv {
-   width:40%;
-   float:right;
-}
-
-.sliderDiv {
+   margin: 0 auto;
    padding-left: 3vw;
    padding-right: 3vw;
+   padding-top: 3vw;
    text-align: center;
    font-size: 1.5em;
+   width:40%;
 }
 
 .sliderDiv span {
@@ -218,6 +216,7 @@ button:hover {
 }
 
 .sliderDiv h4 {
+   text-align: center;
    margin-top: 0;
 }
 
