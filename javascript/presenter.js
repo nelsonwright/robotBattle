@@ -428,6 +428,11 @@ function setHandlers() {
          $( "#timerValue" ).text( ui.value );
        }
    });
+
+   $( "#accordion" ).accordion({
+      collapsible: true,
+      heightStyle: "content"
+   });
 }
 
 function startAnotherGame() {
