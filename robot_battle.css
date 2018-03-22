@@ -184,6 +184,11 @@ button:hover {
    width:22vw;
 }
 
+.smallWidth {
+   margin: 0 auto;
+   width:22vw;
+}
+
 .badRobot {
 	float:right;
 	margin-right: 1%;
