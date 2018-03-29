@@ -8,7 +8,7 @@ var calculation = (function() {
    var intervalId; // timer id for this question
 
 
-   // hmm. should probably put these next four functions into their own helper module . . .
+   // hmm. should probably put these next four functions into their own helper . . .
    function randomNumberTwoToTwelve() {
       return Math.floor(Math.random() * 11) + 2;
    }
@@ -34,7 +34,11 @@ var calculation = (function() {
    }
 
    function setTextForQuestion() {
-      if (optionChosen.match("NumberBonds")) {
+      if (optionChosen.match("OneMore")) {
+         questionText = `1 more than ${firstFactor} is ${answerText}`;
+      } else if (optionChosen.match("OneLess")) {
+         questionText = `1 less than ${firstFactor} is ${answerText}`;
+      } else if (optionChosen.match("NumberBonds")) {
          questionText = `${firstFactor} ${operand} ${answerText} = ${secondFactor}`;
       } else if (optionChosen.match("sequence")) {
          questionText = `${firstFactor}${operand}${secondFactor}${operand}${answerText}${operand}${thirdFactor}`;
@@ -64,37 +68,47 @@ var calculation = (function() {
 
    function calculateAdditionComponentsFor(optionChosen) {
       switch (optionChosen) {
-         case "additionSingleDigits":
+         case "SingleDigits":
             firstFactor = randomSingleDigit();
             secondFactor = randomSingleDigit();
             answerRequired = sum();
             break;
-         case "additionDoubleDigits":
+         case "DoubleDigits":
             firstFactor = randomBetween(10, 99);
             secondFactor = randomBetween(10, 99);
             answerRequired = sum();
             break;
-         case "additionNumberBondsTo10":
+         case "NumberBondsTo10":
             firstFactor = randomBetween(1, 10);
             secondFactor = 10;
             answerRequired = secondFactor - firstFactor;
             break;
-         case "additionNumberBondsTo20":
+         case "NumberBondsTo20":
             firstFactor = randomBetween(0, 20);
             secondFactor = 20;
             answerRequired = secondFactor - firstFactor;
+            break;
+         case "OneMore":
+            firstFactor = randomSingleDigit();
+            secondFactor = 1;
+            answerRequired = firstFactor + secondFactor;
+            break;
+         case "OneLess":
+            firstFactor = randomSingleDigit();
+            secondFactor = 1;
+            answerRequired = firstFactor - secondFactor;
             break;
       }
    }
 
    function calculateSubtractionComponentsFor(optionChosen) {
       switch (optionChosen) {
-         case "subtractionSingleDigits":
+         case "SingleDigits":
             firstFactor = randomSingleDigit();
             secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
             break;
-         case "subtractionDoubleDigits":
+         case "DoubleDigits":
             firstFactor = randomBetween(20, 99);
             secondFactor = randomButLessThan(firstFactor);
             answerRequired = firstFactor - secondFactor;
@@ -121,27 +135,28 @@ var calculation = (function() {
 
       // regex: just match the lower case part before any upper case letters or underscore
       var typeChosen = optionChosen.toString().match(/\b([a-z]+)(?=[A-Z]|_)/)[1];
+      var optionDetail = optionChosen.replace(typeChosen,"");
 
       switch (typeChosen) {
          case "addition":
             operand = "+";
-            calculateAdditionComponentsFor(optionChosen);
+            calculateAdditionComponentsFor(optionDetail);
          break;
          case "subtraction":
             operand = "-";
-            calculateSubtractionComponentsFor(optionChosen);
+            calculateSubtractionComponentsFor(optionDetail);
          break;
          case "sequence":
             operand = "...";
-            calculateSequenceComponentsFor(optionChosen);
+            calculateSequenceComponentsFor(optionDetail);
          break;
          case "multiplication":
             operand = "X";
-            calculateMultiplicationComponentsFor(optionChosen);
+            calculateMultiplicationComponentsFor(optionDetail);
          break;
          case "division":
             operand = "÷";
-            calculateDivisionComponentsFor(optionChosen);
+            calculateDivisionComponentsFor(optionDetail);
          break;
       }
 
