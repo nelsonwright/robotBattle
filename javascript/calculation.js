@@ -93,11 +93,6 @@ var calculation = (function() {
             secondFactor = 1;
             answerRequired = firstFactor + secondFactor;
             break;
-         case "OneLess":
-            firstFactor = randomSingleDigit();
-            secondFactor = 1;
-            answerRequired = firstFactor - secondFactor;
-            break;
       }
    }
 
@@ -111,6 +106,11 @@ var calculation = (function() {
          case "DoubleDigits":
             firstFactor = randomBetween(20, 99);
             secondFactor = randomButLessThan(firstFactor);
+            answerRequired = firstFactor - secondFactor;
+            break;
+         case "OneLess":
+            firstFactor = randomSingleDigit();
+            secondFactor = 1;
             answerRequired = firstFactor - secondFactor;
             break;
       }
