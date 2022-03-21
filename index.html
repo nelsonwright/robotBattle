@@ -11,36 +11,37 @@
      gtag('config', 'UA-109211566-1');
    </script>
 
-	<meta charset="UTF-8">
-	<title>Robot Battle</title>
-   <!-- If you want to get involved, check out https://github.com/nelsonwright/robotBattle -->
-   <meta name="description" content="A game with robots battling, using arithmetic. A robot battle with numbers!">
-   <meta name="author" content="Nelson Wright">
-   <meta name="keywords" content="game, javaScript game, robot, battle, robot battle, arithmetic, arithmetic game,
-      free arithmetic game, maths game, math game, free math game, free maths game">
+  <meta charset="UTF-8">
+  <title>Robot Battle</title>
+  <!-- If you want to get involved, check out https://github.com/nelsonwright/robotBattle -->
+  <meta name="description" content="A game with battling robots, using arithmetic. A robot battle with numbers!">
+  <meta name="author" content="Nelson Wright">
+  <meta name="keywords" content="game, javaScript game, robot, battle, robot battle, arithmetic, arithmetic game,
+    free arithmetic game, maths game, math game, free math game, free maths game">
 
-	<link rel="stylesheet" type="text/css" href="robot_battle.css">
-   <script src="./javascript/game_state.js"></script>
-	<script src="./javascript/presenter.js"></script>
-   <script src="./javascript/screen.js"></script>
-   <script src="./javascript/timer.js"></script>
-   <script src="./javascript/calculation.js"></script>
-   <script src="./javascript/energy_bar.js"></script>
-   <script src="./javascript/robot.js"></script>
+  <link rel="stylesheet" type="text/css" href="robot_battle.css">
+  <script src="./javascript/random_number_helper.js"></script>
+  <script src="./javascript/calculation.js"></script>
+  <script src="./javascript/game_state.js"></script>
+  <script src="./javascript/presenter.js"></script>
+  <script src="./javascript/screen.js"></script>
+  <script src="./javascript/timer.js"></script>
+  <script src="./javascript/energy_bar.js"></script>
+  <script src="./javascript/robot.js"></script>
 
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
-   <link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
-   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-   <script>
-      $(document).ready(function() {
-         $("#playGameButtonDiv").show();
-         $("#gameLoadingDiv").hide();
-         setHandlers();
-      });
-   </script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Orbitron:700" rel="stylesheet">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <script>
+    $(document).ready(function() {
+       $("#playGameButtonDiv").show();
+       $("#gameLoadingDiv").hide();
+       setHandlers();
+    });
+  </script>
 </head>
 
 <body>
